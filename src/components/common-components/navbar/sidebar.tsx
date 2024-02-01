@@ -5,6 +5,7 @@ import {
   AccountIcon,
   ProductsIcon,
 } from "../../../../public/iconSvgs";
+import { Box } from "@mui/material";
 
 const HoverableButton = ({ children, icon, isActive, onClick }: any) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -23,7 +24,7 @@ const HoverableButton = ({ children, icon, isActive, onClick }: any) => {
 };
 
 const SidebarComponent = () => {
-  const [activeButton, setActiveButton] = useState(null);
+  const [activeButton, setActiveButton] = useState("Dashboard");
 
   const handleButtonClick = (buttonName: any) => {
     setActiveButton(buttonName);
@@ -31,6 +32,19 @@ const SidebarComponent = () => {
 
   return (
     <Sidebar>
+      <Box
+        sx={{
+          color: "#FFFFFF",
+          fontFamily: "Inter",
+          fontSize: "14px",
+          margin: "16px 0 10px 0",
+          width: "100%",
+          // textAlign: "center",
+          height: "20px",
+        }}
+      >
+        BETTER CALL PAUL
+      </Box>
       <HoverableButton
         icon={HomeIcon}
         isActive={activeButton === "Dashboard"}
