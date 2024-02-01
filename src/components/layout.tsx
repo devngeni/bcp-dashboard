@@ -16,7 +16,7 @@ const Layout = ({ children, pageTitle }: layoutProps) => {
       <SidebarComponent />
       <MainComponent>
         <TopbarComponent />
-        <main>{children}</main>
+        <main style={{ height: "calc(100% - 64px)" }}>{children}</main>
       </MainComponent>
     </PageContainer>
   );
