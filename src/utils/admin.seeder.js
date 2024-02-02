@@ -24,9 +24,7 @@ const userSchema = new mongoose.Schema(
 const User = mongoose.model("User", userSchema);
 
 mongoose
-  .connect(
-    "mongodb+srv://bettercallpaul:sQOkWzfk5e6FTuRW@bcp-dev.el8ezcc.mongodb.net/bcb-dev"
-  )
+  .connect(`${process.env.NEXT_PUBLIC_MONGO_URL}`)
   .then(() => console.log(`connected successfully`))
   .catch((e) => console.log("error while connecting to db"));
 
