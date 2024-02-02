@@ -7,17 +7,19 @@ import TopbarComponent from "./common-components/navbar/topbar";
 interface layoutProps {
   children: any;
   pageTitle?: string;
+  showSearchComponent?: boolean;
 }
 
-const Layout = ({ children, pageTitle }: layoutProps) => {
+const Layout = ({ children, pageTitle, showSearchComponent }: layoutProps) => {
   return (
     <PageContainer>
       <HeadMetaData pageTitle={pageTitle} />
       <SidebarComponent />
       <MainComponent>
-        <TopbarComponent />
+        <TopbarComponent showSearchComponent={showSearchComponent} />
         <main
           style={{
+            position: "relative",
             height: "calc(100% - 64px)",
             overflowY: "auto",
             overflowX: "hidden",

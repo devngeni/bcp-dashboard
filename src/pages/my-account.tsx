@@ -1,13 +1,13 @@
 import React, { ReactElement } from "react";
 import { NextPageWithLayout } from "./_app";
 import Layout from "@/components/layout";
-import { CommonPageContainer } from "@/styles/common.styles";
+import { CommonWrapper } from "@/styles/common.styles";
 
 const MyAccount: NextPageWithLayout = () => {
   return (
-    <CommonPageContainer>
+    <CommonWrapper>
       <h1>My Account</h1>
-    </CommonPageContainer>
+    </CommonWrapper>
   );
 };
 

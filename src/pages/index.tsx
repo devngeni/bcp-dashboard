@@ -7,7 +7,6 @@ import {
   DatePickerInput,
   RecentOrdersContainer,
   StatisticsContainer,
-  StyledTableCell,
 } from "@/styles/dashboard.styles";
 import {
   Box,
@@ -37,7 +36,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import BrandIcon from "../../public/brandicon.svg";
 import Image from "next/image";
 import { CountArrow } from "../../public/iconSvgs";
-import { CommonPageContainer } from "@/styles/common.styles";
+import { CommonWrapper, StyledTableCell } from "@/styles/common.styles";
 
 interface StatisticBoxProps {
   countType: string;
@@ -139,7 +138,7 @@ const StatisticBox: React.FC<StatisticBoxProps> = ({
 
 const Dashboard: NextPageWithLayout = () => {
   return (
-    <CommonPageContainer>
+    <CommonWrapper>
       <h1>Dashboard</h1>
       <StatisticsContainer>
         <header>Statistics</header>
@@ -231,12 +230,16 @@ const Dashboard: NextPageWithLayout = () => {
           </TableContainer>
         </Box>
       </RecentOrdersContainer>
-    </CommonPageContainer>
+    </CommonWrapper>
   );
 };
 
 Dashboard.getLayout = function getLayout(page: ReactElement) {
-  return <Layout pageTitle="Better call paul | Dashboard">{page}</Layout>;
+  return (
+    <Layout pageTitle="Better call paul | Dashboard" showSearchComponent={true}>
+      {page}
+    </Layout>
+  );
 };
 
 export default Dashboard;
