@@ -189,10 +189,3 @@ export const RecentOrdersContainer = styled(Box)(() => ({
     },
   },
 }));
-
-export const StyledTableCell = styled(TableCell)({
-  color: "#6B7280",
-  fontSize: "12px",
-  fontFamily: "Inter",
-  fontWeight: "500",
-});

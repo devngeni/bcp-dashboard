@@ -1,4 +1,4 @@
-import { Box, styled } from "@mui/material";
+import { Box, Button, TableCell, styled } from "@mui/material";
 
 export const PageContainer = styled(Box)(() => ({
   display: "flex",
@@ -14,7 +14,7 @@ export const MainComponent = styled(Box)(() => ({
   height: "100%",
 }));
 
-export const CommonPageContainer = styled(Box)(() => ({
+export const CommonWrapper = styled(Box)(() => ({
   display: "flex",
   flexDirection: "column",
   padding: "24px",
@@ -35,3 +35,36 @@ export const CommonPageContainer = styled(Box)(() => ({
     color: "#111827",
   },
 }));
+
+export const YelloWButton = styled(Button)(() => ({
+  fontFamily: "Inter",
+  fontSize: "14px",
+  fontWeight: "500",
+  background: "#FFA940",
+  color: "#FFF",
+  height: "38px",
+  textTransform: "none",
+
+  ":hover": {
+    background: "#FFA940",
+  },
+}));
+
+export const StyledTableCell = styled(TableCell)({
+  color: "#6B7280",
+  fontSize: "12px",
+  fontFamily: "Inter",
+  fontWeight: "500",
+
+  "&.bold": {
+    fontWeight: "700",
+  },
+
+  "&.small_size": {
+    width: "50px !important",
+  },
+
+  "&.product_size": {
+    width: "220px !important",
+  },
+});

@@ -45,6 +45,7 @@ export const Topbar = styled(Box)(() => ({
   gap: "24px",
   width: "100%",
   height: "64px",
+  zIndex: 100,
   boxShadow:
     "0px 1px 2px 0px rgba(0, 0, 0, 0.06), 0px 1px 3px 0px rgba(0, 0, 0, 0.10)",
 }));
@@ -87,6 +88,7 @@ export const Notification_User_Box = styled(Box)<NotificationProps>(
     alignItems: "center",
     width: "108px",
     height: "100%",
+    margin: "0 0 0 auto",
 
     ".notification_icon": {},
 

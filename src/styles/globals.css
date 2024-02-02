@@ -23,7 +23,7 @@ a {
   text-decoration: none;
 }
 
-/* icons colors 
-#F1BC7E -biege
-#90BDB6 -greenish
- */
+/*Notes
+*Topbar component with search has a z-index of 100
+*Other components should have a z-index less than 100, starting from 1-99
+*/
