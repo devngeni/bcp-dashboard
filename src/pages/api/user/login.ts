@@ -2,7 +2,7 @@ import argon2 from "argon2";
 import _ from "lodash";
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
-import { connectDB } from "../db-connection";
+import { connectDB } from "../../../utils/dbconnection";
 import User from "../../../../models/user.model";
 
 export default async function handler(
