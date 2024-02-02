@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { connectDB } from "../db-connection";
 import { Service } from "@/services/inserter";
+import { connectDB } from "../../../utils/dbconnection";
 
 export default async function handler(
   req: NextApiRequest,
