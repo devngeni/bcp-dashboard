@@ -90,7 +90,6 @@ const ProductRow = ({ row, index }: { row: Product; index: number }) => (
           flexDirection: "row",
           height: "30px",
           gap: "10px",
-
           svg: {
             cursor: "pointer",
           },
