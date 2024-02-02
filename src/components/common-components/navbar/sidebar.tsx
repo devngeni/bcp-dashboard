@@ -6,6 +6,7 @@ import {
   ProductsIcon,
 } from "../../../../public/iconSvgs";
 import { Box } from "@mui/material";
+import { useRouter } from "next/router";
 
 const HoverableButton = ({ children, icon, isActive, onClick }: any) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -24,10 +25,12 @@ const HoverableButton = ({ children, icon, isActive, onClick }: any) => {
 };
 
 const SidebarComponent = () => {
+  const router = useRouter();
   const [activeButton, setActiveButton] = useState("Dashboard");
 
-  const handleButtonClick = (buttonName: any) => {
+  const handleButtonClick = ({ buttonName, path }: any) => {
     setActiveButton(buttonName);
+    router.push(`/${path}`);
   };
 
   return (
@@ -48,7 +51,7 @@ const SidebarComponent = () => {
       <HoverableButton
         icon={HomeIcon}
         isActive={activeButton === "Dashboard"}
-        onClick={() => handleButtonClick("Dashboard")}
+        onClick={() => handleButtonClick({ buttonName: "Dashboard", path: "" })}
       >
         Dashboard
       </HoverableButton>
@@ -56,7 +59,9 @@ const SidebarComponent = () => {
       <HoverableButton
         icon={ProductsIcon}
         isActive={activeButton === "Products"}
-        onClick={() => handleButtonClick("Products")}
+        onClick={() =>
+          handleButtonClick({ buttonName: "Products", path: "products" })
+        }
       >
         Products
       </HoverableButton>
@@ -64,7 +69,9 @@ const SidebarComponent = () => {
       <HoverableButton
         icon={AccountIcon}
         isActive={activeButton === "My Account"}
-        onClick={() => handleButtonClick("My Account")}
+        onClick={() =>
+          handleButtonClick({ buttonName: "My Account", path: "my-account" })
+        }
       >
         My Account
       </HoverableButton>

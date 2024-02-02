@@ -16,7 +16,16 @@ const Layout = ({ children, pageTitle }: layoutProps) => {
       <SidebarComponent />
       <MainComponent>
         <TopbarComponent />
-        <main style={{ height: "calc(100% - 64px)" }}>{children}</main>
+        <main
+          style={{
+            height: "calc(100% - 64px)",
+            overflowY: "auto",
+            overflowX: "hidden",
+            marginBottom: "20px",
+          }}
+        >
+          {children}
+        </main>
       </MainComponent>
     </PageContainer>
   );

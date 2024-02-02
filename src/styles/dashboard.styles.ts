@@ -1,26 +1,4 @@
-import { Box, styled } from "@mui/material";
-
-export const DashBoardContainer = styled(Box)(() => ({
-  display: "flex",
-  flexDirection: "column",
-  padding: "24px",
-  height: "100%",
-  width: "100%",
-
-  h1: {
-    fontSize: "24px",
-    fontWeight: "600",
-    fontFamily: "Inter",
-    color: "#111827",
-  },
-
-  header: {
-    fontSize: "18px",
-    fontWeight: "500",
-    fontFamily: "Montserrat",
-    color: "#111827",
-  },
-}));
+import { Box, TableCell, styled } from "@mui/material";
 
 export const StatisticsContainer = styled(Box)(() => ({
   display: "flex",
@@ -105,6 +83,7 @@ export const ChartContainer = styled(Box)(() => ({
   flexDirection: "row",
   marginTop: "24px",
   gap: "20px",
+  flexWrap: "wrap",
 
   ".chart_box": {
     display: "flex",
@@ -112,6 +91,12 @@ export const ChartContainer = styled(Box)(() => ({
     width: "550px",
     height: "343px",
     boxShadow: "0px 2px 10px 0px #0000001A",
+  },
+
+  "@media (max-width: 899px)": {
+    ".chart_box": {
+      width: "100%",
+    },
   },
 
   ".top_part": {
@@ -136,24 +121,27 @@ export const ChartContainer = styled(Box)(() => ({
     flexDirection: "column",
     padding: "20px",
     height: "calc(343px - 80px)",
-    width: "100%",
+    // width: "100%",
 
     ".y_axis_label": {
+      position: "relative",
       color: "#000000",
       fontFamily: "Inter",
       fontWeight: "400",
       fontSize: "12px",
+      marginLeft: "50px",
     },
 
     ".y_axis_label::before": {
       content: '""',
       position: "absolute",
-      left: "-20px",
+      left: "-15px",
       top: "50%",
-      width: "10px",
-      height: "10px",
+      transform: "translateY(-50%)",
+      width: "8px",
+      height: "8px",
       borderRadius: "50%",
-      backgroundColor: "#000000",
+      backgroundColor: "red",
     },
   },
 
@@ -174,4 +162,37 @@ export const DatePickerInput = styled("input")({
   "&:focus": {
     outline: "none",
   },
+});
+
+export const ResponsiveContainer = styled(Box)(() => ({
+  display: "flex",
+  alignItems: "center",
+  width: "100%",
+  height: "100%",
+}));
+
+export const RecentOrdersContainer = styled(Box)(() => ({
+  display: "flex",
+  flexDirection: "column",
+  marginTop: "24px",
+
+  ".recent_orders_box": {
+    display: "flex",
+    marginTop: "20px",
+    width: "1120px",
+  },
+
+  "@media (max-width: 1450px)": {
+    ".recent_orders_box": {
+      width: "100%",
+      overflowX: "auto",
+    },
+  },
+}));
+
+export const StyledTableCell = styled(TableCell)({
+  color: "#6B7280",
+  fontSize: "12px",
+  fontFamily: "Inter",
+  fontWeight: "500",
 });
