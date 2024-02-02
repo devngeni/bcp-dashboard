@@ -1,6 +1,5 @@
 // import "dotenv/config";
 import mongoose from "mongoose";
-import { Environment } from "../../../constants/environment";
 
 //const dbUrl = Environment._db__;
 const dbUrl = process.env.NEXT_PUBLIC_MONGO_URL;
