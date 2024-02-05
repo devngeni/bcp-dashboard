@@ -1,4 +1,4 @@
-import { Box, Button, TableCell, styled } from "@mui/material";
+import { Box, Button, Radio, Select, TableCell, styled } from "@mui/material";
 
 export const PageContainer = styled(Box)(() => ({
   display: "flex",
@@ -36,20 +36,6 @@ export const CommonWrapper = styled(Box)(() => ({
   },
 }));
 
-export const YelloWButton = styled(Button)(() => ({
-  fontFamily: "Inter",
-  fontSize: "14px",
-  fontWeight: "500",
-  background: "#FFA940",
-  color: "#FFF",
-  height: "38px",
-  textTransform: "none",
-
-  ":hover": {
-    background: "#FFA940",
-  },
-}));
-
 export const StyledTableCell = styled(TableCell)({
   color: "#6B7280",
   fontSize: "12px",
@@ -66,5 +52,123 @@ export const StyledTableCell = styled(TableCell)({
 
   "&.product_size": {
     width: "220px !important",
+  },
+});
+
+export const StyledInputField = styled(Box)(() => ({
+  display: "flex",
+  flexDirection: "column",
+  gap: "8px",
+
+  input: {
+    border: "1px solid #D1D5DB",
+    background: "#FFFFFF",
+    borderRadius: "6px",
+    outline: "none",
+    color: "#111827",
+    height: "38px",
+    padding: "9px 13px",
+  },
+
+  "& ::placeholder": {
+    color: "#D1D5DB",
+    fontSize: "14px",
+    fontWeight: "500",
+  },
+
+  "@media screen and (max-width: 1050px)": {
+    width: "100%",
+  },
+}));
+
+export const StyledTextArea = styled(Box)(() => ({
+  display: "flex",
+  flexDirection: "column",
+  gap: "8px",
+  width: "747px",
+
+  textarea: {
+    border: "1px solid #D1D5DB",
+    background: "#FFFFFF",
+    borderRadius: "6px",
+    outline: "none",
+    color: "#111827",
+    padding: "9px 13px",
+    resize: "vertical",
+  },
+
+  "@media screen and (max-width: 1050px)": {
+    width: "100%",
+  },
+}));
+
+export const StyledRoundButton = styled(Radio)(() => ({
+  // padding: "0px",
+  "& .MuiSvgIcon-root": {
+    fontSize: 22,
+  },
+  "&.Mui-checked": {
+    color: "#00453A",
+  },
+}));
+
+export const GreenButton = styled(Button)(() => ({
+  textTransform: "none",
+  background: "#095F51",
+  color: "#FFFFFF",
+  fontFamily: "Montserrat",
+  fontWeight: "500",
+  fontSize: "14px",
+  minHeight: "38px",
+
+  ":hover": {
+    background: "#095F51",
+  },
+}));
+
+export const YelloWButton = styled(Button)(() => ({
+  fontFamily: "Inter",
+  fontSize: "14px",
+  fontWeight: "500",
+  background: "#FFA940",
+  color: "#FFF",
+  minHeight: "38px",
+  textTransform: "none",
+
+  ":hover": {
+    background: "#FFA940",
+  },
+}));
+
+export const SelectItems = styled(Select)({
+  minWidth: "64px",
+  width: "361.5px",
+  borderRadius: "6px",
+  height: "35px",
+  padding: "4px 10px",
+
+  background: "#FFFFFF",
+  "&.MuiInputBase-root": {
+    "& fieldset": {
+      borderColor: "#D1D5DB",
+    },
+    "&:hover fieldset": {
+      borderColor: "#D1D5DB",
+    },
+    "&.Mui-focused fieldset": {
+      borderColor: "#D1D5DB",
+    },
+    "& .MuiOutlinedInput-input": {
+      display: "flex",
+      alignItems: "center",
+      padding: "0 !important",
+    },
+    "& .MuiSelect-icon": {
+      color: "#D1D5DB",
+    },
+  },
+
+  "@media screen and (max-width: 1050px)": {
+    width: "100%",
   },
 });
