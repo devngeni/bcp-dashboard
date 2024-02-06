@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { connectDB } from "../db-connection";
+import { connectDB } from "../../../utils/dbconnection";
 import ServiceItemsModel from "../../../../models/service.model";
 import { Service } from "@/services/inserter";
 
