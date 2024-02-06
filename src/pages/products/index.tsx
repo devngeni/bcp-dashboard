@@ -77,8 +77,8 @@ const ProductRow = ({
             <Image src={""} alt="prod-image" width={48} height={48} />
           </Box>
           <Box className="product_name">
-            <h1>{""}</h1>
-            <p>65707ab58920c36a3b5557c9</p>
+            <h1>{row.content[0].name}</h1>
+            {/* <p>65707ab58920c36a3b5557c9</p> */}
           </Box>
         </ProductItemBox>
       </Box>
@@ -92,8 +92,7 @@ const ProductRow = ({
           WebkitLineClamp: 2,
         }}
       >
-        just description
-        {/* {row.description} */}
+        {row.content[0].description}
       </Box>
     </StyledTableCell>
     <StyledTableCell>{row.category}</StyledTableCell>
@@ -320,18 +319,17 @@ const ProductsPages: NextPageWithLayout = () => {
                 {/* {visibleItems &&
                   visibleItems.map((row: any, index: number) => {
                     const { content } = row; // so this this is the c
-                    content &&
-                      content.map((c: any) => {
-                        <ProductRow
-                          key={index}
-                          row={row}
-                          content={c}
-                          index={index}
-                          isSelected={selectedRows.includes(index)}
-                          onCheckboxClick={() => handleCheckboxClick(index)}
-                          pageNavigateToQueryParam={pageNavigateToQueryParam}
-                        />;
-                      });
+                   content && content.map((c: any) => {
+                      <ProductRow
+                        key={index}
+                        content={c}
+                        row={row}
+                        index={index}
+                        isSelected={selectedRows.includes(index)}
+                        onCheckboxClick={() => handleCheckboxClick(index)}
+                        pageNavigateToQueryParam={pageNavigateToQueryParam}
+                      />;
+                    });
                   })} */}
               </TableBody>
             </Table>
