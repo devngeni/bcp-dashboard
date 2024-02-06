@@ -37,6 +37,7 @@ import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { useRouter } from "next/router";
 import { NextPageWithLayout } from "../_app";
+import { useProductDataContext } from "@/utils/context/products-data";
 
 interface Icontent {
   name: string;
@@ -182,6 +183,8 @@ const ProductRow = ({
 );
 
 const ProductsPages: NextPageWithLayout = () => {
+  const data: any = useProductDataContext(); //get data from context replace with your services state in this file
+
   const router = useRouter();
   const currentPageParam = router.query.page as string | undefined;
   const [currentPage, setCurrentPage] = useState(1);
