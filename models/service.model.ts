@@ -24,6 +24,7 @@ interface IContentItem {
 export interface IServiceItem extends Document {
   category: Category;
   subTitle: string;
+  tag: string;
   content: IContentItem[];
 }
 
@@ -37,11 +38,12 @@ const ServiceItemSchema: Schema = new Schema<IServiceItem>({
     },
   },
   subTitle: { type: Schema.Types.String, required: true },
+  tag: { type: Schema.Types.String },
   content: [
     {
       name: { type: Schema.Types.String, required: true },
       description: { type: Schema.Types.String },
-      imagePath: { type: Schema.Types.String, required: true },
+      imagePath: { type: Schema.Types.String, required: false },
       price: { type: Schema.Types.Number, required: true },
     },
   ],
