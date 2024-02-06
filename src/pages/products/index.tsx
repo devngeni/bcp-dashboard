@@ -37,14 +37,18 @@ import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined
 import { useRouter } from "next/router";
 import { NextPageWithLayout } from "../_app";
 
-interface Product {
-  product: string;
-  productImage: string;
-  category: string;
+interface Icontent {
+  name: string;
   description: string;
-  subtitle: string;
+  imagePath: string;
   price: number;
-  cost: number;
+  _id: string;
+}
+interface Product {
+  _id: string;
+  category: string;
+  subTitle: string;
+  content: Icontent[];
 }
 
 const ProductRow = ({
@@ -69,15 +73,10 @@ const ProductRow = ({
       <Box sx={{ display: "flex", justifyContent: "center" }}>
         <ProductItemBox>
           <Box className="image_box">
-            <Image
-              src={row.productImage}
-              alt="prod-image"
-              width={48}
-              height={48}
-            />
+            <Image src={""} alt="prod-image" width={48} height={48} />
           </Box>
           <Box className="product_name">
-            <h1>{row.product}</h1>
+            <h1>{""}</h1>
             <p>65707ab58920c36a3b5557c9</p>
           </Box>
         </ProductItemBox>
@@ -92,11 +91,12 @@ const ProductRow = ({
           WebkitLineClamp: 2,
         }}
       >
-        {row.description}
+        just description
+        {/* {row.description} */}
       </Box>
     </StyledTableCell>
     <StyledTableCell>{row.category}</StyledTableCell>
-    <StyledTableCell>{row.subtitle}</StyledTableCell>
+    <StyledTableCell>{row.subTitle}</StyledTableCell>
     <StyledTableCell>{row.price}</StyledTableCell>
     <StyledTableCell sx={{ width: "100px" }}>
       <Box
@@ -132,6 +132,7 @@ const ProductsPages: NextPageWithLayout = () => {
   const [open, setOpen] = useState(false);
   const [selectAll, setSelectAll] = useState(false);
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
+  const [services, setServices] = useState<any>();
 
   const toggleOpen = () => setOpen((prev) => !prev);
 
@@ -156,6 +157,15 @@ const ProductsPages: NextPageWithLayout = () => {
     setSelectedRows(newSelected);
   };
 
+  useEffect(() => {
+    (async () => {
+      const response = await fetch("http://localhost:3000/api/service");
+      const data = await response.json();
+      const { services } = data;
+      setServices(services);
+    })();
+  }, []);
+
   // Function to handle "Select All" checkbox click
   const handleSelectAllClick = () => {
     if (selectAll) {
@@ -168,9 +178,10 @@ const ProductsPages: NextPageWithLayout = () => {
   };
 
   const itemsPerPage = 10;
-  const totalPages = Math.ceil(tableData.length / itemsPerPage);
+  const totalPages = Math.ceil(services && services.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const visibleItems = tableData.slice(startIndex, startIndex + itemsPerPage);
+  const visibleItems =
+    services && services.slice(startIndex, startIndex + itemsPerPage);
 
   const handlePageChange = (newPage: number) => {
     router.push(`/products?page=${newPage}`);
@@ -293,16 +304,34 @@ const ProductsPages: NextPageWithLayout = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {visibleItems.map((row: any, index: any) => (
-                  <ProductRow
-                    key={index}
-                    row={row}
-                    index={index}
-                    isSelected={selectedRows.includes(index)}
-                    onCheckboxClick={() => handleCheckboxClick(index)}
-                    pageNavigateToQueryParam={pageNavigateToQueryParam}
-                  />
-                ))}
+                {visibleItems &&
+                  visibleItems.map((row: any, index: any) => (
+                    <ProductRow
+                      key={index}
+                      row={row}
+                      index={index}
+                      isSelected={selectedRows.includes(index)}
+                      onCheckboxClick={() => handleCheckboxClick(index)}
+                      pageNavigateToQueryParam={pageNavigateToQueryParam}
+                    />
+                  ))}
+
+                {/* {visibleItems &&
+                  visibleItems.map((row: any, index: number) => {
+                    const { content } = row; // so this this is the c
+                    content &&
+                      content.map((c: any) => {
+                        <ProductRow
+                          key={index}
+                          row={row}
+                          content={c}
+                          index={index}
+                          isSelected={selectedRows.includes(index)}
+                          onCheckboxClick={() => handleCheckboxClick(index)}
+                          pageNavigateToQueryParam={pageNavigateToQueryParam}
+                        />;
+                      });
+                  })} */}
               </TableBody>
             </Table>
           </TableContainer>
