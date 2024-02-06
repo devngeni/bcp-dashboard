@@ -14,7 +14,20 @@ const ProductPage = () => {
   const commonProps = {
     selectItem,
     setSelectItem,
-    selectDataItems: ["Electronics", "Clothing", "Books", "Furniture", "Food"],
+    selectDataItems: [
+      "TOURS AND EXPERIENCES",
+      "TRAVEL CONCIERGE",
+      "HOUSEKEEPING",
+      "PROPERTY MANAGEMENT",
+      "DRINKS",
+      "PRIVATE CHEF & MEAL PREP",
+      "WELLNESS AND GROOMING",
+      "SHOPPING & GROCERY RUNS",
+      "NANNY SERVICE",
+      "GIFTSHOP",
+      "RENTABLES",
+      "LAUGGAGE SHOP",
+    ],
     menuItemPlaceholder: "Select Category",
   };
 
