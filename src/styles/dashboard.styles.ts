@@ -179,6 +179,7 @@ export const RecentOrdersContainer = styled(Box)(() => ({
   ".recent_orders_box": {
     display: "flex",
     marginTop: "20px",
+    marginBottom: "20px",
     width: "1120px",
   },
 

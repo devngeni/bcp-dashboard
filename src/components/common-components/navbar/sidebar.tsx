@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Sidebar, SidebarButtons } from "@/styles/navbar.styles";
 import {
   HomeIcon,
@@ -33,6 +33,19 @@ const SidebarComponent = () => {
     router.push(`/${path}`);
   };
 
+  useEffect(() => {
+    // Update activeButton based on the current path
+    const currentPath = router.pathname;
+
+    if (currentPath === "/dashboard") {
+      setActiveButton("Dashboard");
+    } else if (currentPath === "/products") {
+      setActiveButton("Products");
+    } else if (currentPath === "/my-account") {
+      setActiveButton("My Account");
+    }
+  }, [router.pathname]);
+
   return (
     <Sidebar>
       <Box
@@ -51,7 +64,9 @@ const SidebarComponent = () => {
       <HoverableButton
         icon={HomeIcon}
         isActive={activeButton === "Dashboard"}
-        onClick={() => handleButtonClick({ buttonName: "Dashboard", path: "" })}
+        onClick={() =>
+          handleButtonClick({ buttonName: "Dashboard", path: "dashboard" })
+        }
       >
         Dashboard
       </HoverableButton>

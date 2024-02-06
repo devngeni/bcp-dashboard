@@ -81,7 +81,52 @@ export const BottomNav = styled(Box)(() => ({
   width: "calc(100% - 256px)",
   height: "60px",
   background: "#FFF",
+  padding: "0px 24px",
+
+  ".pagination_box": {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderTop: "2px solid #D1D5DB",
+    width: "100%",
+    height: "38px",
+    position: "relative",
+  },
+
+  ".page_numbers": {
+    display: "flex",
+    flexDirection: "row",
+    gap: "10px",
+  },
+
+  ".pagination_text": {
+    fontFamily: "Montserrat",
+    fontSize: "14px",
+    fontWeight: "400",
+    color: "#6B7280",
+  },
 }));
+
+export const PaginationBtn = styled(Box)({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  width: "38px",
+  height: "38px",
+
+  fontFamily: "Inter",
+  fontSize: "14px",
+  fontWeight: "500",
+  color: "#6B7280",
+
+  cursor: "pointer",
+
+  "&.activePage": {
+    borderTop: "2px solid #00453A",
+    color: "#00453A",
+  },
+});
 
 export const StyledCheckBox = styled(Checkbox)(() => ({
   color: "#D1D5DB",
@@ -125,5 +170,56 @@ export const ProductItemBox = styled(Box)(() => ({
       fontFamily: "Inter",
       color: "#6B7280",
     },
+  },
+}));
+
+export const UploadProductPicture = styled(Box)(() => ({
+  display: "flex",
+  flexDirection: "column",
+  gap: "14px",
+  width: "747px",
+  height: "180px",
+  marginTop: "40px",
+  marginBottom: "40px",
+
+  ".upload_box": {
+    position: "relative",
+    display: "flex",
+    flexDirection: "column",
+    gap: "10px",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "16px",
+    border: "1px dashed #D1D5DB",
+    borderRadius: "6px",
+    cursor: "pointer",
+    height: "100%",
+  },
+  ".upload_text": {
+    fontFamily: "Inter",
+    fontSize: "14px",
+    fontWeight: "500",
+    color: "#6B7280",
+  },
+
+  ".small_size": {
+    fontWeight: "400",
+    fontSize: "12px",
+  },
+  span: {
+    color: "#4F46E5",
+    cursor: "pointer",
+  },
+
+  ".selected-file": {
+    fontStyle: "italic",
+    fontFamily: "Inter",
+    fontSize: "12px",
+    color: "#6B7280",
+    fontWeight: "300",
+  },
+
+  "@media screen and (max-width: 1050px)": {
+    width: "100%",
   },
 }));
