@@ -4,7 +4,6 @@ import HeadMetaData from "./HeadMetadata";
 import SidebarComponent from "./common-components/navbar/sidebar";
 import TopbarComponent from "./common-components/navbar/topbar";
 import { ProductDataProvider } from "@/utils/context/products-data";
-import { Environment } from "../../constants/environment";
 
 interface layoutProps {
   children: any;
@@ -20,7 +19,7 @@ const Layout = ({ children, pageTitle, showSearchComponent }: layoutProps) => {
 
   useEffect(() => {
     (async () => {
-      const response = await fetch(`${Environment._prod__}/api/service`);
+      const response = await fetch(`/api/service`);
       const data = await response.json();
       const { services } = data;
       setServices(services);
