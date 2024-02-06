@@ -45,6 +45,7 @@ interface Icontent {
   _id: string;
 }
 interface Product {
+  price: number;
   _id: string;
   category: string;
   subTitle: string;
@@ -173,7 +174,7 @@ const ProductsPages: NextPageWithLayout = () => {
       setSelectedRows([]);
     } else {
       setSelectAll(true);
-      setSelectedRows(visibleItems.map((_, index) => index));
+      setSelectedRows(visibleItems.map((_: any, index: any) => index));
     }
   };
 
