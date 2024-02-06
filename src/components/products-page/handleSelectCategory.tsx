@@ -19,7 +19,11 @@ export const HandleSelectCategory = ({
   };
   return (
     <>
-      <SelectItems value={selectItem} onChange={handleItemSelect} displayEmpty>
+      <SelectItems
+        value={selectItem}
+        onChange={(e) => setSelectItem(e.target.value)}
+        displayEmpty
+      >
         <MenuItem value="" disabled>
           {menuItemPlaceholder}
         </MenuItem>
