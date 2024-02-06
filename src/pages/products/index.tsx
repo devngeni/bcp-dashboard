@@ -26,6 +26,7 @@ import {
   TopLevel,
 } from "@/styles/products.styles";
 import ArrowIcon from "../../../public/arrowDownIcon.svg";
+import ArrowPreviousNextIcon from "../../../public/arrowLeftIcon.svg";
 import SearchIcon from "../../../public/searchIco.svg";
 import SortIcon from "../../../public/sortIcon.svg";
 
@@ -36,16 +37,56 @@ import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { useRouter } from "next/router";
 import { NextPageWithLayout } from "../_app";
+import { useProductDataContext } from "@/utils/context/products-data";
 
-interface Product {
-  product: string;
-  productImage: string;
-  category: string;
+interface Icontent {
+  name: string;
   description: string;
-  subtitle: string;
+  imagePath: string;
   price: number;
-  cost: number;
+  _id: string;
 }
+interface Product {
+  price: number;
+  _id: string;
+  category: string;
+  subTitle: string;
+  content: any;
+  id: any;
+}
+
+interface pageNavigateToQueryProps {
+  queryParam: string;
+  product_id?: any;
+}
+
+function isValidImageUrl(url: any) {
+  return (
+    url &&
+    (url.startsWith("http://") ||
+      url.startsWith("https://") ||
+      url.startsWith("/"))
+  );
+}
+
+const PreviousNextIcon = ({ isNextBtn }: { isNextBtn?: boolean }) => {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        margin: isNextBtn ? "0 0 0 2px" : "0 2px 0 0",
+        transform: isNextBtn ? "rotate(180deg)" : "rotate(0deg)",
+      }}
+    >
+      <Image
+        src={ArrowPreviousNextIcon}
+        alt="next-priviuos"
+        width={20}
+        height={20}
+      />
+    </Box>
+  );
+};
 
 const ProductRow = ({
   row,
@@ -56,7 +97,10 @@ const ProductRow = ({
 }: {
   row: Product;
   index: number;
-  pageNavigateToQueryParam: (queryParam: string) => void;
+  pageNavigateToQueryParam: ({
+    queryParam,
+    product_id,
+  }: pageNavigateToQueryProps) => void;
   isSelected: boolean;
   onCheckboxClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }) => (
@@ -70,15 +114,23 @@ const ProductRow = ({
         <ProductItemBox>
           <Box className="image_box">
             <Image
-              src={row.productImage}
-              alt="prod-image"
+              src={
+                isValidImageUrl(row.content[0].imagePath)
+                  ? row.content[0].imagePath
+                  : ""
+              }
+              alt={
+                isValidImageUrl(row.content[0].imagePath)
+                  ? "prod-image"
+                  : "Image not available"
+              }
               width={48}
               height={48}
             />
           </Box>
           <Box className="product_name">
-            <h1>{row.product}</h1>
-            <p>65707ab58920c36a3b5557c9</p>
+            <h1>{row.content[0].name}</h1>
+            <p>{row._id}</p>
           </Box>
         </ProductItemBox>
       </Box>
@@ -92,12 +144,12 @@ const ProductRow = ({
           WebkitLineClamp: 2,
         }}
       >
-        {row.description}
+        {row.content[0].description}
       </Box>
     </StyledTableCell>
     <StyledTableCell>{row.category}</StyledTableCell>
-    <StyledTableCell>{row.subtitle}</StyledTableCell>
-    <StyledTableCell>{row.price}</StyledTableCell>
+    <StyledTableCell>{row.subTitle}</StyledTableCell>
+    <StyledTableCell>{row.content[0].price}</StyledTableCell>
     <StyledTableCell sx={{ width: "100px" }}>
       <Box
         sx={{
@@ -112,7 +164,12 @@ const ProductRow = ({
       >
         <div
           title="Edit"
-          onClick={() => pageNavigateToQueryParam("edit-product")}
+          onClick={() =>
+            pageNavigateToQueryParam({
+              queryParam: "edit-product",
+              product_id: row._id,
+            })
+          }
         >
           <EditOutlinedIcon />
         </div>
@@ -126,12 +183,15 @@ const ProductRow = ({
 );
 
 const ProductsPages: NextPageWithLayout = () => {
+  const data: any = useProductDataContext(); //get data from context replace with your services state in this file
+
   const router = useRouter();
   const currentPageParam = router.query.page as string | undefined;
   const [currentPage, setCurrentPage] = useState(1);
   const [open, setOpen] = useState(false);
   const [selectAll, setSelectAll] = useState(false);
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
+  const [services, setServices] = useState<any>();
 
   const toggleOpen = () => setOpen((prev) => !prev);
 
@@ -156,6 +216,15 @@ const ProductsPages: NextPageWithLayout = () => {
     setSelectedRows(newSelected);
   };
 
+  useEffect(() => {
+    (async () => {
+      const response = await fetch("http://localhost:3000/api/service");
+      const data = await response.json();
+      const { services } = data;
+      setServices(services);
+    })();
+  }, []);
+
   // Function to handle "Select All" checkbox click
   const handleSelectAllClick = () => {
     if (selectAll) {
@@ -163,14 +232,17 @@ const ProductsPages: NextPageWithLayout = () => {
       setSelectedRows([]);
     } else {
       setSelectAll(true);
-      setSelectedRows(visibleItems.map((_, index) => index));
+      setSelectedRows(visibleItems.map((_: any, index: any) => index));
     }
   };
 
   const itemsPerPage = 10;
-  const totalPages = Math.ceil(tableData.length / itemsPerPage);
+  const totalPages = Math.ceil(services && services.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const visibleItems = tableData.slice(startIndex, startIndex + itemsPerPage);
+  const visibleItems =
+    services && services.slice(startIndex, startIndex + itemsPerPage);
+
+  console.log(visibleItems);
 
   const handlePageChange = (newPage: number) => {
     router.push(`/products?page=${newPage}`);
@@ -225,8 +297,15 @@ const ProductsPages: NextPageWithLayout = () => {
     }
   }, [currentPageParam, router, totalPages]);
 
-  const pageNavigateToQueryParam = (queryParam: string) => {
-    router.push(`/products/${queryParam}`);
+  const pageNavigateToQueryParam = ({
+    queryParam,
+    product_id,
+  }: pageNavigateToQueryProps) => {
+    if (product_id) {
+      router.push(`/products/${queryParam}?product_id=${product_id}`);
+    } else {
+      router.push(`/products/${queryParam}`);
+    }
   };
 
   return (
@@ -257,7 +336,9 @@ const ProductsPages: NextPageWithLayout = () => {
               </SortBox>
             </Box>
             <YelloWButton
-              onClick={() => pageNavigateToQueryParam("new-product")}
+              onClick={() =>
+                pageNavigateToQueryParam({ queryParam: "new-product" })
+              }
             >
               Add new product
             </YelloWButton>
@@ -286,23 +367,24 @@ const ProductsPages: NextPageWithLayout = () => {
                   <StyledTableCell className="bold">
                     DESCRIPTION
                   </StyledTableCell>
-                  <StyledTableCell>CATEGORY</StyledTableCell>
+                  <StyledTableCell className="bold">CATEGORY</StyledTableCell>
                   <StyledTableCell className="bold">SUBTITTLE</StyledTableCell>
                   <StyledTableCell className="bold">PRICE($)</StyledTableCell>
                   <StyledTableCell className="bold">ACTION</StyledTableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {visibleItems.map((row: any, index: any) => (
-                  <ProductRow
-                    key={index}
-                    row={row}
-                    index={index}
-                    isSelected={selectedRows.includes(index)}
-                    onCheckboxClick={() => handleCheckboxClick(index)}
-                    pageNavigateToQueryParam={pageNavigateToQueryParam}
-                  />
-                ))}
+                {visibleItems &&
+                  visibleItems.map((row: any, index: any) => (
+                    <ProductRow
+                      key={index}
+                      row={row}
+                      index={index}
+                      isSelected={selectedRows.includes(index)}
+                      onCheckboxClick={() => handleCheckboxClick(index)}
+                      pageNavigateToQueryParam={pageNavigateToQueryParam}
+                    />
+                  ))}
               </TableBody>
             </Table>
           </TableContainer>
@@ -310,7 +392,7 @@ const ProductsPages: NextPageWithLayout = () => {
         <BottomNav>
           <Box className="pagination_box">
             <Box
-              sx={{ cursor: "pointer" }}
+              sx={{ display: "flex", alignItems: "center", cursor: "pointer" }}
               className="pagination_text"
               onClick={() => {
                 if (currentPage > 1) {
@@ -318,6 +400,7 @@ const ProductsPages: NextPageWithLayout = () => {
                 }
               }}
             >
+              <PreviousNextIcon />
               Previous
             </Box>
             <Box
@@ -350,7 +433,7 @@ const ProductsPages: NextPageWithLayout = () => {
               ))}
             </Box>
             <Box
-              sx={{ cursor: "pointer" }}
+              sx={{ display: "flex", alignItems: "center", cursor: "pointer" }}
               className="pagination_text"
               onClick={() => {
                 if (currentPage < totalPages) {
@@ -359,6 +442,7 @@ const ProductsPages: NextPageWithLayout = () => {
               }}
             >
               Next
+              <PreviousNextIcon isNextBtn={true} />
             </Box>
           </Box>
         </BottomNav>
@@ -375,6 +459,7 @@ export default ProductsPages;
 
 const tableData = [
   {
+    id: 1,
     product: "Product A",
     productImage:
       "https://img.freepik.com/free-photo/fresh-cola-drink-glass_144627-16201.jpg?w=740&t=st=1706889461~exp=1706890061~hmac=d7037e9e1fe5d9c5aa1e1e96c2275339b1f91697be15b44b2c317fb1b833bf15",
@@ -386,6 +471,7 @@ const tableData = [
     cost: 15120,
   },
   {
+    id: 2,
     product: "Product B",
     productImage:
       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
@@ -397,6 +483,7 @@ const tableData = [
     cost: 20000,
   },
   {
+    id: 3,
     product: "Product B",
     productImage:
       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
@@ -408,6 +495,7 @@ const tableData = [
     cost: 20000,
   },
   {
+    id: 4,
     product: "Product B",
     productImage:
       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
@@ -419,6 +507,7 @@ const tableData = [
     cost: 20000,
   },
   {
+    id: 5,
     product: "Product B",
     productImage:
       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
@@ -430,6 +519,7 @@ const tableData = [
     cost: 20000,
   },
   {
+    id: 6,
     product: "Product B",
     productImage:
       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
@@ -441,6 +531,7 @@ const tableData = [
     cost: 20000,
   },
   {
+    id: 7,
     product: "Product B",
     productImage:
       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
@@ -452,6 +543,7 @@ const tableData = [
     cost: 20000,
   },
   {
+    id: 8,
     product: "Product B",
     productImage:
       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
@@ -463,6 +555,7 @@ const tableData = [
     cost: 20000,
   },
   {
+    id: 9,
     product: "Product B",
     productImage:
       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
@@ -474,6 +567,7 @@ const tableData = [
     cost: 20000,
   },
   {
+    id: 10,
     product: "Product B",
     productImage:
       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
@@ -485,6 +579,7 @@ const tableData = [
     cost: 20000,
   },
   {
+    id: 11,
     product: "Product B",
     productImage:
       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
@@ -496,6 +591,7 @@ const tableData = [
     cost: 20000,
   },
   {
+    id: 12,
     product: "Product B",
     productImage:
       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
@@ -507,6 +603,7 @@ const tableData = [
     cost: 20000,
   },
   {
+    id: 13,
     product: "Product B",
     productImage:
       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
@@ -518,6 +615,7 @@ const tableData = [
     cost: 20000,
   },
   {
+    id: 14,
     product: "Product B",
     productImage:
       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
@@ -529,6 +627,7 @@ const tableData = [
     cost: 20000,
   },
   {
+    id: 15,
     product: "Product B",
     productImage:
       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
@@ -540,6 +639,7 @@ const tableData = [
     cost: 20000,
   },
   {
+    id: 16,
     product: "Product B",
     productImage:
       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
@@ -551,6 +651,7 @@ const tableData = [
     cost: 20000,
   },
   {
+    id: 17,
     product: "Product B",
     productImage:
       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
@@ -562,6 +663,7 @@ const tableData = [
     cost: 20000,
   },
   {
+    id: 18,
     product: "Product B",
     productImage:
       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
@@ -573,6 +675,7 @@ const tableData = [
     cost: 20000,
   },
   {
+    id: 19,
     product: "Product B",
     productImage:
       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
@@ -584,6 +687,7 @@ const tableData = [
     cost: 20000,
   },
   {
+    id: 20,
     product: "Product B",
     productImage:
       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
@@ -595,6 +699,7 @@ const tableData = [
     cost: 20000,
   },
   {
+    id: 21,
     product: "Product B",
     productImage:
       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
@@ -606,6 +711,7 @@ const tableData = [
     cost: 20000,
   },
   {
+    id: 22,
     product: "Product B",
     productImage:
       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
@@ -617,6 +723,7 @@ const tableData = [
     cost: 20000,
   },
   {
+    id: 23,
     product: "Product B",
     productImage:
       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
@@ -628,6 +735,7 @@ const tableData = [
     cost: 20000,
   },
   {
+    id: 24,
     product: "Product B",
     productImage:
       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
@@ -639,534 +747,7 @@ const tableData = [
     cost: 20000,
   },
   {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
+    id: 25,
     product: "Product B",
     productImage:
       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
