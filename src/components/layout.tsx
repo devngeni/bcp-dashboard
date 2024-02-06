@@ -4,6 +4,7 @@ import HeadMetaData from "./HeadMetadata";
 import SidebarComponent from "./common-components/navbar/sidebar";
 import TopbarComponent from "./common-components/navbar/topbar";
 import { ProductDataProvider } from "@/utils/context/products-data";
+import { Environment } from "../../constants/environment";
 
 interface layoutProps {
   children: any;
@@ -11,12 +12,15 @@ interface layoutProps {
   showSearchComponent?: boolean;
 }
 
+function editProduct() {}
+function deleteProduct() {}
+
 const Layout = ({ children, pageTitle, showSearchComponent }: layoutProps) => {
   const [services, setServices] = useState([]);
 
   useEffect(() => {
     (async () => {
-      const response = await fetch("/api/service");
+      const response = await fetch(`${Environment._prod__}/api/service`);
       const data = await response.json();
       const { services } = data;
       setServices(services);
@@ -24,7 +28,13 @@ const Layout = ({ children, pageTitle, showSearchComponent }: layoutProps) => {
   }, []);
 
   return (
-    <ProductDataProvider value={{ name: "fred" }}>
+    <ProductDataProvider
+      value={{
+        services: services,
+        editFunc: editProduct,
+        deleteFunc: deleteProduct,
+      }}
+    >
       <PageContainer>
         <HeadMetaData pageTitle={pageTitle} />
         <SidebarComponent />

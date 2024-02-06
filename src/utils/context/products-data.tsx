@@ -1,8 +1,10 @@
 import { createContext, useContext } from "react";
 
 interface ProductDataProps {
-  servicesData?: any;
+  services?: any;
   name: string;
+  deleteFunc: () => void;
+  editFunc: () => void;
 }
 
 // Product Data Context
@@ -10,14 +12,6 @@ const ProductDataContext = createContext({} as ProductDataProps);
 
 //useProductDataContext to get all services data
 export function useProductDataContext() {
-  // const productData = useContext(ProductDataContext);
-  // if (productData === undefined) {
-  //   throw new Error(
-  //     "useProductDataContext must be used within a ProductDataProvider"
-  //   );
-  // }
-  // return productData;
-
   return useContext(ProductDataContext);
 }
 
