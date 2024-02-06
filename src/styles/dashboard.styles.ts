@@ -8,7 +8,7 @@ export const StatisticsContainer = styled(Box)(() => ({
   ".counts_container": {
     display: "flex",
     flexDirection: "row",
-    flexWrap: "wrap",
+    // flexWrap: "wrap",
     marginTop: "12px",
     gap: "30px",
   },
@@ -63,6 +63,12 @@ export const StatisticsContainer = styled(Box)(() => ({
       alignItems: "center",
     },
   },
+
+  "@media (max-width: 1200px)": {
+    ".counts_container": {
+      flexWrap: "wrap",
+    },
+  },
 }));
 
 export const ActivitiesContainer = styled(Box)(() => ({
@@ -91,6 +97,12 @@ export const ChartContainer = styled(Box)(() => ({
     width: "550px",
     height: "343px",
     boxShadow: "0px 2px 10px 0px #0000001A",
+  },
+
+  "@media (max-width: 1400px)": {
+    ".chart_box": {
+      width: "500px",
+    },
   },
 
   "@media (max-width: 899px)": {
