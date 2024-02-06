@@ -1,13 +1,9 @@
-import React, { useState } from "react";
 import { createContext, useContext } from "react";
 
-export const ProdContext = createContext({} as any);
-
-type ProductDataProps = {
+interface ProductDataProps {
+  servicesData?: any;
   name: string;
-};
-
-export const money = 200;
+}
 
 // Product Data Context
 const ProductDataContext = createContext({} as ProductDataProps);
@@ -21,15 +17,15 @@ export function useProductDataContext() {
   //   );
   // }
   // return productData;
+
   return useContext(ProductDataContext);
 }
 
 //ProductDataProvider to wrap all the children components, check in the layout.tsx
-
-export const ProductDataProvider = ({ children }: any) => {
+export const ProductDataProvider = ({ children, value }: any) => {
   return (
-    <ProdContext.Provider value={{ name: "fred" }}>
+    <ProductDataContext.Provider value={value}>
       {children}
-    </ProdContext.Provider>
+    </ProductDataContext.Provider>
   );
 };

@@ -4,6 +4,7 @@ import {
   HomeIcon,
   AccountIcon,
   ProductsIcon,
+  OperatorsIcon,
 } from "../../../../public/iconSvgs";
 import { Box } from "@mui/material";
 import { useRouter } from "next/router";
@@ -39,10 +40,12 @@ const SidebarComponent = () => {
 
     if (currentPath === "/dashboard") {
       setActiveButton("Dashboard");
-    } else if (currentPath === "/products") {
+    } else if (currentPath.startsWith("/products")) {
       setActiveButton("Products");
     } else if (currentPath === "/my-account") {
       setActiveButton("My Account");
+    } else if (currentPath === "/operators") {
+      setActiveButton("Operators");
     }
   }, [router.pathname]);
 
@@ -89,6 +92,16 @@ const SidebarComponent = () => {
         }
       >
         My Account
+      </HoverableButton>
+
+      <HoverableButton
+        icon={OperatorsIcon}
+        isActive={activeButton === "Operators"}
+        onClick={() =>
+          handleButtonClick({ buttonName: "Operators", path: "operators" })
+        }
+      >
+        Operators
       </HoverableButton>
     </Sidebar>
   );
