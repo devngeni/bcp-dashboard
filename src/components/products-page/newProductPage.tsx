@@ -73,10 +73,7 @@ const NewProductPage = ({
         ],
       };
 
-      const response = await axios.post(
-        "/api/service",
-        Service
-      );
+      const response = await axios.post("/api/service", Service);
 
       setProductName("");
       setPrice(0);

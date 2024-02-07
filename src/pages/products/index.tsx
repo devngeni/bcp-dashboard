@@ -37,6 +37,7 @@ import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined
 import { useRouter } from "next/router";
 import { NextPageWithLayout } from "../_app";
 import { useProductDataContext } from "@/utils/context/products-data";
+import axios from "axios";
 import DashBoardLayout from "@/components/layout/dashboardLayout";
 
 interface Icontent {
@@ -88,6 +89,13 @@ const PreviousNextIcon = ({ isNextBtn }: { isNextBtn?: boolean }) => {
   );
 };
 
+const handleDelete = async (product_id: string) => {
+  try {
+    await axios.delete(`/api/service/${product_id}`);
+  } catch (error) {
+    console.error("Error deleting product:", error);
+  }
+};
 const ProductRow = ({
   row,
   index,
@@ -175,7 +183,7 @@ const ProductRow = ({
         </div>
 
         <div title="Delete">
-          <DeleteOutlineOutlinedIcon color="error" />
+          <DeleteOutlineOutlinedIcon color="error" onClick={() => handleDelete(row._id)} />
         </div>
       </Box>
     </StyledTableCell>
