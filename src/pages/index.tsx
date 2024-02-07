@@ -48,8 +48,10 @@ const SignIn: NextPageWithLayout = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (email !== "" || password !== "") {
-      const result = await login(credentials);
-      console.log(result);
+      const results = (await login(credentials)) as any;
+      if (results.error) {
+        alert(results.error);
+      }
     } else {
       console.log("fill in the fields");
       return;

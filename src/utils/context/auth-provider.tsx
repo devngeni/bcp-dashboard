@@ -1,5 +1,6 @@
 import { Icredentials } from "@/pages";
 import { createContext, useContext, useState } from "react";
+import { useRouter } from "next/router";
 
 // Define the interface for authentication data
 interface AuthData {
@@ -26,7 +27,7 @@ export function useAuth() {
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState(null); // Replace 'null' with your user object type
   const [isAuthenticated, setIsAuthenticated] = useState(false); // Replace 'false' with your authentication state type
-
+  const router = useRouter();
   // Replace with your login function
   async function login(credentials: Icredentials) {
     try {
@@ -41,7 +42,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const { user } = await response.json();
         setUser(user);
         setIsAuthenticated(true);
+        localStorage.setItem("bcp-token", user.token);
+        return router.push("/dashboard");
       }
+      return {
+        error: "Authentication failed",
+      };
     } catch (error: any) {
       throw new Error(error.message);
     }
@@ -55,8 +61,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   // Replace with your logout function
   async function logout() {
-    try {
-    } catch (error) {}
+    localStorage.removeItem("bcp-token");
+    return router.push("/");
   }
 
   return (
