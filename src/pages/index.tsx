@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { GreenButton, StyledInputField } from "@/styles/common.styles";
 import {
   ButtonSignIn,
@@ -18,6 +19,11 @@ import { NextPageWithLayout } from "./_app";
 import AuthLayout from "@/components/layout/authLayout";
 import { useAuth } from "@/utils/context/auth-provider";
 
+export interface Icredentials {
+  email: string;
+  password: string;
+}
+
 const renderSocialButton = (IconComponent: any, color: any) => (
   <ButtonSignIn>
     <IconComponent sx={{ color: color }} />
@@ -26,14 +32,28 @@ const renderSocialButton = (IconComponent: any, color: any) => (
 
 const SignIn: NextPageWithLayout = () => {
   const router = useRouter();
+  const [credentials, setCredentials] = useState<Icredentials>({
+    email: "",
+    password: "",
+  });
 
   //from useAuth provider
-  const data = useAuth();
-  console.log("data", data);
+  const { login } = useAuth();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const { email, password } = credentials;
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setCredentials({ ...credentials, [e.target.name]: e.target.value });
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("submitting");
+    if (email !== "" || password !== "") {
+      const result = await login(credentials);
+      console.log(result);
+    } else {
+      console.log("fill in the fields");
+      return;
+    }
   };
 
   return (
@@ -52,21 +72,34 @@ const SignIn: NextPageWithLayout = () => {
             }}
           >
             <header>Sign in as admin</header>
-            <StyledInputField sx={{ width: "100%" }}>
+            {/* <StyledInputField sx={{ width: "100%" }}>
               <input type="text" placeholder="Full name" />
+            </StyledInputField> */}
+            <StyledInputField sx={{ width: "100%" }}>
+              <input
+                value={email}
+                name="email"
+                onChange={handleChange}
+                type="text"
+                placeholder="Email"
+              />
             </StyledInputField>
             <StyledInputField sx={{ width: "100%" }}>
-              <input type="text" placeholder="Mobile number or email" />
-            </StyledInputField>
-            <StyledInputField sx={{ width: "100%" }}>
-              <input type="text" placeholder="Password" />
+              <input
+                value={password}
+                name="password"
+                onChange={handleChange}
+                type="password"
+                placeholder="Password"
+              />
             </StyledInputField>
             <GreenButton
               sx={{ width: "100%" }}
               //             onClick={() => router.push("/dashboard")}
               type="submit"
             >
-              Create your account
+              {/* Create your account */}
+              Login
             </GreenButton>
 
             <DividerLine>

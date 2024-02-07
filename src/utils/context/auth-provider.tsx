@@ -1,10 +1,11 @@
+import { Icredentials } from "@/pages";
 import { createContext, useContext, useState } from "react";
 
 // Define the interface for authentication data
 interface AuthData {
   user: any; // Replace 'any' with your user object type
   isAuthenticated: boolean;
-  login?: () => void;
+  login: (credentials: Icredentials) => void;
   signUp?: () => void;
   logout?: () => void;
 }
@@ -27,9 +28,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false); // Replace 'false' with your authentication state type
 
   // Replace with your login function
-  async function login() {
+  async function login(credentials: Icredentials) {
     try {
-    } catch (error) {}
+      const response = await fetch("/api/user/login", {
+        method: "POST",
+        body: JSON.stringify(credentials),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (response.status === 200) {
+        const { user } = await response.json();
+        setUser(user);
+        setIsAuthenticated(true);
+      }
+    } catch (error: any) {
+      throw new Error(error.message);
+    }
   }
 
   // Replace with your sign up function
