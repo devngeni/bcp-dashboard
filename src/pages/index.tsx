@@ -9,11 +9,14 @@ import {
   TC_Box,
 } from "@/styles/sign-in.styles";
 import { Box } from "@mui/material";
-import React from "react";
+import React, { ReactElement } from "react";
 
 import FacebookRoundedIcon from "@mui/icons-material/FacebookRounded";
 import XIcon from "@mui/icons-material/X";
 import { useRouter } from "next/router";
+import { NextPageWithLayout } from "./_app";
+import AuthLayout from "@/components/layout/authLayout";
+import { useAuth } from "@/utils/context/auth-provider";
 
 const renderSocialButton = (IconComponent: any, color: any) => (
   <ButtonSignIn>
@@ -21,8 +24,12 @@ const renderSocialButton = (IconComponent: any, color: any) => (
   </ButtonSignIn>
 );
 
-const SignIn = () => {
+const SignIn: NextPageWithLayout = () => {
   const router = useRouter();
+
+  //from useAuth provider
+  const data = useAuth();
+  console.log("data", data);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -83,6 +90,10 @@ const SignIn = () => {
       </form>
     </SignInContainer>
   );
+};
+
+SignIn.getLayout = function getLayout(page: ReactElement) {
+  return <AuthLayout pageTitle="Better call paul">{page}</AuthLayout>;
 };
 
 export default SignIn;
