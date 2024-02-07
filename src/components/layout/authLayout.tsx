@@ -6,10 +6,8 @@ import { AuthProvider } from "@/utils/context/auth-provider";
 const AuthLayout = ({ children, pageTitle }: layoutProps) => {
   return (
     <>
-      <AuthProvider>
-        <HeadMetaData pageTitle={pageTitle} />
-        {children}
-      </AuthProvider>
+      <HeadMetaData pageTitle={pageTitle} />
+      {children}
     </>
   );
 };
