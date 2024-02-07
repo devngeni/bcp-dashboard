@@ -65,7 +65,6 @@ const EditProductPage = ({
       try {
         const response = await axios.get(`/api/service/${product_id}`);
         const fetchedProduct = response.data.service;
-        console.log("Product from Db", fetchedProduct);
         setProduct(fetchedProduct);
         setProductName(fetchedProduct.content[0]?.name || "");
         setPrice(fetchedProduct.content[0]?.price || 0);
@@ -106,7 +105,29 @@ const EditProductPage = ({
 
   const handleEdit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
     try {
+      if (!selectedFile) {
+        console.error("No file selected.");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+      formData.append("upload_preset", "z9q4pq86");
+
+      const cloudinaryResponse = await axios.post(
+        `https://api.cloudinary.com/v1_1/dhvrtisdb/image/upload`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      const cloudinaryImageUrl = cloudinaryResponse.data.secure_url;
+
       const { product_id } = router.query;
       if (product_id) {
         const updatedService: ServiceObject = {
@@ -119,7 +140,7 @@ const EditProductPage = ({
               ...product.content[0],
               name: productName,
               description: description,
-              imagePath: "",
+              imagePath: cloudinaryImageUrl,
               price: price,
             },
           ],
@@ -205,7 +226,6 @@ const EditProductPage = ({
                 selectItem={selectItem}
                 setSelectItem={setSelectItem}
                 selectDataItems={selectDataItems}
-                
               />
             </StyledInputField>
 
