@@ -218,7 +218,7 @@ const ProductsPages: NextPageWithLayout = () => {
 
   useEffect(() => {
     (async () => {
-      const response = await fetch("http://localhost:3000/api/service");
+      const response = await fetch("/api/service");
       const data = await response.json();
       const { services } = data;
       setServices(services);
