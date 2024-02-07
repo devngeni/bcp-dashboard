@@ -74,7 +74,7 @@ const NewProductPage = ({
       };
 
       const response = await axios.post(
-        "http://localhost:3000/api/service",
+        "/api/service",
         Service
       );
 

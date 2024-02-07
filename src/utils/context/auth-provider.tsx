@@ -1,11 +1,17 @@
 import { Icredentials } from "@/pages";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
+
+interface User {
+  email: string;
+  id: string;
+  token: string;
+}
 
 // Define the interface for authentication data
 interface AuthData {
-  user: any; // Replace 'any' with your user object type
-  isAuthenticated: boolean;
+  user: User | null;
+  isAuthenticated?: boolean;
   login: (credentials: Icredentials) => void;
   signUp?: () => void;
   logout?: () => void;
@@ -17,7 +23,7 @@ const AuthContext = createContext({} as AuthData);
 // Hook to access authentication context
 export function useAuth() {
   const auth = useContext(AuthContext);
-  if (!auth) {
+  if (auth === undefined) {
     throw new Error("useAuth must be used within an AuthProvider");
   }
   return auth;
@@ -25,9 +31,28 @@ export function useAuth() {
 
 // AuthProvider component to wrap the application with Authentication context, check in authLayout.tsx
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState(null); // Replace 'null' with your user object type
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // Replace 'false' with your authentication state type
+  const [user, setUser] = useState<User | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    // Check if user data is present in local storage
+    const storedUser = localStorage.getItem("bcp-token");
+    if (storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        if (parsedUser) {
+          setUser(parsedUser);
+          setIsAuthenticated(true);
+        }
+      } catch (error) {
+        console.error("Error parsing stored user data:", error);
+        // Handle error, e.g., clear invalid data from local storage
+        localStorage.removeItem("bcp-token");
+      }
+    }
+  }, []);
+
   // Replace with your login function
   async function login(credentials: Icredentials) {
     try {
@@ -38,18 +63,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           "Content-Type": "application/json",
         },
       });
+
       if (response.status === 200) {
         const { user } = await response.json();
+        localStorage.setItem("bcp-token", JSON.stringify(user)); // stringify user object before storing
         setUser(user);
         setIsAuthenticated(true);
-        localStorage.setItem("bcp-token", user.token);
-        return router.push("/dashboard");
+        return { user };
+      } else {
+        const error = "Authentication failed";
+
+        return error;
       }
-      return {
-        error: "Authentication failed",
-      };
     } catch (error: any) {
-      throw new Error(error.message);
+      console.error("Error logging in:", error);
     }
   }
 
