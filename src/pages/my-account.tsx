@@ -1,7 +1,7 @@
 import React, { ReactElement } from "react";
 import { NextPageWithLayout } from "./_app";
-import Layout from "@/components/layout";
 import { CommonWrapper } from "@/styles/common.styles";
+import DashBoardLayout from "@/components/layout/dashboardLayout";
 
 const MyAccount: NextPageWithLayout = () => {
   return (
@@ -12,7 +12,11 @@ const MyAccount: NextPageWithLayout = () => {
 };
 
 MyAccount.getLayout = function getLayout(page: ReactElement) {
-  return <Layout pageTitle="Better call paul | My Account">{page}</Layout>;
+  return (
+    <DashBoardLayout pageTitle="Better call paul | My Account">
+      {page}
+    </DashBoardLayout>
+  );
 };
 
 export default MyAccount;
