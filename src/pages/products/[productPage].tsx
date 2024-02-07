@@ -1,4 +1,4 @@
-import Layout from "@/components/layout";
+import DashBoardLayout from "@/components/layout/dashboardLayout";
 import EditProductPage from "@/components/products-page/editProductPage";
 import NewProductPage from "@/components/products-page/newProductPage";
 import { CommonWrapper } from "@/styles/common.styles";
@@ -50,7 +50,7 @@ const ProductPage = () => {
 };
 
 ProductPage.getLayout = function getLayout(page: ReactElement) {
-  return <Layout pageTitle="Better call paul | Products">{page}</Layout>;
+  return <DashBoardLayout pageTitle="Better call paul | Products">{page}</DashBoardLayout>;
 };
 
 export default ProductPage;

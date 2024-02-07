@@ -1,6 +1,6 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useEffect } from "react";
+import { useRouter } from "next/router";
 import { NextPageWithLayout } from "./_app";
-import Layout from "@/components/layout";
 import {
   ActivitiesContainer,
   ChartContainer,
@@ -37,6 +37,8 @@ import BrandIcon from "../../public/brandicon.svg";
 import Image from "next/image";
 import { CountArrow } from "../../public/iconSvgs";
 import { CommonWrapper, StyledTableCell } from "@/styles/common.styles";
+import DashBoardLayout from "@/components/layout/dashboardLayout";
+import { useAuth } from "@/utils/context/auth-provider";
 
 interface StatisticBoxProps {
   countType: string;
@@ -137,6 +139,10 @@ const StatisticBox: React.FC<StatisticBoxProps> = ({
 };
 
 const Dashboard: NextPageWithLayout = () => {
+  //from useAuth provider
+  const { isAuthenticated } = useAuth();
+  const router = useRouter();
+
   return (
     <CommonWrapper>
       <h1>Dashboard</h1>
@@ -236,9 +242,12 @@ const Dashboard: NextPageWithLayout = () => {
 
 Dashboard.getLayout = function getLayout(page: ReactElement) {
   return (
-    <Layout pageTitle="Better call paul | Dashboard" showSearchComponent={true}>
+    <DashBoardLayout
+      pageTitle="Better call paul | Dashboard"
+      showSearchComponent={true}
+    >
       {page}
-    </Layout>
+    </DashBoardLayout>
   );
 };
 

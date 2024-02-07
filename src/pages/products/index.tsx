@@ -1,4 +1,3 @@
-import Layout from "@/components/layout";
 import React, { ReactElement, useEffect, useState } from "react";
 
 import {
@@ -39,6 +38,7 @@ import { useRouter } from "next/router";
 import { NextPageWithLayout } from "../_app";
 import { useProductDataContext } from "@/utils/context/products-data";
 import axios from "axios";
+import DashBoardLayout from "@/components/layout/dashboardLayout";
 
 interface Icontent {
   name: string;
@@ -460,7 +460,7 @@ const ProductsPages: NextPageWithLayout = () => {
 };
 
 ProductsPages.getLayout = function getLayout(page: ReactElement) {
-  return <Layout pageTitle="Better call paul | Products">{page}</Layout>;
+  return <DashBoardLayout pageTitle="Better call paul | Products">{page}</DashBoardLayout>;
 };
 
 export default ProductsPages;

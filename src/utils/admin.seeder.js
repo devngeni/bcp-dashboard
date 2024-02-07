@@ -2,6 +2,11 @@
 const mongoose = require("mongoose");
 const argon2 = require("argon2");
 
+mongoose
+  .connect(``)
+  .then(() => console.log(`connected successfully`))
+  .catch((e) => console.log("error while connecting to db"));
+
 const userSchema = new mongoose.Schema(
   {
     email: {
@@ -21,12 +26,25 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const User = mongoose.model("User", userSchema);
+userSchema.methods.genToken = function genToken() {
+  return jwt.sign(
+    {
+      id: this._id,
+    },
+    process.env.NEXT_PUBLIC_JWT_SECRET,
+    { expiresIn: "7d" }
+  );
+};
 
-mongoose
-  .connect(`${process.env.NEXT_PUBLIC_MONGO_URL}`)
-  .then(() => console.log(`connected successfully`))
-  .catch((e) => console.log("error while connecting to db"));
+userSchema.methods.toJson = function toJson() {
+  return {
+    email: this.email,
+    id: this._id,
+    token: this.genToken(),
+  };
+};
+
+const User = mongoose.model("User", userSchema);
 
 async function adminSeeder(admin) {
   try {
@@ -39,6 +57,8 @@ async function adminSeeder(admin) {
 
     await newUser.save();
     console.log("seeded admin successfully");
+
+    mongoose.connection.close();
   } catch (e) {
     throw e;
   }
