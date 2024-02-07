@@ -183,7 +183,7 @@ const ProductRow = ({
 );
 
 const ProductsPages: NextPageWithLayout = () => {
-  const data: any = useProductDataContext(); //get data from context replace with your services state in this file
+  const { services } = useProductDataContext(); //get data from context replace with your services state in this file
 
   const router = useRouter();
   const currentPageParam = router.query.page as string | undefined;
@@ -191,7 +191,7 @@ const ProductsPages: NextPageWithLayout = () => {
   const [open, setOpen] = useState(false);
   const [selectAll, setSelectAll] = useState(false);
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
-  const [services, setServices] = useState<any>();
+  //const [services, setServices] = useState<any>();
 
   const toggleOpen = () => setOpen((prev) => !prev);
 
@@ -216,14 +216,14 @@ const ProductsPages: NextPageWithLayout = () => {
     setSelectedRows(newSelected);
   };
 
-  useEffect(() => {
-    (async () => {
-      const response = await fetch("/api/service");
-      const data = await response.json();
-      const { services } = data;
-      setServices(services);
-    })();
-  }, []);
+  // useEffect(() => {
+  //   (async () => {
+  //     const response = await fetch("http://localhost:3000/api/service");
+  //     const data = await response.json();
+  //     const { services } = data;
+  //     setServices(services);
+  //   })();
+  // }, []);
 
   // Function to handle "Select All" checkbox click
   const handleSelectAllClick = () => {
