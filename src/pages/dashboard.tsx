@@ -1,4 +1,5 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useEffect } from "react";
+import { useRouter } from "next/router";
 import { NextPageWithLayout } from "./_app";
 import {
   ActivitiesContainer,
@@ -139,8 +140,8 @@ const StatisticBox: React.FC<StatisticBoxProps> = ({
 
 const Dashboard: NextPageWithLayout = () => {
   //from useAuth provider
-  const data = useAuth();
-  console.log("in dashboard", data);
+  const { isAuthenticated } = useAuth();
+  const router = useRouter();
 
   return (
     <CommonWrapper>
