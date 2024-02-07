@@ -32,6 +32,7 @@ const renderSocialButton = (IconComponent: any, color: any) => (
 
 const SignIn: NextPageWithLayout = () => {
   const router = useRouter();
+
   const [credentials, setCredentials] = useState<Icredentials>({
     email: "",
     password: "",
@@ -49,12 +50,14 @@ const SignIn: NextPageWithLayout = () => {
     e.preventDefault();
     if (email !== "" || password !== "") {
       const results = (await login(credentials)) as any;
-      if (results.error) {
-        alert(results.error);
+
+      if (results.user) {
+        router.push("/dashboard");
+        
+        console.log("logged in");
       }
     } else {
       console.log("fill in the fields");
-      return;
     }
   };
 
