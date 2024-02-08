@@ -16,18 +16,7 @@ import {
   HandleSelectCategoryProps,
 } from "./handleSelectCategory";
 import { useRouter } from "next/router";
-
-interface ServiceObject {
-  category: string;
-  subTitle: string;
-  tag: string;
-  content: {
-    name: string;
-    description: string;
-    imagePath: string;
-    price: number;
-  }[];
-}
+import { useProductDataContext } from "@/utils/context/products-data";
 
 type FileType = File | null;
 
@@ -72,6 +61,7 @@ const EditProductPage = ({
         setSubtitle(fetchedProduct.subTitle || "");
         setDescription(fetchedProduct.content[0]?.description || "");
         setSelectedRadio(fetchedProduct.tag || "");
+        setSelectedFile(fetchedProduct.content[0]?.imagePath || "");
       } catch (error) {
         console.error("Error fetching product details", error);
       }
@@ -103,59 +93,26 @@ const EditProductPage = ({
     simulateUpload(setProgress);
   };
 
+  const context = useProductDataContext();
+  const editProductFunc = context?.editFunc;
+  if (!editProductFunc) {
+    console.error("newProductFunc is not defined");
+    return null;
+  }
+
   const handleEdit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     try {
-      if (!selectedFile) {
-        console.error("No file selected.");
-        return;
-      }
-
-      const formData = new FormData();
-      formData.append("file", selectedFile);
-      formData.append("upload_preset", "z9q4pq86");
-
-      const cloudinaryResponse = await axios.post(
-        `https://api.cloudinary.com/v1_1/dhvrtisdb/image/upload`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
+      await editProductFunc(
+        selectedFile,
+        selectItem,
+        subtitle,
+        selectedRadio,
+        productName,
+        description,
+        price
       );
-
-      const cloudinaryImageUrl = cloudinaryResponse.data.secure_url;
-
-      const { product_id } = router.query;
-      if (product_id) {
-        const updatedService: ServiceObject = {
-          ...product,
-          category: selectItem,
-          subTitle: subtitle,
-          tag: selectedRadio,
-          content: [
-            {
-              ...product.content[0],
-              name: productName,
-              description: description,
-              imagePath: cloudinaryImageUrl,
-              price: price,
-            },
-          ],
-        };
-
-        const response = await axios.put(
-          `/api/service/${product_id}`,
-          updatedService
-        );
-        setTimeout(() => {
-          router.push("/products");
-        }, 3000);
-      } else {
-        console.log("Product not found");
-      }
     } catch (error) {
       console.error("Error updating product:", error);
     }
