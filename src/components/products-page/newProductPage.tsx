@@ -1,3 +1,4 @@
+import "dotenv/config";
 import React, { useState } from "react";
 import axios from "axios";
 import { Box, LinearProgress } from "@mui/material";
@@ -59,7 +60,28 @@ const NewProductPage = ({
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      const Service: ServiceObject = {
+      if (!selectedFile) {
+        console.error("No file selected.");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+      formData.append("upload_preset", "z9q4pq86");
+
+      const cloudinaryResponse = await axios.post(
+        `https://api.cloudinary.com/v1_1/dhvrtisdb/image/upload`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      const cloudinaryImageUrl = cloudinaryResponse.data.secure_url;
+
+      const serviceData = {
         category: selectItem,
         subTitle: subtitle,
         tag: selectedRadio,
@@ -67,16 +89,15 @@ const NewProductPage = ({
           {
             name: productName,
             description: description,
-            imagePath: "", // We need to upload this separately
+            imagePath: cloudinaryImageUrl,
             price: price,
           },
         ],
       };
 
-      const response = await axios.post(
-        "http://localhost:3000/api/service",
-        Service
-      );
+      console.log("Service Data", serviceData);
+
+      const response = await axios.post("/api/service", serviceData);
 
       setProductName("");
       setPrice(0);
@@ -84,6 +105,7 @@ const NewProductPage = ({
       setSubtitle("");
       setDescription("");
       setSelectedRadio("");
+      setSelectedFile(null);
     } catch (error) {
       console.error("Error creating product:", error);
     }
