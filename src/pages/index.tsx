@@ -81,6 +81,10 @@ const SignIn: NextPageWithLayout = () => {
               flexDirection: "column",
               gap: "20px",
               margin: "50px 20px 40px 20px",
+
+              "@media (max-width: 599px)": {
+                width: "80%",
+              },
             }}
           >
             <header>Sign in as admin</header>
