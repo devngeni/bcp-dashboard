@@ -1,6 +1,5 @@
 import "dotenv/config";
 import React, { useState } from "react";
-import axios from "axios";
 import { Box, LinearProgress } from "@mui/material";
 import Image from "next/image";
 import {
@@ -16,18 +15,7 @@ import {
   HandleSelectCategory,
   HandleSelectCategoryProps,
 } from "./handleSelectCategory";
-
-interface ServiceObject {
-  category: string;
-  subTitle: string;
-  tag: string;
-  content: {
-    name: string;
-    description: string;
-    imagePath: string;
-    price: number;
-  }[];
-}
+import { useProductDataContext } from "@/utils/context/products-data";
 
 type FileType = File | null;
 
@@ -57,55 +45,32 @@ const NewProductPage = ({
   const [selectedFile, setSelectedFile] = useState<FileType>(null);
   const [progress, setProgress] = useState(0);
 
+  const context = useProductDataContext();
+  const newProductFunc = context?.newProductFunc;
+  if (!newProductFunc) {
+    console.error("newProductFunc is not defined");
+    return null;
+  }
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      if (!selectedFile) {
-        console.error("No file selected.");
-        return;
-      }
-
-      const formData = new FormData();
-      formData.append("file", selectedFile);
-      formData.append("upload_preset", "z9q4pq86");
-
-      const cloudinaryResponse = await axios.post(
-        `https://api.cloudinary.com/v1_1/dhvrtisdb/image/upload`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
+      await newProductFunc(
+        selectedFile,
+        selectItem,
+        subtitle,
+        selectedRadio,
+        productName,
+        description,
+        price
       );
-
-      const cloudinaryImageUrl = cloudinaryResponse.data.secure_url;
-
-      const serviceData = {
-        category: selectItem,
-        subTitle: subtitle,
-        tag: selectedRadio,
-        content: [
-          {
-            name: productName,
-            description: description,
-            imagePath: cloudinaryImageUrl,
-            price: price,
-          },
-        ],
-      };
-
-      console.log("Service Data", serviceData);
-
-      const response = await axios.post("/api/service", serviceData);
-
       setProductName("");
       setPrice(0);
-      setCategory("Select Category");
       setSubtitle("");
       setDescription("");
       setSelectedRadio("");
       setSelectedFile(null);
+      setProgress(0);
     } catch (error) {
       console.error("Error creating product:", error);
     }

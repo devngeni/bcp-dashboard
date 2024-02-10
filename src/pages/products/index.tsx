@@ -37,7 +37,6 @@ import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined
 import { useRouter } from "next/router";
 import { NextPageWithLayout } from "../_app";
 import { useProductDataContext } from "@/utils/context/products-data";
-import axios from "axios";
 import DashBoardLayout from "@/components/layout/dashboardLayout";
 
 interface Icontent {
@@ -89,19 +88,13 @@ const PreviousNextIcon = ({ isNextBtn }: { isNextBtn?: boolean }) => {
   );
 };
 
-const handleDelete = async (product_id: string) => {
-  try {
-    await axios.delete(`/api/service/${product_id}`);
-  } catch (error) {
-    console.error("Error deleting product:", error);
-  }
-};
 const ProductRow = ({
   row,
   index,
   pageNavigateToQueryParam,
   isSelected,
   onCheckboxClick,
+  handleDelete,
 }: {
   row: Product;
   index: number;
@@ -111,6 +104,7 @@ const ProductRow = ({
   }: pageNavigateToQueryProps) => void;
   isSelected: boolean;
   onCheckboxClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleDelete: (product_id: string) => Promise<void>;
 }) => (
   <TableRow key={index}>
     <StyledTableCell>{index + 1}</StyledTableCell>
@@ -183,7 +177,10 @@ const ProductRow = ({
         </div>
 
         <div title="Delete">
-          <DeleteOutlineOutlinedIcon color="error" onClick={() => handleDelete(row._id)} />
+          <DeleteOutlineOutlinedIcon
+            color="error"
+            onClick={() => handleDelete(row._id)}
+          />
         </div>
       </Box>
     </StyledTableCell>
@@ -191,7 +188,9 @@ const ProductRow = ({
 );
 
 const ProductsPages: NextPageWithLayout = () => {
-  const { services } = useProductDataContext(); //get data from context replace with your services state in this file
+  const { services } = useProductDataContext();
+
+  //get data from context replace with your services state in this file
 
   const router = useRouter();
   const currentPageParam = router.query.page as string | undefined;
@@ -200,6 +199,21 @@ const ProductsPages: NextPageWithLayout = () => {
   const [selectAll, setSelectAll] = useState(false);
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
   //const [services, setServices] = useState<any>();
+
+  const context = useProductDataContext();
+  const deleteFunc = context?.deleteFunc;
+  if (!deleteFunc) {
+    console.error("deleteFunc is not defined");
+    return null;
+  }
+  const handleDelete = async (product_id: string) => {
+    try {
+      await deleteFunc(product_id);
+      console.log("Product deleted successfully");
+    } catch (error) {
+      console.error("Error deleting product:", error);
+    }
+  };
 
   const toggleOpen = () => setOpen((prev) => !prev);
 
@@ -293,17 +307,18 @@ const ProductsPages: NextPageWithLayout = () => {
     return pageNumbers;
   };
 
-  useEffect(() => {
-    if (currentPageParam) {
-      const parsedPage = parseInt(currentPageParam, 10);
-      if (!isNaN(parsedPage) && parsedPage >= 1 && parsedPage <= totalPages) {
-        setCurrentPage(parsedPage);
-      } else {
-        // Handle invalid page number or out of range
-        router.push("/products?page=1 & page was not found"); // Redirect to page 1 by default
-      }
-    }
-  }, [currentPageParam, router, totalPages]);
+  // Inside your component ProductsPages
+  // useEffect(() => {
+  //   if (currentPageParam) {
+  //     const parsedPage = parseInt(currentPageParam, 10);
+  //     if (!isNaN(parsedPage) && parsedPage >= 1 && parsedPage <= totalPages) {
+  //       setCurrentPage(parsedPage);
+  //     } else {
+  //       // Handle invalid page number or out of range
+  //       router.push("/products?page=1 & page was not found"); // Redirect to page 1 by default
+  //     }
+  //   }
+  // }, [currentPageParam, router, totalPages]);
 
   const pageNavigateToQueryParam = ({
     queryParam,
@@ -391,6 +406,7 @@ const ProductsPages: NextPageWithLayout = () => {
                       isSelected={selectedRows.includes(index)}
                       onCheckboxClick={() => handleCheckboxClick(index)}
                       pageNavigateToQueryParam={pageNavigateToQueryParam}
+                      handleDelete={handleDelete}
                     />
                   ))}
               </TableBody>
@@ -460,7 +476,11 @@ const ProductsPages: NextPageWithLayout = () => {
 };
 
 ProductsPages.getLayout = function getLayout(page: ReactElement) {
-  return <DashBoardLayout pageTitle="Better call paul | Products">{page}</DashBoardLayout>;
+  return (
+    <DashBoardLayout pageTitle="Better call paul | Products">
+      {page}
+    </DashBoardLayout>
+  );
 };
 
 export default ProductsPages;
