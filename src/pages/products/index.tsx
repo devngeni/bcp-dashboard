@@ -339,6 +339,7 @@ const ProductsPages: NextPageWithLayout = () => {
           <Box
             sx={{
               display: "flex",
+              flexWrap: "wrap",
               flexDirection: "row",
               gap: "10px",
               justifyContent: "space-between",
@@ -436,6 +437,10 @@ const ProductsPages: NextPageWithLayout = () => {
                 transform: "translateX(-50%)",
                 display: "flex",
                 flexDirection: "row",
+
+                "@media screen and (max-width: 610px)": {
+                  display: "none",
+                },
               }}
             >
               {getPageNumbers().map((pageNumber: any, index: any) => (
@@ -485,305 +490,305 @@ ProductsPages.getLayout = function getLayout(page: ReactElement) {
 
 export default ProductsPages;
 
-const tableData = [
-  {
-    id: 1,
-    product: "Product A",
-    productImage:
-      "https://img.freepik.com/free-photo/fresh-cola-drink-glass_144627-16201.jpg?w=740&t=st=1706889461~exp=1706890061~hmac=d7037e9e1fe5d9c5aa1e1e96c2275339b1f91697be15b44b2c317fb1b833bf15",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 3.6,
-    cost: 15120,
-  },
-  {
-    id: 2,
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    id: 3,
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    id: 4,
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    id: 5,
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    id: 6,
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    id: 7,
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    id: 8,
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    id: 9,
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    id: 10,
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    id: 11,
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    id: 12,
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    id: 13,
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    id: 14,
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    id: 15,
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    id: 16,
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    id: 17,
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    id: 18,
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    id: 19,
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    id: 20,
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    id: 21,
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    id: 22,
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    id: 23,
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    id: 24,
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-  {
-    id: 25,
-    product: "Product B",
-    productImage:
-      "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
-    category: "Drinks",
-    description:
-      "Spend a day in the lush karen neighbourhood learning about her heritage",
-    subtitle: "soft drinks",
-    price: 4.02,
-    cost: 20000,
-  },
-];
+// const tableData = [
+//   {
+//     id: 1,
+//     product: "Product A",
+//     productImage:
+//       "https://img.freepik.com/free-photo/fresh-cola-drink-glass_144627-16201.jpg?w=740&t=st=1706889461~exp=1706890061~hmac=d7037e9e1fe5d9c5aa1e1e96c2275339b1f91697be15b44b2c317fb1b833bf15",
+//     category: "Drinks",
+//     description:
+//       "Spend a day in the lush karen neighbourhood learning about her heritage Spend a day in the lush karen neighbourhood learning about her heritage",
+//     subtitle: "soft drinks",
+//     price: 3.6,
+//     cost: 15120,
+//   },
+//   {
+//     id: 2,
+//     product: "Product B",
+//     productImage:
+//       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
+//     category: "Drinks",
+//     description:
+//       "Spend a day in the lush karen neighbourhood learning about her heritage",
+//     subtitle: "soft drinks",
+//     price: 4.02,
+//     cost: 20000,
+//   },
+//   {
+//     id: 3,
+//     product: "Product B",
+//     productImage:
+//       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
+//     category: "Drinks",
+//     description:
+//       "Spend a day in the lush karen neighbourhood learning about her heritage",
+//     subtitle: "soft drinks",
+//     price: 4.02,
+//     cost: 20000,
+//   },
+//   {
+//     id: 4,
+//     product: "Product B",
+//     productImage:
+//       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
+//     category: "Drinks",
+//     description:
+//       "Spend a day in the lush karen neighbourhood learning about her heritage",
+//     subtitle: "soft drinks",
+//     price: 4.02,
+//     cost: 20000,
+//   },
+//   {
+//     id: 5,
+//     product: "Product B",
+//     productImage:
+//       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
+//     category: "Drinks",
+//     description:
+//       "Spend a day in the lush karen neighbourhood learning about her heritage",
+//     subtitle: "soft drinks",
+//     price: 4.02,
+//     cost: 20000,
+//   },
+//   {
+//     id: 6,
+//     product: "Product B",
+//     productImage:
+//       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
+//     category: "Drinks",
+//     description:
+//       "Spend a day in the lush karen neighbourhood learning about her heritage",
+//     subtitle: "soft drinks",
+//     price: 4.02,
+//     cost: 20000,
+//   },
+//   {
+//     id: 7,
+//     product: "Product B",
+//     productImage:
+//       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
+//     category: "Drinks",
+//     description:
+//       "Spend a day in the lush karen neighbourhood learning about her heritage",
+//     subtitle: "soft drinks",
+//     price: 4.02,
+//     cost: 20000,
+//   },
+//   {
+//     id: 8,
+//     product: "Product B",
+//     productImage:
+//       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
+//     category: "Drinks",
+//     description:
+//       "Spend a day in the lush karen neighbourhood learning about her heritage",
+//     subtitle: "soft drinks",
+//     price: 4.02,
+//     cost: 20000,
+//   },
+//   {
+//     id: 9,
+//     product: "Product B",
+//     productImage:
+//       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
+//     category: "Drinks",
+//     description:
+//       "Spend a day in the lush karen neighbourhood learning about her heritage",
+//     subtitle: "soft drinks",
+//     price: 4.02,
+//     cost: 20000,
+//   },
+//   {
+//     id: 10,
+//     product: "Product B",
+//     productImage:
+//       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
+//     category: "Drinks",
+//     description:
+//       "Spend a day in the lush karen neighbourhood learning about her heritage",
+//     subtitle: "soft drinks",
+//     price: 4.02,
+//     cost: 20000,
+//   },
+//   {
+//     id: 11,
+//     product: "Product B",
+//     productImage:
+//       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
+//     category: "Drinks",
+//     description:
+//       "Spend a day in the lush karen neighbourhood learning about her heritage",
+//     subtitle: "soft drinks",
+//     price: 4.02,
+//     cost: 20000,
+//   },
+//   {
+//     id: 12,
+//     product: "Product B",
+//     productImage:
+//       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
+//     category: "Drinks",
+//     description:
+//       "Spend a day in the lush karen neighbourhood learning about her heritage",
+//     subtitle: "soft drinks",
+//     price: 4.02,
+//     cost: 20000,
+//   },
+//   {
+//     id: 13,
+//     product: "Product B",
+//     productImage:
+//       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
+//     category: "Drinks",
+//     description:
+//       "Spend a day in the lush karen neighbourhood learning about her heritage",
+//     subtitle: "soft drinks",
+//     price: 4.02,
+//     cost: 20000,
+//   },
+//   {
+//     id: 14,
+//     product: "Product B",
+//     productImage:
+//       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
+//     category: "Drinks",
+//     description:
+//       "Spend a day in the lush karen neighbourhood learning about her heritage",
+//     subtitle: "soft drinks",
+//     price: 4.02,
+//     cost: 20000,
+//   },
+//   {
+//     id: 15,
+//     product: "Product B",
+//     productImage:
+//       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
+//     category: "Drinks",
+//     description:
+//       "Spend a day in the lush karen neighbourhood learning about her heritage",
+//     subtitle: "soft drinks",
+//     price: 4.02,
+//     cost: 20000,
+//   },
+//   {
+//     id: 16,
+//     product: "Product B",
+//     productImage:
+//       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
+//     category: "Drinks",
+//     description:
+//       "Spend a day in the lush karen neighbourhood learning about her heritage",
+//     subtitle: "soft drinks",
+//     price: 4.02,
+//     cost: 20000,
+//   },
+//   {
+//     id: 17,
+//     product: "Product B",
+//     productImage:
+//       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
+//     category: "Drinks",
+//     description:
+//       "Spend a day in the lush karen neighbourhood learning about her heritage",
+//     subtitle: "soft drinks",
+//     price: 4.02,
+//     cost: 20000,
+//   },
+//   {
+//     id: 18,
+//     product: "Product B",
+//     productImage:
+//       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
+//     category: "Drinks",
+//     description:
+//       "Spend a day in the lush karen neighbourhood learning about her heritage",
+//     subtitle: "soft drinks",
+//     price: 4.02,
+//     cost: 20000,
+//   },
+//   {
+//     id: 19,
+//     product: "Product B",
+//     productImage:
+//       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
+//     category: "Drinks",
+//     description:
+//       "Spend a day in the lush karen neighbourhood learning about her heritage",
+//     subtitle: "soft drinks",
+//     price: 4.02,
+//     cost: 20000,
+//   },
+//   {
+//     id: 20,
+//     product: "Product B",
+//     productImage:
+//       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
+//     category: "Drinks",
+//     description:
+//       "Spend a day in the lush karen neighbourhood learning about her heritage",
+//     subtitle: "soft drinks",
+//     price: 4.02,
+//     cost: 20000,
+//   },
+//   {
+//     id: 21,
+//     product: "Product B",
+//     productImage:
+//       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
+//     category: "Drinks",
+//     description:
+//       "Spend a day in the lush karen neighbourhood learning about her heritage",
+//     subtitle: "soft drinks",
+//     price: 4.02,
+//     cost: 20000,
+//   },
+//   {
+//     id: 22,
+//     product: "Product B",
+//     productImage:
+//       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
+//     category: "Drinks",
+//     description:
+//       "Spend a day in the lush karen neighbourhood learning about her heritage",
+//     subtitle: "soft drinks",
+//     price: 4.02,
+//     cost: 20000,
+//   },
+//   {
+//     id: 23,
+//     product: "Product B",
+//     productImage:
+//       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
+//     category: "Drinks",
+//     description:
+//       "Spend a day in the lush karen neighbourhood learning about her heritage",
+//     subtitle: "soft drinks",
+//     price: 4.02,
+//     cost: 20000,
+//   },
+//   {
+//     id: 24,
+//     product: "Product B",
+//     productImage:
+//       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
+//     category: "Drinks",
+//     description:
+//       "Spend a day in the lush karen neighbourhood learning about her heritage",
+//     subtitle: "soft drinks",
+//     price: 4.02,
+//     cost: 20000,
+//   },
+//   {
+//     id: 25,
+//     product: "Product B",
+//     productImage:
+//       "https://img.freepik.com/premium-psd/glass-drink-bottle-mockup-3d-rendering_13598-253.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph",
+//     category: "Drinks",
+//     description:
+//       "Spend a day in the lush karen neighbourhood learning about her heritage",
+//     subtitle: "soft drinks",
+//     price: 4.02,
+//     cost: 20000,
+//   },
+// ];

@@ -11,6 +11,10 @@ export const Sidebar = styled(Box)(() => ({
   gap: "8px",
   alignItems: "center",
   alignSelf: "stretch",
+
+  "@media (max-width: 899px)": {
+    width: "60px",
+  },
 }));
 
 export const SidebarButtons = styled(Button)(() => ({
@@ -25,6 +29,14 @@ export const SidebarButtons = styled(Button)(() => ({
   fontWeight: 500,
   justifyContent: "flex-start",
   gap: "8px",
+
+  "@media (max-width: 899px)": {
+    justifyContent: "center",
+    minWidth: "50px",
+    span: {
+      display: "none",
+    },
+  },
 
   ":hover": {
     background: "#095F51",
