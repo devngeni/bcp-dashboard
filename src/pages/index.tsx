@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useSession, signIn, signOut } from "next-auth/react";
 import { GreenButton, StyledInputField } from "@/styles/common.styles";
 import {
   ButtonSignIn,
@@ -33,6 +34,12 @@ const renderSocialButton = (IconComponent: any, color: any) => (
 const SignIn: NextPageWithLayout = () => {
   const router = useRouter();
 
+  const { data: session } = useSession();
+
+  if (session) {
+    console.log(session.user);
+  }
+
   const [credentials, setCredentials] = useState<Icredentials>({
     email: "",
     password: "",
@@ -53,7 +60,7 @@ const SignIn: NextPageWithLayout = () => {
 
       if (results.user) {
         router.push("/dashboard");
-        
+
         console.log("logged in");
       }
     } else {
