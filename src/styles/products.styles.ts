@@ -28,6 +28,16 @@ export const ProductsContainer = styled(Box)(() => ({
       padding: "0px 16px",
     },
   },
+
+  "@media screen and (max-width: 550px)": {
+    ".searchProduct_box": {
+      width: "100%",
+
+      input: {
+        width: "100%",
+      },
+    },
+  },
 }));
 
 export const TopLevel = styled(Box)<ProductsContainerProps>((props) => ({
@@ -64,6 +74,10 @@ export const SortBox = styled(Box)<ProductsContainerProps>((props) => ({
     cursor: "pointer",
     transition: "all 0.3s ease-in-out",
     transform: props.open ? "rotate(180deg)" : "rotate(0deg)",
+  },
+
+  "@media screen and (max-width: 550px)": {
+    width: "40%",
   },
 }));
 
@@ -106,6 +120,10 @@ export const BottomNav = styled(Box)(() => ({
     fontWeight: "400",
     color: "#6B7280",
   },
+
+  "@media screen and (max-width: 899px)": {
+    width: "calc(100% - 60px)",
+  }
 }));
 
 export const PaginationBtn = styled(Box)({

@@ -60,6 +60,10 @@ const SidebarComponent = () => {
           width: "100%",
           // textAlign: "center",
           height: "20px",
+
+          "@media (max-width: 899px)": {
+            display: "none",
+          }
         }}
       >
         BETTER CALL PAUL
@@ -71,7 +75,7 @@ const SidebarComponent = () => {
           handleButtonClick({ buttonName: "Dashboard", path: "dashboard" })
         }
       >
-        Dashboard
+        <span>Dashboard</span>
       </HoverableButton>
 
       <HoverableButton
@@ -81,7 +85,7 @@ const SidebarComponent = () => {
           handleButtonClick({ buttonName: "Products", path: "products" })
         }
       >
-        Products
+        <span>Products</span>
       </HoverableButton>
 
       <HoverableButton
@@ -91,7 +95,7 @@ const SidebarComponent = () => {
           handleButtonClick({ buttonName: "My Account", path: "my-account" })
         }
       >
-        My Account
+        <span>My Account</span>
       </HoverableButton>
 
       <HoverableButton
@@ -101,7 +105,7 @@ const SidebarComponent = () => {
           handleButtonClick({ buttonName: "Operators", path: "operators" })
         }
       >
-        Operators
+        <span>Operators</span>
       </HoverableButton>
     </Sidebar>
   );

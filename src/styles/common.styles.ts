@@ -12,6 +12,10 @@ export const MainComponent = styled(Box)(() => ({
   flexDirection: "column",
   width: "calc(100% - 256px)",
   height: "100%",
+
+  "@media (max-width: 899px)": {
+    width: "calc(100% - 60px)",
+  },
 }));
 
 export const CommonWrapper = styled(Box)(() => ({
