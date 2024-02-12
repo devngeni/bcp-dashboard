@@ -63,7 +63,7 @@ const SidebarComponent = () => {
 
           "@media (max-width: 899px)": {
             display: "none",
-          }
+          },
         }}
       >
         BETTER CALL PAUL
@@ -98,7 +98,7 @@ const SidebarComponent = () => {
         <span>My Account</span>
       </HoverableButton>
 
-      <HoverableButton
+      {/* <HoverableButton
         icon={OperatorsIcon}
         isActive={activeButton === "Operators"}
         onClick={() =>
@@ -106,7 +106,7 @@ const SidebarComponent = () => {
         }
       >
         <span>Operators</span>
-      </HoverableButton>
+      </HoverableButton> */}
     </Sidebar>
   );
 };
