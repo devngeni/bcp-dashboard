@@ -342,6 +342,7 @@ const ProductsPages: NextPageWithLayout = () => {
   //     }
   //   }
   // }, [currentPageParam, router, totalPages]);
+  
 
   const pageNavigateToQueryParam = ({
     queryParam,
