@@ -64,6 +64,13 @@ export const StyledInputField = styled(Box)(() => ({
   flexDirection: "column",
   gap: "8px",
 
+  label: {
+    fontFamily: "Montserrat",
+    fontWeight: "500",
+    fontSize: "14px",
+    color: "#374151",
+  },
+
   input: {
     border: "1px solid #D1D5DB",
     background: "#FFFFFF",
