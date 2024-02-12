@@ -38,14 +38,8 @@ import { useRouter } from "next/router";
 import { NextPageWithLayout } from "../_app";
 import { useProductDataContext } from "@/utils/context/products-data";
 import DashBoardLayout from "@/components/layout/dashboardLayout";
+import DeleteModal from "./deleteModal";
 
-interface Icontent {
-  name: string;
-  description: string;
-  imagePath: string;
-  price: number;
-  _id: string;
-}
 interface Product {
   price: number;
   _id: string;
@@ -58,6 +52,20 @@ interface Product {
 interface pageNavigateToQueryProps {
   queryParam: string;
   product_id?: any;
+}
+
+interface IProductRows {
+  row: Product;
+  index: number;
+  pageNavigateToQueryParam: ({
+    queryParam,
+    product_id,
+  }: pageNavigateToQueryProps) => void;
+  isSelected: boolean;
+  onCheckboxClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleDelete: (product_id: string) => Promise<void>;
+  selectedRows: any;
+  eachSelectedRow: any;
 }
 
 function isValidImageUrl(url: any) {
@@ -95,97 +103,111 @@ const ProductRow = ({
   isSelected,
   onCheckboxClick,
   handleDelete,
-}: {
-  row: Product;
-  index: number;
-  pageNavigateToQueryParam: ({
-    queryParam,
-    product_id,
-  }: pageNavigateToQueryProps) => void;
-  isSelected: boolean;
-  onCheckboxClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  handleDelete: (product_id: string) => Promise<void>;
-}) => (
-  <TableRow key={index}>
-    <StyledTableCell>{index + 1}</StyledTableCell>
-    <StyledTableCell className="small_size">
-      <StyledCheckBox checked={isSelected} onChange={onCheckboxClick} />
-    </StyledTableCell>
-    <StyledTableCell>
-      <Box sx={{ display: "flex", justifyContent: "center" }}>
-        <ProductItemBox>
-          <Box className="image_box">
-            <Image
-              src={
-                isValidImageUrl(row.content[0].imagePath)
-                  ? row.content[0].imagePath
-                  : ""
-              }
-              alt={
-                isValidImageUrl(row.content[0].imagePath)
-                  ? "prod-image"
-                  : "Image not available"
-              }
-              width={48}
-              height={48}
-            />
-          </Box>
-          <Box className="product_name">
-            <h1>{row.content[0].name}</h1>
-            <p>{row._id}</p>
-          </Box>
-        </ProductItemBox>
-      </Box>
-    </StyledTableCell>
-    <StyledTableCell sx={{ maxWidth: "150px" }}>
-      <Box
-        sx={{
-          overflow: "hidden",
-          display: "-webkit-box",
-          WebkitBoxOrient: "vertical",
-          WebkitLineClamp: 2,
-        }}
-      >
-        {row.content[0].description}
-      </Box>
-    </StyledTableCell>
-    <StyledTableCell>{row.category}</StyledTableCell>
-    <StyledTableCell>{row.subTitle}</StyledTableCell>
-    <StyledTableCell>{row.content[0].price}</StyledTableCell>
-    <StyledTableCell sx={{ width: "100px" }}>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "row",
-          height: "30px",
-          gap: "10px",
-          svg: {
-            cursor: "pointer",
-          },
-        }}
-      >
-        <div
-          title="Edit"
-          onClick={() =>
-            pageNavigateToQueryParam({
-              queryParam: "edit-product",
-              product_id: row._id,
-            })
-          }
-        >
-          <EditOutlinedIcon />
-        </div>
+  selectedRows,
+  eachSelectedRow,
+}: IProductRows) => {
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-        <div title="Delete">
-          <DeleteOutlineOutlinedIcon
-            color="error"
-            onClick={() => handleDelete(row._id)}
-          />
-        </div>
-      </Box>
-    </StyledTableCell>
-  </TableRow>
-);
+  const toggleDeleteModal = () => {
+    if (selectedRows.length === 0) {
+      console.log("No item selected");
+    } else {
+      if (eachSelectedRow._id === row._id) {
+        setIsDeleteModalOpen((prev) => !prev);
+      } else {
+        console.log("select the item to delete");
+      }
+    }
+  };
+  return (
+    <TableRow key={index}>
+      <StyledTableCell>{index + 1}</StyledTableCell>
+      <StyledTableCell className="small_size">
+        <StyledCheckBox checked={isSelected} onChange={onCheckboxClick} />
+      </StyledTableCell>
+      <StyledTableCell>
+        <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <ProductItemBox>
+            <Box className="image_box">
+              <Image
+                src={
+                  isValidImageUrl(row.content[0].imagePath)
+                    ? row.content[0].imagePath
+                    : ""
+                }
+                alt={
+                  isValidImageUrl(row.content[0].imagePath)
+                    ? "prod-image"
+                    : "Image not available"
+                }
+                width={48}
+                height={48}
+              />
+            </Box>
+            <Box className="product_name">
+              <h1>{row.content[0].name}</h1>
+              <p>{row._id}</p>
+            </Box>
+          </ProductItemBox>
+        </Box>
+      </StyledTableCell>
+      <StyledTableCell sx={{ maxWidth: "150px" }}>
+        <Box
+          sx={{
+            overflow: "hidden",
+            display: "-webkit-box",
+            WebkitBoxOrient: "vertical",
+            WebkitLineClamp: 2,
+          }}
+        >
+          {row.content[0].description}
+        </Box>
+      </StyledTableCell>
+      <StyledTableCell>{row.category}</StyledTableCell>
+      <StyledTableCell>{row.subTitle}</StyledTableCell>
+      <StyledTableCell>{row.content[0].price}</StyledTableCell>
+      <StyledTableCell sx={{ width: "100px" }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            height: "30px",
+            gap: "10px",
+            svg: {
+              cursor: "pointer",
+            },
+          }}
+        >
+          <div
+            title="Edit"
+            onClick={() =>
+              pageNavigateToQueryParam({
+                queryParam: "edit-product",
+                product_id: row._id,
+              })
+            }
+          >
+            <EditOutlinedIcon />
+          </div>
+
+          <div title="Delete">
+            <DeleteOutlineOutlinedIcon
+              color="error"
+              onClick={() => {
+                toggleDeleteModal();
+              }}
+            />
+            <DeleteModal
+              isDeleteModalOpen={isDeleteModalOpen}
+              handleClose={toggleDeleteModal}
+              handleDelete={() => handleDelete(row._id)}
+            />
+          </div>
+        </Box>
+      </StyledTableCell>
+    </TableRow>
+  );
+};
 
 const ProductsPages: NextPageWithLayout = () => {
   const { services } = useProductDataContext();
@@ -198,7 +220,8 @@ const ProductsPages: NextPageWithLayout = () => {
   const [open, setOpen] = useState(false);
   const [selectAll, setSelectAll] = useState(false);
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
-  //const [services, setServices] = useState<any>();
+
+  const [eachSelectedRow, setEachSelectedRow] = useState<any>();
 
   const context = useProductDataContext();
   const deleteFunc = context?.deleteFunc;
@@ -209,7 +232,6 @@ const ProductsPages: NextPageWithLayout = () => {
   const handleDelete = async (product_id: string) => {
     try {
       await deleteFunc(product_id);
-      console.log("Product deleted successfully");
     } catch (error) {
       console.error("Error deleting product:", error);
     }
@@ -224,6 +246,7 @@ const ProductsPages: NextPageWithLayout = () => {
 
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selectedRows, index);
+      setEachSelectedRow(visibleItems[index]);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selectedRows.slice(1));
     } else if (selectedIndex === selectedRows.length - 1) {
@@ -408,6 +431,8 @@ const ProductsPages: NextPageWithLayout = () => {
                       onCheckboxClick={() => handleCheckboxClick(index)}
                       pageNavigateToQueryParam={pageNavigateToQueryParam}
                       handleDelete={handleDelete}
+                      selectedRows={selectedRows}
+                      eachSelectedRow={eachSelectedRow}
                     />
                   ))}
               </TableBody>
