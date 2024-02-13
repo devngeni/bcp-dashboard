@@ -38,7 +38,8 @@ import { useRouter } from "next/router";
 import { NextPageWithLayout } from "../_app";
 import { useProductDataContext } from "@/utils/context/products-data";
 import DashBoardLayout from "@/components/layout/dashboardLayout";
-import DeleteModal from "./deleteModal";
+import DeleteModal from "../../components/products-page/deleteModal";
+import toast from "react-hot-toast";
 
 interface Product {
   price: number;
@@ -63,9 +64,10 @@ interface IProductRows {
   }: pageNavigateToQueryProps) => void;
   isSelected: boolean;
   onCheckboxClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  handleDelete: (product_id: string) => Promise<void>;
+  deleteFunc: (product_id: string) => void;
   selectedRows: any;
   eachSelectedRow: any;
+  setSelectedRows?: any;
 }
 
 function isValidImageUrl(url: any) {
@@ -102,23 +104,44 @@ const ProductRow = ({
   pageNavigateToQueryParam,
   isSelected,
   onCheckboxClick,
-  handleDelete,
   selectedRows,
   eachSelectedRow,
+  deleteFunc,
+  setSelectedRows,
 }: IProductRows) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const toggleDeleteModal = () => {
     if (selectedRows.length === 0) {
-      console.log("No item selected");
+      toast.error("Select the item to delete");
     } else {
       if (eachSelectedRow._id === row._id) {
         setIsDeleteModalOpen((prev) => !prev);
       } else {
-        console.log("select the item to delete");
+        toast.error("Select specific item for delete");
       }
     }
   };
+
+  const handleDelete = async (product_id: string) => {
+    try {
+      setIsLoading(true);
+      const res = (await deleteFunc(product_id)) as any;
+
+      if (res.status === 200) {
+        setIsDeleteModalOpen(false);
+        setSelectedRows([]);
+        setIsLoading(false);
+      } else {
+        toast.error("Error deleting product. Please try again.");
+        setIsLoading(false);
+      }
+    } catch (error) {
+      toast.error("Error deleting product. Please try again.");
+    }
+  };
+
   return (
     <TableRow key={index}>
       <StyledTableCell>{index + 1}</StyledTableCell>
@@ -198,6 +221,7 @@ const ProductRow = ({
               }}
             />
             <DeleteModal
+              isLoading={isLoading}
               isDeleteModalOpen={isDeleteModalOpen}
               handleClose={toggleDeleteModal}
               handleDelete={() => handleDelete(row._id)}
@@ -229,34 +253,20 @@ const ProductsPages: NextPageWithLayout = () => {
     console.error("deleteFunc is not defined");
     return null;
   }
-  const handleDelete = async (product_id: string) => {
-    try {
-      await deleteFunc(product_id);
-      console.log("Product Deleted!");
-    } catch (error) {
-      console.error("Error deleting product:", error);
-    }
-  };
 
   const toggleOpen = () => setOpen((prev) => !prev);
 
   // Function to handle individual checkbox click
   const handleCheckboxClick = (index: number) => {
-    const selectedIndex = selectedRows.indexOf(index);
+    const isSelected = selectedRows.includes(index);
+
     let newSelected: number[] = [];
 
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selectedRows, index);
+    if (isSelected) {
+      newSelected = selectedRows.filter((item) => item !== index);
+    } else {
+      newSelected = [...selectedRows, index];
       setEachSelectedRow(visibleItems[index]);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selectedRows.slice(1));
-    } else if (selectedIndex === selectedRows.length - 1) {
-      newSelected = newSelected.concat(selectedRows.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selectedRows.slice(0, selectedIndex),
-        selectedRows.slice(selectedIndex + 1)
-      );
     }
 
     setSelectedRows(newSelected);
@@ -431,9 +441,10 @@ const ProductsPages: NextPageWithLayout = () => {
                       isSelected={selectedRows.includes(index)}
                       onCheckboxClick={() => handleCheckboxClick(index)}
                       pageNavigateToQueryParam={pageNavigateToQueryParam}
-                      handleDelete={handleDelete}
                       selectedRows={selectedRows}
                       eachSelectedRow={eachSelectedRow}
+                      setSelectedRows={setSelectedRows}
+                      deleteFunc={deleteFunc}
                     />
                   ))}
               </TableBody>
