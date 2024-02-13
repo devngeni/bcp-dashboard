@@ -17,9 +17,22 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    name: {
+      type: String,
+      required: false,
+    },
+    subId: {
+      type: String,
+      required: false,
+      default: "",
+    },
+    picture: {
+      type: String,
+      required: false,
+    },
     role: {
       type: String,
-      enum: ["admin"],
+      enum: ["super", "admin"],
       default: "admin",
     },
   },

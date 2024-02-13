@@ -11,9 +11,17 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
+    name: {
+      type: String,
+      required: false,
+    },
+    picture: {
+      type: String,
+      required: false,
+    },
     role: {
       type: String,
-      enum: ["admin"],
+      enum: ["super", "admin"],
       default: "admin",
     },
   },
