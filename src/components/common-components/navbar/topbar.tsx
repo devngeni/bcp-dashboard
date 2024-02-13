@@ -10,6 +10,7 @@ import Image from "next/image";
 import SearchIcon from "../../../../public/searchIco.svg";
 import NotificationIcon from "../../../../public/bellIcon.svg";
 import ArrowIcon from "../../../../public/arrowDownIcon.svg";
+import QuickActionModal from "./quickActionModal";
 
 const UserIcon =
   "https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph";
@@ -44,6 +45,8 @@ const TopbarComponent = ({ showSearchComponent }: TopbarProps) => {
           <Image src={ArrowIcon} alt="arrow" />
         </Box>
       </Notification_User_Box>
+
+      {open && <QuickActionModal handleClose={() => setOpen(false)} />}
     </Topbar>
   );
 };

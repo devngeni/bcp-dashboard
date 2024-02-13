@@ -19,21 +19,18 @@ import { useRouter } from "next/router";
 import { NextPageWithLayout } from "./_app";
 import AuthLayout from "@/components/layout/authLayout";
 import { useAuth } from "@/utils/context/auth-provider";
+import GoogleIcon from "@mui/icons-material/Google";
+import { set } from "lodash";
+import toast from "react-hot-toast";
+import Loader from "@/components/common-components/loader";
 
 export interface Icredentials {
   email: string;
   password: string;
 }
 
-const renderSocialButton = (IconComponent: any, color: any) => (
-  <ButtonSignIn>
-    <IconComponent sx={{ color: color }} />
-  </ButtonSignIn>
-);
-
 const SignIn: NextPageWithLayout = () => {
   const router = useRouter();
-
   const { data: session } = useSession();
 
   if (session) {
@@ -44,6 +41,7 @@ const SignIn: NextPageWithLayout = () => {
     email: "",
     password: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   //from useAuth provider
   const { login } = useAuth();
@@ -56,14 +54,18 @@ const SignIn: NextPageWithLayout = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (email !== "" || password !== "") {
+      setIsLoading(true);
       const results = (await login(credentials)) as any;
-
       if (results.user) {
+        toast.success("Logged in successfully");
         router.push("/dashboard");
-
-        console.log("logged in");
+        setIsLoading(false);
+      } else {
+        setIsLoading(false);
+        toast.error("Invalid credentials");
       }
     } else {
+      setIsLoading(false);
       console.log("fill in the fields");
     }
   };
@@ -109,13 +111,8 @@ const SignIn: NextPageWithLayout = () => {
                 placeholder="Password"
               />
             </StyledInputField>
-            <GreenButton
-              sx={{ width: "100%" }}
-              //             onClick={() => router.push("/dashboard")}
-              type="submit"
-            >
-              {/* Create your account */}
-              Login
+            <GreenButton sx={{ width: "100%" }} type="submit">
+              {isLoading ? <Loader /> : "Sign in"}
             </GreenButton>
 
             <DividerLine>
@@ -125,8 +122,12 @@ const SignIn: NextPageWithLayout = () => {
             </DividerLine>
             <SocialItemsSignIn>
               <header className="header">Sign in with</header>
-              {renderSocialButton(FacebookRoundedIcon, "#6B7280")}
-              {renderSocialButton(XIcon, "#6B7280")}
+              <ButtonSignIn>
+                <GoogleIcon sx={{ color: "#6B7280" }} />
+              </ButtonSignIn>
+              <ButtonSignIn>
+                <FacebookRoundedIcon sx={{ color: "#6B7280" }} />
+              </ButtonSignIn>
             </SocialItemsSignIn>
           </Box>
           <TC_Box>

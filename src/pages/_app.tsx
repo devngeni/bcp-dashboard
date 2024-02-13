@@ -5,6 +5,7 @@ import { SessionProvider } from "next-auth/react";
 import type { AppProps } from "next/app";
 import { ReactElement, ReactNode } from "react";
 import NoSSR from "react-no-ssr";
+import { Toaster } from "react-hot-toast";
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -24,6 +25,7 @@ export default function App({
   return (
     <SessionProvider session={session}>
       <AuthProvider>
+        <Toaster />
         {getLayout(
           <NoSSR>
             <Component {...pageProps} />

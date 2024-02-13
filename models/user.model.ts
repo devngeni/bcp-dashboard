@@ -15,15 +15,17 @@ const userSchema = new Schema(
       type: String,
       required: false,
     },
-    picture: {
+    subId: {
       type: String,
       required: false,
+      default: "",
     },
     role: {
       type: String,
-      enum: ["super", "admin"],
+      enum: ["admin", "operator"],
       default: "admin",
     },
+    photo: { type: String },
   },
   { timestamps: true }
 );

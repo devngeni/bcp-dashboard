@@ -1,14 +1,17 @@
 import { Box, Button, Modal } from "@mui/material";
 import React from "react";
+import Loader from "../common-components/loader";
 
 interface DeleteModalProps {
   isDeleteModalOpen: boolean;
+  isLoading?: boolean;
   handleClose: () => void;
   handleDelete: () => void;
 }
 
 const DeleteModal: React.FC<DeleteModalProps> = ({
   isDeleteModalOpen,
+  isLoading,
   handleClose,
   handleDelete,
 }) => {
@@ -83,7 +86,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
             onClick={handleDelete}
             sx={{ width: "100px" }}
           >
-            Delete
+            {isLoading ? <Loader /> : "Delete"}
           </Button>
         </Box>
       </Box>

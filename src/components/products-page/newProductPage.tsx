@@ -16,6 +16,8 @@ import {
   HandleSelectCategoryProps,
 } from "./handleSelectCategory";
 import { useProductDataContext } from "@/utils/context/products-data";
+import { useRouter } from "next/router";
+import Loader from "../common-components/loader";
 
 type FileType = File | null;
 
@@ -44,6 +46,9 @@ const NewProductPage = ({
   const [selectedRadio, setSelectedRadio] = useState("");
   const [selectedFile, setSelectedFile] = useState<FileType>(null);
   const [progress, setProgress] = useState(0);
+  const router = useRouter();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const context = useProductDataContext();
   const newProductFunc = context?.newProductFunc;
@@ -55,7 +60,8 @@ const NewProductPage = ({
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      await newProductFunc(
+      setIsLoading(true);
+      const res = (await newProductFunc(
         selectedFile,
         selectItem,
         subtitle,
@@ -63,16 +69,25 @@ const NewProductPage = ({
         productName,
         description,
         price
-      );
-      setProductName("");
-      setPrice(0);
-      setSubtitle("");
-      setDescription("");
-      setSelectedRadio("");
-      setSelectedFile(null);
-      setProgress(0);
+      )) as any;
+
+      if (res?.status === 200) {
+        setProductName("");
+        setPrice(0);
+        setSubtitle("");
+        setDescription("");
+        setSelectedRadio("");
+        setSelectedFile(null);
+        setSelectItem("");
+        setProgress(0);
+
+        setIsLoading(false);
+      }else{
+        setIsLoading(false);
+      }
     } catch (error) {
-      console.error("Error creating product:", error);
+      setIsLoading(false);
+      console.error("Error Creating Product!", error);
     }
   };
 
@@ -121,7 +136,9 @@ const NewProductPage = ({
               alignItems: "center",
             }}
           >
-            <YelloWButton type="submit">Save Product</YelloWButton>
+            <YelloWButton type="submit">
+              {isLoading ? <Loader /> : "Save Product"}
+            </YelloWButton>
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <Image src={ArrowIcon} alt="arrow" className="sort_arrow" />
             </Box>
@@ -142,7 +159,7 @@ const NewProductPage = ({
             <StyledInputField sx={{ width: "167px" }}>
               <label>Price</label>
               <input
-                type="text"
+                type="number"
                 placeholder="Price"
                 value={price}
                 onChange={(e) => setPrice(Number(e.target.value))}
