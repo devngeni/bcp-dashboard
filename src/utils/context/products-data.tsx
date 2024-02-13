@@ -3,13 +3,6 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 
-// interface ProductDataProps {
-//   services?: any;
-//   newProductFunc?: () => void;
-//   editFunc?: () => void;
-//   deleteFunc?: () => void;
-// }
-
 interface ProductDataProps {
   services?: any;
   newProductFunc?: (

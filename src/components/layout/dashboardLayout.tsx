@@ -17,6 +17,8 @@ const DashBoardLayout = ({
   const [isMounted, setIsMounted] = React.useState(false);
   const { user, isAuthenticated } = useAuth();
 
+  console.log("user is here", user);
+
   useEffect(() => {
     setIsMounted(true);
   }, []);

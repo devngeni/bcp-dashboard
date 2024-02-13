@@ -1,5 +1,4 @@
-import React, { ReactElement, useEffect } from "react";
-import { useRouter } from "next/router";
+import React, { ReactElement } from "react";
 import { NextPageWithLayout } from "./_app";
 import {
   ActivitiesContainer,
@@ -38,7 +37,6 @@ import Image from "next/image";
 import { CountArrow } from "../../public/iconSvgs";
 import { CommonWrapper, StyledTableCell } from "@/styles/common.styles";
 import DashBoardLayout from "@/components/layout/dashboardLayout";
-import { useAuth } from "@/utils/context/auth-provider";
 
 interface StatisticBoxProps {
   countType: string;

@@ -5,49 +5,20 @@ import {
   SwitchTabsContainer,
 } from "@/styles/myAccount.styles";
 import { Box } from "@mui/material";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef } from "react";
 import { HandleSelectCategory } from "../products-page/handleSelectCategory";
 import Image from "next/image";
 import { myAccProps } from "@/pages/my-account";
-import { useAuth } from "@/utils/context/auth-provider";
-import axios from "axios";
 
 const Profile = ({
   selectedImage,
   setSelectedImage,
-  userRole,
-  setUserRole,
+  formData,
+  setFormData,
 }: myAccProps) => {
   let avatarPlaceHolder = "/userAvatar.svg";
 
   const fileInputRef: any = useRef(null); // Ref for file input element
-  const { user, updateProfile } = useAuth();
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    confirmEmail: "",
-    phone: "",
-    photo: "",
-    role: "",
-  });
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const userId = user?.id;
-        const response = await axios.get(`/api/user/profile/${userId}`);
-        const userData = response.data.User;
-        console.log("User Data", formData);
-        setFormData(userData);
-      } catch (error) {
-        console.error("Error fetching user profile:", error);
-      }
-    };
-
-    if (user) {
-      fetchData();
-    }
-  }, [user, setUserRole]);
 
   const handleImageChange = (e: any) => {
     const file = e.target.files[0];
@@ -66,33 +37,6 @@ const Profile = ({
 
   const handleClickChange = () => {
     fileInputRef.current.click(); // Trigger click on file input
-  };
-
-  const handleProfileUpdate = async () => {
-    try {
-      const formDataForUpload = new FormData();
-      formDataForUpload.append("file", selectedImage.file);
-      formDataForUpload.append("upload_preset", "z9q4pq86");
-
-      const cloudinaryResponse = await axios.post(
-        `https://api.cloudinary.com/v1_1/dhvrtisdb/image/upload`,
-        formDataForUpload,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-
-      const photoUrl = cloudinaryResponse.data.secure_url;
-
-      const updatedFormData = { ...formData, photo: photoUrl };
-
-      const response = await updateProfile(updatedFormData);
-      console.log("Data Saved", response);
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   return (
@@ -152,7 +96,9 @@ const Profile = ({
         <HandleSelectCategory
           menuItemPlaceholder="set user role"
           selectItem={formData.role}
-          setSelectItem={setUserRole}
+          setSelectItem={(value: string) =>
+            setFormData({ ...formData, role: value })
+          }
           selectDataItems={["Admin"]}
         />
       </StyledInputField>
@@ -169,10 +115,11 @@ const Profile = ({
               style={{ display: "none" }}
               id="fileInput"
             />
+
             <Image
               src={
-                formData.photo ||
-                selectedImage.previewImage ||
+                selectedImage.previewImage ??
+                formData.photo ??
                 avatarPlaceHolder
               }
               alt="user-avatar"
