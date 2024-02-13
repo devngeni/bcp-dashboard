@@ -9,21 +9,32 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  await connectDB();
-  if (req.method == "POST") {
-    const { email, password } = req.body;
-    try {
-      const user = await User.findOne({ email });
-      const isValidPassword = await argon2.verify(user?.password, password);
+  try {
+    await connectDB();
 
-      if (user && isValidPassword) {
+    if (req.method === "POST") {
+      const { email, password } = req.body;
+      const user = await User.findOne({ email });
+
+      if (!user) {
+        return res.status(400).json({ message: "User not found" });
+      }
+
+      const isValidPassword = await argon2.verify(user.password, password);
+
+      if (isValidPassword) {
         return res.status(200).json({ user: user.toJson() });
       } else {
         console.log("Invalid credentials");
-        res.status(400).json({ message: "authentication of admin failed" });
+        res.status(400).json({ message: "Authentication failed" });
       }
-    } catch (e: any) {
-      res.status(400).json({ message: e.message });
+    } else if (req.method === "GET") {
+      const users = await User.find({});
+      res.status(200).json({ users });
+    } else {
+      res.status(405).json({ message: "Method Not Allowed" });
     }
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
   }
 }
