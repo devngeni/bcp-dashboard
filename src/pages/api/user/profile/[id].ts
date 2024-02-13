@@ -5,26 +5,13 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { connectDB } from "@/utils/dbconnection";
 import User from "../../../../../models/user.model";
 
-function getUserIdFromToken(req: NextApiRequest): string | null {
-  const token = req.headers.authorization?.split(" ")[1];
-  if (token) {
-    const decodedToken = jwt.decode(token) as { id: string };
-    return decodedToken.id;
-  }
-  return null;
-}
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   try {
     await connectDB();
-    const userIdFromToken = getUserIdFromToken(req);
-
-    if (!userIdFromToken) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
+    const userIdFromToken = req.query.id;
 
     const user = await User.findById(userIdFromToken);
 
