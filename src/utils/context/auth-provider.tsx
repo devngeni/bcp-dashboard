@@ -19,7 +19,7 @@ interface AuthData {
   newPassword?: string;
   confirmPassword?: string;
   handlePasswordChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  passwordReset: () => Promise<boolean>;
+  passwordReset: () => Promise<boolean | any>;
 }
 
 // Create authentication context
