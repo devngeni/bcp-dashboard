@@ -66,7 +66,7 @@ const SignIn: NextPageWithLayout = () => {
       }
     } else {
       setIsLoading(false);
-      toast.error("Fill in the fields");
+      toast.error("Fill in all fields");
     }
   };
 
