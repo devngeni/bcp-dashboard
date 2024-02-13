@@ -1,11 +1,16 @@
 import { Icredentials } from "@/pages";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import axios from "axios";
 
 interface User {
   email: string;
   id: string;
   token: string;
+  name: string;
+  photo: string;
+  phone: string;
+  role: string;
 }
 
 // Define the interface for authentication data
@@ -20,6 +25,7 @@ interface AuthData {
   confirmPassword?: string;
   handlePasswordChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   passwordReset: () => Promise<boolean | any>;
+  updateProfile: (data: any) => Promise<any>;
 }
 
 // Create authentication context
@@ -134,6 +140,24 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return router.push("/");
   }
 
+  async function updateProfile(data: any) {
+    console.log("User", user?.id);
+    try {
+      const response = await axios.put(`api/user/profile/${user?.id}`, data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (response.status === 200) {
+        console.log("Profile Updated");
+      } else {
+        console.log("Profile Update Failed!");
+      }
+    } catch (error) {
+      console.log("Error Occurred");
+    }
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -147,6 +171,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         confirmPassword,
         handlePasswordChange,
         passwordReset,
+        updateProfile,
       }}
     >
       {children}
