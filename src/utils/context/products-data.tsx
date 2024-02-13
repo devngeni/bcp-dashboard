@@ -34,7 +34,6 @@ interface ProductDataProps {
 
 // Product Data Context
 const ProductDataContext = createContext({} as ProductDataProps);
-
 //useProductDataContext to get all services data
 export function useProductDataContext() {
   const productData = useContext(ProductDataContext);
@@ -156,9 +155,6 @@ export const ProductDataProvider = ({ children }: any) => {
           `/api/service/${product_id}`,
           serviceData
         );
-        setTimeout(() => {
-          router.push("/products");
-        }, 3000);
       } else {
         console.log("Product not found");
       }
