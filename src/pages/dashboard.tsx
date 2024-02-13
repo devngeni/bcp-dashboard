@@ -139,10 +139,6 @@ const StatisticBox: React.FC<StatisticBoxProps> = ({
 };
 
 const Dashboard: NextPageWithLayout = () => {
-  //from useAuth provider
-  const data = useAuth();
-  const router = useRouter();
-
   return (
     <CommonWrapper>
       <h1>Dashboard</h1>

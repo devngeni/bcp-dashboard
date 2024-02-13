@@ -7,6 +7,8 @@ import { Box } from "@mui/material";
 import Profile from "@/components/my-account-page/profile";
 import Settings from "@/components/my-account-page/settings";
 import { useAuth } from "@/utils/context/auth-provider";
+import toast from "react-hot-toast";
+import Loader from "@/components/common-components/loader";
 
 export interface myAccProps {
   formData: any;
@@ -19,6 +21,7 @@ export interface myAccProps {
 
 const MyAccount: NextPageWithLayout = () => {
   const [activeTab, setActiveTab] = useState("Profile");
+  const [isLoading, setIsLoading] = useState(false);
   const { user } = useAuth();
 
   const [formData, setFormData] = useState({
@@ -39,21 +42,28 @@ const MyAccount: NextPageWithLayout = () => {
   const handleTabClick = (tabName: string) => {
     setActiveTab(tabName);
   };
+  setSelectedImage;
 
   const tabs = ["Profile", "Settings"];
   const { newPassword, confirmPassword, passwordReset } = useAuth();
 
-  const HandleSaveUserDetails = async () => {
+  const handleSaveUserDetails = async () => {
     if (activeTab === "Settings") {
       // call password reset
+      setIsLoading(true);
       if (confirmPassword === newPassword) {
-        const result = await passwordReset();
+        const passwordChanged = await passwordReset();
 
-        result
-          ? alert("Successfully changed password")
-          : alert("something went wrong while changing password");
+        if (passwordChanged) {
+          setIsLoading(false);
+          toast.success("Password changed successfully");
+        } else {
+          setIsLoading(false);
+          toast.error("Password change failed, log out and log in again");
+        }
       } else {
-        alert("Passwords do no match");
+        setIsLoading(false);
+        toast.error("Passwords do no match");
         return;
       }
     }
@@ -75,8 +85,8 @@ const MyAccount: NextPageWithLayout = () => {
           ))}
         </Box>
         <Box className="sub_box">
-          <YelloWButton type="submit" onClick={HandleSaveUserDetails}>
-            Save
+          <YelloWButton type="submit" onClick={handleSaveUserDetails}>
+            {isLoading ? <Loader /> : "Save"}
           </YelloWButton>
         </Box>
       </TabsBar>
