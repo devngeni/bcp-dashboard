@@ -103,3 +103,25 @@ export const CountArrow = ({ fillColor }: iconProps) => {
     </Box>
   );
 };
+
+export const LogoutIcon = ({ fillColor }: iconProps) => {
+  return (
+    <Box>
+      <svg
+        width="25"
+        height="24"
+        viewBox="0 0 25 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M11.5 16L7.5 12M7.5 12L11.5 8M7.5 12L21.5 12M16.5 16V17C16.5 18.6569 15.1569 20 13.5 20H6.5C4.84315 20 3.5 18.6569 3.5 17V7C3.5 5.34315 4.84315 4 6.5 4H13.5C15.1569 4 16.5 5.34315 16.5 7V8"
+          stroke={fillColor ? fillColor : "#111827"}
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </Box>
+  );
+};

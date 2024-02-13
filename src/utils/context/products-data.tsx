@@ -1,6 +1,7 @@
 import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import toast from "react-hot-toast";
 
 // interface ProductDataProps {
 //   services?: any;
@@ -62,8 +63,11 @@ export const ProductDataProvider = ({ children }: any) => {
     price: number
   ) => {
     try {
-      if (!selectedFile) {
-        console.error("No file selected.");
+      if (!selectItem || !subtitle || !productName || !price) {
+        toast.error("All fields are required.");
+        return;
+      } else if (!selectedFile) {
+        toast.error("Image file is required.");
         return;
       }
 
@@ -97,11 +101,15 @@ export const ProductDataProvider = ({ children }: any) => {
         ],
       };
 
-      console.log("Service Data", serviceData);
-
       const response = await axios.post("/api/service", serviceData);
+
+      if (response.status === 200) {
+        toast.success("New product added successfully.");
+        await refetchServices();
+      }
+      return response;
     } catch (error) {
-      console.error("Error creating product:", error);
+      toast.error("Error creating product. Please try again.");
     }
   };
 
@@ -113,7 +121,7 @@ export const ProductDataProvider = ({ children }: any) => {
     productName: string,
     description: string,
     price: number
-  ): Promise<void> => {
+  ): Promise<any> => {
     try {
       if (!selectedFile) {
         console.error("No file selected.");
@@ -156,9 +164,13 @@ export const ProductDataProvider = ({ children }: any) => {
           `/api/service/${product_id}`,
           serviceData
         );
+        console.log("Product updated:", response);
+
         setTimeout(() => {
           router.push("/products");
         }, 3000);
+
+        return response;
       } else {
         console.log("Product not found");
       }
@@ -170,17 +182,32 @@ export const ProductDataProvider = ({ children }: any) => {
   const deleteProduct = async (product_id: string) => {
     try {
       await axios.delete(`/api/service/${product_id}`);
+      //after delete the product, we need to update the state
+      await refetchServices();
     } catch (error) {
       console.error("Error deleting product:", error);
     }
   };
-  useEffect(() => {
-    (async () => {
+
+  const fetchServices = async () => {
+    try {
       const response = await fetch(`/api/service`);
       const data = await response.json();
       const { services } = data;
-      setServices(services);
-    })();
+      return services;
+    } catch (error) {
+      console.error("Error fetching services:", error);
+      return [];
+    }
+  };
+
+  const refetchServices = async () => {
+    const updatedServices = await fetchServices();
+    setServices(updatedServices);
+  };
+
+  useEffect(() => {
+    refetchServices(); // Initial fetching of services
   }, []);
 
   return (

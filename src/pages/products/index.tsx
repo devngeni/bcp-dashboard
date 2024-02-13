@@ -38,7 +38,7 @@ import { useRouter } from "next/router";
 import { NextPageWithLayout } from "../_app";
 import { useProductDataContext } from "@/utils/context/products-data";
 import DashBoardLayout from "@/components/layout/dashboardLayout";
-import DeleteModal from "./deleteModal";
+import DeleteModal from "../../components/products-page/deleteModal";
 
 interface Product {
   price: number;
@@ -63,9 +63,10 @@ interface IProductRows {
   }: pageNavigateToQueryProps) => void;
   isSelected: boolean;
   onCheckboxClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  handleDelete: (product_id: string) => Promise<void>;
+  deleteFunc: (product_id: string) => void;
   selectedRows: any;
   eachSelectedRow: any;
+  setSelectedRows?: any;
 }
 
 function isValidImageUrl(url: any) {
@@ -102,9 +103,10 @@ const ProductRow = ({
   pageNavigateToQueryParam,
   isSelected,
   onCheckboxClick,
-  handleDelete,
   selectedRows,
   eachSelectedRow,
+  deleteFunc,
+  setSelectedRows,
 }: IProductRows) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
@@ -119,6 +121,17 @@ const ProductRow = ({
       }
     }
   };
+
+  const handleDelete = async (product_id: string) => {
+    try {
+      await deleteFunc(product_id);
+      setIsDeleteModalOpen(false);
+      setSelectedRows([]);
+    } catch (error) {
+      console.error("Error deleting product:", error);
+    }
+  };
+
   return (
     <TableRow key={index}>
       <StyledTableCell>{index + 1}</StyledTableCell>
@@ -229,33 +242,20 @@ const ProductsPages: NextPageWithLayout = () => {
     console.error("deleteFunc is not defined");
     return null;
   }
-  const handleDelete = async (product_id: string) => {
-    try {
-      await deleteFunc(product_id);
-    } catch (error) {
-      console.error("Error deleting product:", error);
-    }
-  };
 
   const toggleOpen = () => setOpen((prev) => !prev);
 
   // Function to handle individual checkbox click
   const handleCheckboxClick = (index: number) => {
-    const selectedIndex = selectedRows.indexOf(index);
+    const isSelected = selectedRows.includes(index);
+
     let newSelected: number[] = [];
 
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selectedRows, index);
+    if (isSelected) {
+      newSelected = selectedRows.filter((item) => item !== index);
+    } else {
+      newSelected = [...selectedRows, index];
       setEachSelectedRow(visibleItems[index]);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selectedRows.slice(1));
-    } else if (selectedIndex === selectedRows.length - 1) {
-      newSelected = newSelected.concat(selectedRows.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selectedRows.slice(0, selectedIndex),
-        selectedRows.slice(selectedIndex + 1)
-      );
     }
 
     setSelectedRows(newSelected);
@@ -342,7 +342,6 @@ const ProductsPages: NextPageWithLayout = () => {
   //     }
   //   }
   // }, [currentPageParam, router, totalPages]);
-  
 
   const pageNavigateToQueryParam = ({
     queryParam,
@@ -431,9 +430,10 @@ const ProductsPages: NextPageWithLayout = () => {
                       isSelected={selectedRows.includes(index)}
                       onCheckboxClick={() => handleCheckboxClick(index)}
                       pageNavigateToQueryParam={pageNavigateToQueryParam}
-                      handleDelete={handleDelete}
                       selectedRows={selectedRows}
                       eachSelectedRow={eachSelectedRow}
+                      setSelectedRows={setSelectedRows}
+                      deleteFunc={deleteFunc}
                     />
                   ))}
               </TableBody>

@@ -91,12 +91,15 @@ export const ChartContainer = styled(Box)(() => ({
   gap: "20px",
   flexWrap: "wrap",
 
+
   ".chart_box": {
     display: "flex",
     flexDirection: "column",
     width: "550px",
     height: "343px",
     boxShadow: "0px 2px 10px 0px #0000001A",
+  backgroundColor: "#FFFFFF",
+
   },
 
   "@media (max-width: 1400px)": {

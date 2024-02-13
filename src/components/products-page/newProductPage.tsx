@@ -55,7 +55,7 @@ const NewProductPage = ({
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      await newProductFunc(
+      const res = (await newProductFunc(
         selectedFile,
         selectItem,
         subtitle,
@@ -63,14 +63,18 @@ const NewProductPage = ({
         productName,
         description,
         price
-      );
-      setProductName("");
-      setPrice(0);
-      setSubtitle("");
-      setDescription("");
-      setSelectedRadio("");
-      setSelectedFile(null);
-      setProgress(0);
+      )) as any;
+
+      if (res?.status === 200) {
+        setProductName("");
+        setPrice(0);
+        setSubtitle("");
+        setDescription("");
+        setSelectedRadio("");
+        setSelectedFile(null);
+        setSelectItem("");
+        setProgress(0);
+      }
     } catch (error) {
       console.error("Error creating product:", error);
     }

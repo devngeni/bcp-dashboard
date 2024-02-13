@@ -119,6 +119,7 @@ const EditProductPage = ({
   };
 
   return (
+    // <Box sx={{ display: "flex" }}>
     <form onSubmit={handleEdit}>
       <Box
         sx={{
@@ -146,146 +147,190 @@ const EditProductPage = ({
             </Box>
           </Box>
         </TopLevel>
-        <Box sx={{ display: "flex", flexDirection: "column", mt: "20px" }}>
-          <Box sx={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
-            <StyledInputField sx={{ width: "556px" }}>
-              <label>Product Name</label>
-              <input
-                type="text"
-                placeholder="Product"
-                value={productName}
-                onChange={(e) => setProductName(e.target.value)}
-              />
-            </StyledInputField>
+        <Box sx={{ display: "flex", gap: "50px", flexWrap: "wrap" }}>
+          <Box sx={{ display: "flex", flexDirection: "column", mt: "20px" }}>
+            <Box sx={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
+              <StyledInputField sx={{ width: "556px" }}>
+                <label>Product Name</label>
+                <input
+                  type="text"
+                  placeholder="Product"
+                  value={productName}
+                  onChange={(e) => setProductName(e.target.value)}
+                />
+              </StyledInputField>
 
-            <StyledInputField sx={{ width: "167px" }}>
-              <label>Price</label>
-              <input
-                type="text"
-                placeholder="Price"
-                value={price}
-                onChange={(e) => setPrice(Number(e.target.value))}
-              />
-            </StyledInputField>
-          </Box>
+              <StyledInputField sx={{ width: "167px" }}>
+                <label>Price</label>
+                <input
+                  type="text"
+                  placeholder="Price"
+                  value={price}
+                  onChange={(e) => setPrice(Number(e.target.value))}
+                />
+              </StyledInputField>
+            </Box>
 
-          <Box
-            sx={{ display: "flex", gap: "20px", mt: "20px", flexWrap: "wrap" }}
-          >
-            <StyledInputField
+            <Box
               sx={{
-                width: "361.5px",
+                display: "flex",
+                gap: "20px",
+                mt: "20px",
+                flexWrap: "wrap",
               }}
             >
-              <label>Category</label>
-              <HandleSelectCategory
-                menuItemPlaceholder={menuItemPlaceholder}
-                selectItem={selectItem}
-                setSelectItem={setSelectItem}
-                selectDataItems={selectDataItems}
-              />
-            </StyledInputField>
-
-            <StyledInputField
-              sx={{
-                width: "361.5px",
-              }}
-            >
-              <label>Subtitle</label>
-              <input
-                type="text"
-                placeholder="Subtitle"
-                value={subtitle}
-                onChange={(e) => setSubtitle(e.target.value)}
-              />
-            </StyledInputField>
-          </Box>
-
-          <Box sx={{ display: "flex", gap: "20px", mt: "28px" }}>
-            <StyledTextArea sx={{}}>
-              <label>Description</label>
-              <textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              />
-            </StyledTextArea>
-          </Box>
-
-          <Box
-            sx={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: "20px",
-              mt: "28px",
-              label: {
-                fontWeight: 400,
-              },
-            }}
-          >
-            {[
-              "Featured",
-              "Deal of the Month",
-              "Add to quick actions",
-              "On Offer/Discount",
-            ].map((label, index) => (
-              <Box
-                key={index}
+              <StyledInputField
                 sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  gap: "8px",
-                  width: "fit-content",
-                  alignItems: "center",
+                  width: "361.5px",
                 }}
               >
-                <StyledRoundButton
-                  checked={selectedRadio === label}
-                  value={label}
-                  onChange={handleRadioButtonChange}
+                <label>Category</label>
+                <HandleSelectCategory
+                  menuItemPlaceholder={menuItemPlaceholder}
+                  selectItem={selectItem}
+                  setSelectItem={setSelectItem}
+                  selectDataItems={selectDataItems}
                 />
-                <label>{label}</label>
+              </StyledInputField>
+
+              <StyledInputField
+                sx={{
+                  width: "361.5px",
+                }}
+              >
+                <label>Subtitle</label>
+                <input
+                  type="text"
+                  placeholder="Subtitle"
+                  value={subtitle}
+                  onChange={(e) => setSubtitle(e.target.value)}
+                />
+              </StyledInputField>
+            </Box>
+
+            <Box sx={{ display: "flex", gap: "20px", mt: "28px" }}>
+              <StyledTextArea sx={{}}>
+                <label>Description</label>
+                <textarea
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                />
+              </StyledTextArea>
+            </Box>
+
+            <Box
+              sx={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: "20px",
+                mt: "28px",
+                label: {
+                  fontWeight: 400,
+                },
+              }}
+            >
+              {[
+                "Featured",
+                "Deal of the Month",
+                "Add to quick actions",
+                "On Offer/Discount",
+              ].map((label, index) => (
+                <Box
+                  key={index}
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    gap: "8px",
+                    width: "fit-content",
+                    alignItems: "center",
+                  }}
+                >
+                  <StyledRoundButton
+                    checked={selectedRadio === label}
+                    value={label}
+                    onChange={handleRadioButtonChange}
+                  />
+                  <label>{label}</label>
+                </Box>
+              ))}
+            </Box>
+
+            <UploadProductPicture
+              onDragOver={handleDragOver}
+              onDrop={handleDrop}
+            >
+              <label>Product pictures</label>
+              <Box className="upload_box">
+                <Image src={UploadImageIcon} alt="arrow" />
+                <Box className="upload_text">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    style={{ display: "none" }}
+                    id="fileInput"
+                  />
+                  <label htmlFor="fileInput">
+                    <span>Upload a file</span>{" "}
+                  </label>
+                  or drag and drop
+                </Box>
+                <Box className="upload_text small_size">
+                  PNG, JPG, GIF up to 10MB
+                </Box>
+
+                {selectedFile && (
+                  <Box>
+                    <LinearProgress
+                      variant="determinate"
+                      value={progress}
+                      sx={{ width: "100px" }}
+                    />
+                    {progress === 100 && (
+                      <Box className="selected-file">{selectedFile.name}</Box>
+                    )}
+                  </Box>
+                )}
               </Box>
-            ))}
+            </UploadProductPicture>
           </Box>
 
-          <UploadProductPicture onDragOver={handleDragOver} onDrop={handleDrop}>
-            <label>Product pictures</label>
-            <Box className="upload_box">
-              <Image src={UploadImageIcon} alt="arrow" />
-              <Box className="upload_text">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                  style={{ display: "none" }}
-                  id="fileInput"
-                />
-                <label htmlFor="fileInput">
-                  <span>Upload a file</span>{" "}
-                </label>
-                or drag and drop
-              </Box>
-              <Box className="upload_text small_size">
-                PNG, JPG, GIF up to 10MB
-              </Box>
+          {product &&
+            product.content &&
+            product.content[0] &&
+            product.content[0].imagePath && (
+              <Box
+                sx={{
+                  width: "200px",
+                  background: "#fff",
+                  boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.25)",
+                  height: "200px",
+                  mt: "50px",
 
-              {selectedFile && (
-                <Box>
-                  <LinearProgress
-                    variant="determinate"
-                    value={progress}
-                    sx={{ width: "100px" }}
-                  />
-                  {progress === 100 && (
-                    <Box className="selected-file">{selectedFile.name}</Box>
-                  )}
-                </Box>
-              )}
-            </Box>
-          </UploadProductPicture>
+                  img: {
+                    width: "100%",
+                    height: "100%",
+                  },
+
+                  "@media (max-width: 1200px)": {
+                    mt: "0px",
+                    gap: "10px",
+                  },
+                }}
+              >
+                <Image
+                  src={product.content[0].imagePath}
+                  alt=""
+                  width={1}
+                  height={1}
+                />
+              </Box>
+            )}
         </Box>
       </Box>
     </form>
+    // <Box></Box>
+    // </Box>
   );
 };
 

@@ -50,6 +50,7 @@ export const SidebarButtons = styled(Button)(() => ({
 }));
 
 export const Topbar = styled(Box)(() => ({
+  position: "relative",
   display: "flex",
   flexDirection: "row",
   alignItems: "center",
@@ -58,6 +59,7 @@ export const Topbar = styled(Box)(() => ({
   width: "100%",
   height: "64px",
   zIndex: 100,
+  background: "#FFFFFF",
   boxShadow:
     "0px 1px 2px 0px rgba(0, 0, 0, 0.06), 0px 1px 3px 0px rgba(0, 0, 0, 0.10)",
 }));
