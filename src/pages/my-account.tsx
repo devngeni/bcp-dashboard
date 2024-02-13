@@ -41,13 +41,27 @@ const MyAccount: NextPageWithLayout = () => {
   };
 
   const tabs = ["Profile", "Settings"];
+  const { newPassword, confirmPassword, passwordReset } = useAuth();
 
-  const HandleSaveUserDetails = () => {
-    console.log("details updated successfully", {
-      formData,
-      selectedImage,
-      userRole,
-    });
+  const HandleSaveUserDetails = async () => {
+    // console.log("details updated successfully", {
+    //   formData,
+    //   selectedImage,
+    //   userRole,
+    // });
+    if (activeTab === "Settings") {
+      // call password reset
+      if (confirmPassword === newPassword) {
+        const result = await passwordReset();
+
+        result
+          ? alert("Successfully changed password")
+          : alert("something went wrong while changing password");
+      } else {
+        alert("Passwords do no match");
+        return;
+      }
+    }
   };
 
   return (
@@ -66,7 +80,9 @@ const MyAccount: NextPageWithLayout = () => {
           ))}
         </Box>
         <Box className="sub_box">
-          <YelloWButton onClick={HandleSaveUserDetails}>Save</YelloWButton>
+          <YelloWButton type="submit" onClick={HandleSaveUserDetails}>
+            Save
+          </YelloWButton>
         </Box>
       </TabsBar>
       {activeTab === "Profile" ? (
@@ -79,7 +95,7 @@ const MyAccount: NextPageWithLayout = () => {
           setUserRole={setUserRole}
         />
       ) : activeTab === "Settings" ? (
-        <Settings formData={formData} setFormData={setFormData} />
+        <Settings />
       ) : null}
     </CommonWrapper>
   );

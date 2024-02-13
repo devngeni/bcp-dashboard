@@ -89,7 +89,7 @@ const PreviousNextIcon = ({ isNextBtn }: { isNextBtn?: boolean }) => {
     >
       <Image
         src={ArrowPreviousNextIcon}
-        alt="next-priviuos"
+        alt="next-previous"
         width={20}
         height={20}
       />
