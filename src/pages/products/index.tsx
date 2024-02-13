@@ -39,6 +39,7 @@ import { NextPageWithLayout } from "../_app";
 import { useProductDataContext } from "@/utils/context/products-data";
 import DashBoardLayout from "@/components/layout/dashboardLayout";
 import DeleteModal from "../../components/products-page/deleteModal";
+import toast from "react-hot-toast";
 
 interface Product {
   price: number;
@@ -109,26 +110,35 @@ const ProductRow = ({
   setSelectedRows,
 }: IProductRows) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const toggleDeleteModal = () => {
     if (selectedRows.length === 0) {
-      console.log("No item selected");
+      toast.error("Select the item to delete");
     } else {
       if (eachSelectedRow._id === row._id) {
         setIsDeleteModalOpen((prev) => !prev);
       } else {
-        console.log("select the item to delete");
+        toast.error("Select specific item for delete");
       }
     }
   };
 
   const handleDelete = async (product_id: string) => {
     try {
-      await deleteFunc(product_id);
-      setIsDeleteModalOpen(false);
-      setSelectedRows([]);
+      setIsLoading(true);
+      const res = (await deleteFunc(product_id)) as any;
+
+      if (res.status === 200) {
+        setIsDeleteModalOpen(false);
+        setSelectedRows([]);
+        setIsLoading(false);
+      } else {
+        toast.error("Error deleting product. Please try again.");
+        setIsLoading(false);
+      }
     } catch (error) {
-      console.error("Error deleting product:", error);
+      toast.error("Error deleting product. Please try again.");
     }
   };
 
@@ -211,6 +221,7 @@ const ProductRow = ({
               }}
             />
             <DeleteModal
+              isLoading={isLoading}
               isDeleteModalOpen={isDeleteModalOpen}
               handleClose={toggleDeleteModal}
               handleDelete={() => handleDelete(row._id)}

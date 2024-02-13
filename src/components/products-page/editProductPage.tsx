@@ -17,6 +17,8 @@ import {
 } from "./handleSelectCategory";
 import { useRouter } from "next/router";
 import { useProductDataContext } from "@/utils/context/products-data";
+import toast from "react-hot-toast";
+import Loader from "../common-components/loader";
 
 type FileType = File | null;
 
@@ -41,12 +43,14 @@ const EditProductPage = ({
   const [product, setProduct] = useState<any>({});
   const [productName, setProductName] = useState<string>("");
   const [price, setPrice] = useState<number>(0);
-  const [category, setCategory] = useState<string>("");
   const [subtitle, setSubtitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [selectedRadio, setSelectedRadio] = useState("");
   const [selectedFile, setSelectedFile] = useState<FileType>(null);
   const [progress, setProgress] = useState(0);
+  const [previewImage, setPreviewImage] = useState(null);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const getProductDetails = async () => {
@@ -76,7 +80,14 @@ const EditProductPage = ({
 
   const handleFileChange = (event: any) => {
     const file = event.target.files && event.target.files[0];
-    setSelectedFile(file);
+    if (file) {
+      const reader: any = new FileReader();
+      reader.onloadend = () => {
+        setSelectedFile(file);
+        setPreviewImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
     simulateUpload(setProgress);
   };
 
@@ -89,7 +100,14 @@ const EditProductPage = ({
     event.preventDefault();
     event.stopPropagation();
     const file = event.dataTransfer.files[0];
-    setSelectedFile(file);
+    if (file) {
+      const reader: any = new FileReader();
+      reader.onloadend = () => {
+        setSelectedFile(file);
+        setPreviewImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
     simulateUpload(setProgress);
   };
 
@@ -104,18 +122,29 @@ const EditProductPage = ({
     event.preventDefault();
 
     try {
-      await editProductFunc(
+      setIsLoading(true);
+      const res = (await editProductFunc(
         selectedFile,
         selectItem,
         subtitle,
         selectedRadio,
         productName,
         description,
-        price
-      );
-      console.log("Product Edited Successfully!");
-      router.push("/products");
+        price,
+        product.content[0].imagePath
+      )) as any;
+
+      if (res?.status === 200) {
+        setIsLoading(false);
+
+        setTimeout(() => {
+          router.back();
+        }, 2000);
+      } else {
+        setIsLoading(false);
+      }
     } catch (error) {
+      toast.error("Error Updating Product!");
       console.error("Error Updating Product:", error);
     }
   };
@@ -143,7 +172,9 @@ const EditProductPage = ({
               alignItems: "center",
             }}
           >
-            <YelloWButton type="submit">Save Changes</YelloWButton>
+            <YelloWButton type="submit">
+              {isLoading ? <Loader /> : "Save Changes"}
+            </YelloWButton>
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <Image src={ArrowIcon} alt="arrow" className="sort_arrow" />
             </Box>
@@ -165,7 +196,7 @@ const EditProductPage = ({
               <StyledInputField sx={{ width: "167px" }}>
                 <label>Price</label>
                 <input
-                  type="text"
+                  type="number"
                   placeholder="Price"
                   value={price}
                   onChange={(e) => setPrice(Number(e.target.value))}
@@ -321,7 +352,9 @@ const EditProductPage = ({
                 }}
               >
                 <Image
-                  src={product.content[0].imagePath}
+                  src={
+                    previewImage ? previewImage : product.content[0].imagePath
+                  }
                   alt=""
                   width={1}
                   height={1}

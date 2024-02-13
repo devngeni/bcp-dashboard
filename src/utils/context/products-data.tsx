@@ -28,7 +28,8 @@ interface ProductDataProps {
     selectedRadio: string,
     productName: string,
     description: string,
-    price: number
+    price: number,
+    existingImagePath: any
   ) => void;
   deleteFunc?: (product_id: string) => void;
 }
@@ -119,29 +120,32 @@ export const ProductDataProvider = ({ children }: any) => {
     selectedRadio: string,
     productName: string,
     description: string,
-    price: number
+    price: number,
+    existingImagePath: any
   ): Promise<any> => {
     try {
-      if (!selectedFile) {
-        console.error("No file selected.");
+      let cloudinaryImageUrl = existingImagePath; // Set the default image URL to the existing one
+
+      if (selectedFile) {
+        const formData = new FormData();
+        formData.append("file", selectedFile);
+        formData.append("upload_preset", "z9q4pq86");
+
+        const cloudinaryResponse = await axios.post(
+          `https://api.cloudinary.com/v1_1/dhvrtisdb/image/upload`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+
+        cloudinaryImageUrl = cloudinaryResponse.data.secure_url;
+      } else {
+        toast.error("No file selected."); // Notify the user if no file is selected
         return;
       }
-
-      const formData = new FormData();
-      formData.append("file", selectedFile);
-      formData.append("upload_preset", "z9q4pq86");
-
-      const cloudinaryResponse = await axios.post(
-        `https://api.cloudinary.com/v1_1/dhvrtisdb/image/upload`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-
-      const cloudinaryImageUrl = cloudinaryResponse.data.secure_url;
 
       const serviceData = {
         category: selectItem,
@@ -163,27 +167,33 @@ export const ProductDataProvider = ({ children }: any) => {
           `/api/service/${product_id}`,
           serviceData
         );
-        console.log("Product updated:", response);
 
-        setTimeout(() => {
-          router.push("/products");
-        }, 3000);
-
+        if (response.status === 200) {
+          toast.success("Product updated successfully.");
+          await refetchServices();
+        }
         return response;
       } else {
-        console.log("Product not found");
+        toast.error("Product not found");
+        return { success: false, message: "Product not found" };
       }
     } catch (error) {
-      console.error("Error updating product:", error);
+      toast.error("Error updating product. Please try again.");
+      return { success: false, message: "Error updating product" };
     }
   };
 
   const deleteProduct = async (product_id: string) => {
     try {
-      await axios.delete(`/api/service/${product_id}`);
-      //after delete the product, we need to update the state
-      await refetchServices();
+      const res = await axios.delete(`/api/service/${product_id}`);
+
+      if (res.status === 200) {
+        await refetchServices();
+        toast.success("Product deleted successfully.");
+      }
+      return res;
     } catch (error) {
+      toast.error("Error deleting product. Please try again.");
       console.error("Error deleting product:", error);
     }
   };
