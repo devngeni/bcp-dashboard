@@ -249,10 +249,6 @@ const ProductsPages: NextPageWithLayout = () => {
 
   const context = useProductDataContext();
   const deleteFunc = context?.deleteFunc;
-  if (!deleteFunc) {
-    console.error("deleteFunc is not defined");
-    return null;
-  }
 
   const toggleOpen = () => setOpen((prev) => !prev);
 
@@ -333,8 +329,6 @@ const ProductsPages: NextPageWithLayout = () => {
 
   // Update currentPage when currentPageParam changes
   useEffect(() => {
-    const currentPageParam = router.query.page as string;
-
     if (currentPageParam) {
       const parsedPage = parseInt(currentPageParam, 10);
       // Redirect to the last valid page if parsedPage is out of range
@@ -357,6 +351,11 @@ const ProductsPages: NextPageWithLayout = () => {
       router.push(`/products/${queryParam}`);
     }
   };
+
+  if (!deleteFunc) {
+    console.error("deleteFunc is not defined");
+    return null;
+  }
 
   return (
     <CommonWrapper>
