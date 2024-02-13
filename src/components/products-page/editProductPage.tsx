@@ -57,7 +57,7 @@ const EditProductPage = ({
         setProduct(fetchedProduct);
         setProductName(fetchedProduct.content[0]?.name || "");
         setPrice(fetchedProduct.content[0]?.price || 0);
-        setCategory(fetchedProduct.category || "");
+        setSelectItem(fetchedProduct.category || "");
         setSubtitle(fetchedProduct.subTitle || "");
         setDescription(fetchedProduct.content[0]?.description || "");
         setSelectedRadio(fetchedProduct.tag || "");
@@ -68,7 +68,7 @@ const EditProductPage = ({
     };
 
     getProductDetails();
-  }, [router.query]);
+  }, [router.query, setSelectItem]);
 
   const handleRadioButtonChange = (event: any) => {
     setSelectedRadio(event.target.value);
@@ -113,8 +113,10 @@ const EditProductPage = ({
         description,
         price
       );
+      console.log("Product Edited Successfully!");
+      router.push("/products");
     } catch (error) {
-      console.error("Error updating product:", error);
+      console.error("Error Updating Product:", error);
     }
   };
 

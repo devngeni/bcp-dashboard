@@ -88,7 +88,7 @@ const PreviousNextIcon = ({ isNextBtn }: { isNextBtn?: boolean }) => {
     >
       <Image
         src={ArrowPreviousNextIcon}
-        alt="next-priviuos"
+        alt="next-previous"
         width={20}
         height={20}
       />
@@ -232,6 +232,7 @@ const ProductsPages: NextPageWithLayout = () => {
   const handleDelete = async (product_id: string) => {
     try {
       await deleteFunc(product_id);
+      console.log("Product Deleted!");
     } catch (error) {
       console.error("Error deleting product:", error);
     }
@@ -342,7 +343,6 @@ const ProductsPages: NextPageWithLayout = () => {
   //     }
   //   }
   // }, [currentPageParam, router, totalPages]);
-  
 
   const pageNavigateToQueryParam = ({
     queryParam,

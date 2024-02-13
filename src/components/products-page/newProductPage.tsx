@@ -16,6 +16,7 @@ import {
   HandleSelectCategoryProps,
 } from "./handleSelectCategory";
 import { useProductDataContext } from "@/utils/context/products-data";
+import { useRouter } from "next/router";
 
 type FileType = File | null;
 
@@ -44,6 +45,7 @@ const NewProductPage = ({
   const [selectedRadio, setSelectedRadio] = useState("");
   const [selectedFile, setSelectedFile] = useState<FileType>(null);
   const [progress, setProgress] = useState(0);
+  const router = useRouter();
 
   const context = useProductDataContext();
   const newProductFunc = context?.newProductFunc;
@@ -71,8 +73,10 @@ const NewProductPage = ({
       setSelectedRadio("");
       setSelectedFile(null);
       setProgress(0);
+      router.push("/products");
+      console.log("Product Created Successfully!");
     } catch (error) {
-      console.error("Error creating product:", error);
+      console.error("Error Creating Product!", error);
     }
   };
 
