@@ -1,7 +1,8 @@
 import { Icredentials } from "@/pages";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, use, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 interface User {
   email: string;
@@ -44,6 +45,7 @@ export function useAuth() {
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+
   const router = useRouter();
   // password change
   const [newPasswordData, setNewPasswordData] = useState<any>({
@@ -57,8 +59,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setNewPasswordData({ ...newPasswordData, [e.target.name]: e.target.value });
 
+  // Check if user data is present in local storage
   useEffect(() => {
-    // Check if user data is present in local storage
     const storedUser = localStorage.getItem("bcp-token");
     if (storedUser) {
       try {
@@ -75,7 +77,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, []);
 
-  // Replace with your login function
+  //login function by email and password
   async function login(credentials: Icredentials) {
     try {
       const response = await fetch("/api/user/login", {
@@ -141,7 +143,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }
 
   async function updateProfile(data: any) {
-    console.log("User", user?.id);
     try {
       const response = await axios.put(`api/user/profile/${user?.id}`, data, {
         headers: {
@@ -149,12 +150,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         },
       });
       if (response.status === 200) {
-        console.log("Profile Updated");
+        localStorage.setItem("bcp-token", JSON.stringify(response.data.user));
+        setUser(response.data.user);
+        toast.success("Profile Updated");
+        return response;
       } else {
-        console.log("Profile Update Failed!");
+        toast.error("Profile Update Failed!");
+        return { error: "Profile Update Failed" };
       }
     } catch (error) {
-      console.log("Error Occurred");
+      toast.error("Error Occurred Updating Profile!, Please try again later.");
+      console.log("Error Occurred", error);
     }
   }
 

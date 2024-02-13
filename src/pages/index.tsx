@@ -14,13 +14,11 @@ import { Box } from "@mui/material";
 import React, { ReactElement } from "react";
 
 import FacebookRoundedIcon from "@mui/icons-material/FacebookRounded";
-import XIcon from "@mui/icons-material/X";
 import { useRouter } from "next/router";
 import { NextPageWithLayout } from "./_app";
 import AuthLayout from "@/components/layout/authLayout";
 import { useAuth } from "@/utils/context/auth-provider";
 import GoogleIcon from "@mui/icons-material/Google";
-import { set } from "lodash";
 import toast from "react-hot-toast";
 import Loader from "@/components/common-components/loader";
 

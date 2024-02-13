@@ -9,9 +9,17 @@ import Settings from "@/components/my-account-page/settings";
 import { useAuth } from "@/utils/context/auth-provider";
 import toast from "react-hot-toast";
 import Loader from "@/components/common-components/loader";
+import axios from "axios";
 
 export interface myAccProps {
-  formData: any;
+  formData: {
+    name: string;
+    email: string;
+    confirmEmail: string;
+    phone: string;
+    photo: string;
+    role: string;
+  };
   setFormData: any;
   selectedImage?: any;
   setSelectedImage?: any;
@@ -22,18 +30,18 @@ export interface myAccProps {
 const MyAccount: NextPageWithLayout = () => {
   const [activeTab, setActiveTab] = useState("Profile");
   const [isLoading, setIsLoading] = useState(false);
-  const { user } = useAuth();
+  const { user, updateProfile, newPassword, confirmPassword, passwordReset } =
+    useAuth();
 
   const [formData, setFormData] = useState({
-    name: "",
-    email: user?.email || "",
+    name: user?.name ?? "",
+    email: user?.email ?? "",
     confirmEmail: "",
-    phone: "",
-    oldPassword: "",
-    newPassword: "",
-    confirmNewPassword: "",
+    phone: user?.phone ?? "",
+    photo: user?.photo ?? "",
+    role: user?.role ?? "",
   });
-  const [userRole, setUserRole] = useState("");
+
   const [selectedImage, setSelectedImage] = useState({
     file: null,
     previewImage: null,
@@ -45,7 +53,50 @@ const MyAccount: NextPageWithLayout = () => {
   setSelectedImage;
 
   const tabs = ["Profile", "Settings"];
-  const { newPassword, confirmPassword, passwordReset } = useAuth();
+
+  const handleProfileUpdate = async () => {
+    try {
+      if (formData.email !== formData.confirmEmail) {
+        toast.error("Emails do not match");
+        return;
+      }
+
+      setIsLoading(true);
+      let photoUrl = formData.photo;
+      if (!selectedImage.file) {
+        photoUrl = formData.photo;
+      } else {
+        const formDataForUpload = new FormData();
+        formDataForUpload.append("file", selectedImage.file);
+        formDataForUpload.append("upload_preset", "z9q4pq86");
+
+        const cloudinaryResponse = await axios.post(
+          `https://api.cloudinary.com/v1_1/dhvrtisdb/image/upload`,
+          formDataForUpload,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        photoUrl = cloudinaryResponse.data.secure_url;
+      }
+
+      const updatedFormData = { ...formData, photo: photoUrl };
+
+      const response = await updateProfile(updatedFormData);
+
+      if (response.status === 200) {
+        setIsLoading(false);
+      } else {
+        setIsLoading(false);
+        toast.error("Error updating profile");
+      }
+    } catch (error) {
+      setIsLoading(false);
+      console.log(error);
+    }
+  };
 
   const handleSaveUserDetails = async () => {
     if (activeTab === "Settings") {
@@ -66,6 +117,8 @@ const MyAccount: NextPageWithLayout = () => {
         toast.error("Passwords do no match");
         return;
       }
+    } else if (activeTab === "Profile") {
+      await handleProfileUpdate();
     }
   };
 
@@ -96,8 +149,6 @@ const MyAccount: NextPageWithLayout = () => {
           setFormData={setFormData}
           selectedImage={selectedImage}
           setSelectedImage={setSelectedImage}
-          userRole={userRole}
-          setUserRole={setUserRole}
         />
       ) : activeTab === "Settings" ? (
         <Settings />
