@@ -124,11 +124,11 @@ const ProductRow = ({
     }
   };
 
+  // Function to handle delete product
   const handleDelete = async (product_id: string) => {
     try {
       setIsLoading(true);
       const res = (await deleteFunc(product_id)) as any;
-
       if (res.status === 200) {
         setIsDeleteModalOpen(false);
         setSelectedRows([]);
@@ -239,7 +239,7 @@ const ProductsPages: NextPageWithLayout = () => {
   //get data from context replace with your services state in this file
 
   const router = useRouter();
-  const currentPageParam = router.query.page as string | undefined;
+  const currentPageParam = router.query.page as string;
   const [currentPage, setCurrentPage] = useState(1);
   const [open, setOpen] = useState(false);
   const [selectAll, setSelectAll] = useState(false);
@@ -249,10 +249,6 @@ const ProductsPages: NextPageWithLayout = () => {
 
   const context = useProductDataContext();
   const deleteFunc = context?.deleteFunc;
-  if (!deleteFunc) {
-    console.error("deleteFunc is not defined");
-    return null;
-  }
 
   const toggleOpen = () => setOpen((prev) => !prev);
 
@@ -272,15 +268,6 @@ const ProductsPages: NextPageWithLayout = () => {
     setSelectedRows(newSelected);
   };
 
-  // useEffect(() => {
-  //   (async () => {
-  //     const response = await fetch("http://localhost:3000/api/service");
-  //     const data = await response.json();
-  //     const { services } = data;
-  //     setServices(services);
-  //   })();
-  // }, []);
-
   // Function to handle "Select All" checkbox click
   const handleSelectAllClick = () => {
     if (selectAll) {
@@ -298,13 +285,12 @@ const ProductsPages: NextPageWithLayout = () => {
   const visibleItems =
     services && services.slice(startIndex, startIndex + itemsPerPage);
 
-  console.log(visibleItems);
-
   const handlePageChange = (newPage: number) => {
     router.push(`/products?page=${newPage}`);
     setCurrentPage(newPage);
   };
 
+  // Function to get page numbers
   const getPageNumbers = (): (number | string)[] => {
     const pageNumbers: (number | string)[] = [];
 
@@ -341,18 +327,19 @@ const ProductsPages: NextPageWithLayout = () => {
     return pageNumbers;
   };
 
-  // Inside your component ProductsPages
-  // useEffect(() => {
-  //   if (currentPageParam) {
-  //     const parsedPage = parseInt(currentPageParam, 10);
-  //     if (!isNaN(parsedPage) && parsedPage >= 1 && parsedPage <= totalPages) {
-  //       setCurrentPage(parsedPage);
-  //     } else {
-  //       // Handle invalid page number or out of range
-  //       router.push("/products?page=1 & page was not found"); // Redirect to page 1 by default
-  //     }
-  //   }
-  // }, [currentPageParam, router, totalPages]);
+  // Update currentPage when currentPageParam changes
+  useEffect(() => {
+    if (currentPageParam) {
+      const parsedPage = parseInt(currentPageParam, 10);
+      // Redirect to the last valid page if parsedPage is out of range
+      if (!isNaN(parsedPage) && parsedPage >= 1) {
+        const adjustedPage = Math.min(parsedPage, totalPages); // Ensure page is within valid range
+        setCurrentPage(adjustedPage); // Update state with adjusted page
+      } else {
+        router.push(`/products?page=${totalPages}`); // Redirect to last valid page
+      }
+    }
+  }, [currentPageParam, router, totalPages]);
 
   const pageNavigateToQueryParam = ({
     queryParam,
@@ -364,6 +351,11 @@ const ProductsPages: NextPageWithLayout = () => {
       router.push(`/products/${queryParam}`);
     }
   };
+
+  if (!deleteFunc) {
+    console.error("deleteFunc is not defined");
+    return null;
+  }
 
   return (
     <CommonWrapper>
