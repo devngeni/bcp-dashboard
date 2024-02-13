@@ -26,13 +26,10 @@ const userSchema = new mongoose.Schema(
       required: false,
       default: "",
     },
-    picture: {
-      type: String,
-      required: false,
-    },
+    photo: { type: String, required: false },
     role: {
       type: String,
-      enum: ["super", "admin"],
+      enum: ["admin", "operator"],
       default: "admin",
     },
   },
