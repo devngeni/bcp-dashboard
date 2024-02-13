@@ -141,8 +141,6 @@ const StatisticBox: React.FC<StatisticBoxProps> = ({
 const Dashboard: NextPageWithLayout = () => {
   //from useAuth provider
   const data = useAuth();
-  console.log("user", data.user);
-
   const router = useRouter();
 
   return (

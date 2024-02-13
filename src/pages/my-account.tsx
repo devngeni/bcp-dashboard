@@ -44,11 +44,6 @@ const MyAccount: NextPageWithLayout = () => {
   const { newPassword, confirmPassword, passwordReset } = useAuth();
 
   const HandleSaveUserDetails = async () => {
-    // console.log("details updated successfully", {
-    //   formData,
-    //   selectedImage,
-    //   userRole,
-    // });
     if (activeTab === "Settings") {
       // call password reset
       if (confirmPassword === newPassword) {
