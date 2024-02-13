@@ -15,6 +15,11 @@ interface AuthData {
   login: (credentials: Icredentials) => void;
   signUp?: () => void;
   logout?: () => void;
+  oldPassword?: string;
+  newPassword?: string;
+  confirmPassword?: string;
+  handlePasswordChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  passwordReset: () => Promise<boolean>;
 }
 
 // Create authentication context
@@ -34,6 +39,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const router = useRouter();
+  // password change
+  const [newPasswordData, setNewPasswordData] = useState<any>({
+    oldPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+
+  const { oldPassword, newPassword, confirmPassword } = newPasswordData;
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setNewPasswordData({ ...newPasswordData, [e.target.name]: e.target.value });
 
   useEffect(() => {
     // Check if user data is present in local storage
@@ -80,6 +96,32 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }
 
+  async function passwordReset() {
+    try {
+      // catch all values if they are not empty here
+      const response = await fetch("/api/user/change-password", {
+        method: "POST",
+        body: JSON.stringify({
+          email: user?.email,
+          oldPassword,
+          newPassword,
+          confirmPassword,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.status === 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error: any) {
+      console.error("Password reset failed:", error);
+    }
+  }
+
   // Replace with your sign up function
   async function signUp() {
     try {
@@ -100,6 +142,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         login,
         signUp,
         logout,
+        oldPassword,
+        newPassword,
+        confirmPassword,
+        handlePasswordChange,
+        passwordReset,
       }}
     >
       {children}
