@@ -4,6 +4,11 @@ import TwitterProvider from "next-auth/providers/twitter";
 import GoogleProvider from "next-auth/providers/google";
 import { connectDB } from "@/utils/dbconnection";
 import User from "../../../../models/user.model";
+import argon2 from "argon2";
+
+(() => {
+  connectDB();
+})();
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -29,14 +34,25 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user, account, profile }: any) {
       console.log("profile", profile);
-      connectDB();
+
       const { name, email, picture } = profile;
       const savedUser = await User.findOne({ email });
+      console.log(profile);
+      console.log(user);
       if (savedUser) {
         console.log("user already saved");
         return token;
       }
-      const newUser = new User({});
+      const hashPassword = await argon2.hash("atr5-gt65-9jet");
+      console.log(hashPassword);
+      // const newUser = new User({
+      //   email,
+      //   photo: picture,
+      //   name,
+      //   password: hashPassword,
+      //   subId: sub,
+      // });
+
       return token;
     },
   },
