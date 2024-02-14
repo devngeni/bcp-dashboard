@@ -16,6 +16,7 @@ export const authOptions: NextAuthOptions = {
       clientId: process.env.NEXT_PUBLIC_TWITTER_CLIENT_ID as string,
       clientSecret: process.env.NEXT_PUBLIC_TWITTER_CLIENT_SECRET as string,
       version: "2.0",
+      checks: ["none"],
     }),
     // FacebookProvider({
     //   clientId: process.env.NEXT_PUBLIC_FACEBOOK_CLIENT_ID as string,
@@ -24,11 +25,11 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET as string,
+      checks: ["none"],
     }),
   ],
   pages: {
     signIn: "/",
-    signOut: "/",
   },
   secret: "atr5-gt65-9jet",
   session: {
@@ -51,7 +52,7 @@ export const authOptions: NextAuthOptions = {
           const hashPassword = await argon2.hash("atr5-gt65-9jet");
 
           const newUser = new User({
-            email,
+            email: email ? email : "twitteruser@twitteruser.com",
             photo: picture,
             name,
             password: hashPassword,
