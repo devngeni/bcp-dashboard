@@ -11,12 +11,10 @@ import Image from "next/image";
 import { myAccProps } from "@/pages/my-account";
 
 const Profile = ({
-  formData,
-  setFormData,
   selectedImage,
   setSelectedImage,
-  userRole,
-  setUserRole,
+  formData,
+  setFormData,
 }: myAccProps) => {
   let avatarPlaceHolder = "/userAvatar.svg";
 
@@ -73,6 +71,7 @@ const Profile = ({
         </StyledInputField>
         <StyledInputField sx={{ mt: "20px", width: "361px" }}>
           <label>Confirm email</label>
+          {/* Add input field for confirm email */}
           <input
             type="email"
             value={formData.confirmEmail}
@@ -96,8 +95,10 @@ const Profile = ({
         <label>Assigned role</label>
         <HandleSelectCategory
           menuItemPlaceholder="set user role"
-          selectItem={userRole}
-          setSelectItem={setUserRole}
+          selectItem={formData.role}
+          setSelectItem={(value: string) =>
+            setFormData({ ...formData, role: value })
+          }
           selectDataItems={["Admin"]}
         />
       </StyledInputField>
@@ -114,8 +115,13 @@ const Profile = ({
               style={{ display: "none" }}
               id="fileInput"
             />
+
             <Image
-              src={selectedImage.previewImage || avatarPlaceHolder}
+              src={
+                selectedImage.previewImage ??
+                formData.photo ??
+                avatarPlaceHolder
+              }
               alt="user-avatar"
               width={48}
               height={48}

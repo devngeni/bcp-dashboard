@@ -16,7 +16,6 @@ import {
   HandleSelectCategoryProps,
 } from "./handleSelectCategory";
 import { useProductDataContext } from "@/utils/context/products-data";
-import { useRouter } from "next/router";
 import Loader from "../common-components/loader";
 
 type FileType = File | null;
@@ -40,14 +39,11 @@ const NewProductPage = ({
 }: HandleSelectCategoryProps) => {
   const [productName, setProductName] = useState<string>("");
   const [price, setPrice] = useState<number>(0);
-  const [category, setCategory] = useState<string>("");
   const [subtitle, setSubtitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [selectedRadio, setSelectedRadio] = useState("");
   const [selectedFile, setSelectedFile] = useState<FileType>(null);
   const [progress, setProgress] = useState(0);
-  const router = useRouter();
-
   const [isLoading, setIsLoading] = useState(false);
 
   const context = useProductDataContext();
@@ -82,7 +78,7 @@ const NewProductPage = ({
         setProgress(0);
 
         setIsLoading(false);
-      }else{
+      } else {
         setIsLoading(false);
       }
     } catch (error) {

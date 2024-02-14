@@ -11,9 +11,9 @@ import SearchIcon from "../../../../public/searchIco.svg";
 import NotificationIcon from "../../../../public/bellIcon.svg";
 import ArrowIcon from "../../../../public/arrowDownIcon.svg";
 import QuickActionModal from "./quickActionModal";
+import { useAuth } from "@/utils/context/auth-provider";
 
-const UserIcon =
-  "https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?size=626&ext=jpg&ga=GA1.1.1107306055.1706171759&semt=sph";
+let avatarPlaceHolder = "/userAvatar.svg";
 
 interface TopbarProps {
   showSearchComponent?: boolean;
@@ -21,6 +21,7 @@ interface TopbarProps {
 
 const TopbarComponent = ({ showSearchComponent }: TopbarProps) => {
   const [open, setOpen] = useState(false);
+  const { user } = useAuth();
 
   const toggleOpen = () => setOpen((prev) => !prev);
 
@@ -39,7 +40,12 @@ const TopbarComponent = ({ showSearchComponent }: TopbarProps) => {
         </Box>
 
         <Box className="user_icon">
-          <Image src={UserIcon} alt="user" width={32} height={32} />
+          <Image
+            src={user?.photo || avatarPlaceHolder}
+            alt="user"
+            width={32}
+            height={32}
+          />
         </Box>
         <Box className="arrow" onClick={toggleOpen}>
           <Image src={ArrowIcon} alt="arrow" />

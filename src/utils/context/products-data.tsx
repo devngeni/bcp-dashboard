@@ -3,13 +3,6 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 
-// interface ProductDataProps {
-//   services?: any;
-//   newProductFunc?: () => void;
-//   editFunc?: () => void;
-//   deleteFunc?: () => void;
-// }
-
 interface ProductDataProps {
   services?: any;
   newProductFunc?: (
@@ -74,9 +67,11 @@ export const ProductDataProvider = ({ children }: any) => {
       const formData = new FormData();
       formData.append("file", selectedFile);
       formData.append("upload_preset", "z9q4pq86");
+      // formData.append("quality", "auto:best");
+      // formData.append("transformation", "w_auto,c_scale");
 
       const cloudinaryResponse = await axios.post(
-        `https://api.cloudinary.com/v1_1/dhvrtisdb/image/upload`,
+        `https://api.cloudinary.com/v1_1/dhvrtisdb/auto/upload`,
         formData,
         {
           headers: {

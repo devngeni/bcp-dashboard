@@ -26,6 +26,7 @@ const userSchema = new Schema(
       default: "admin",
     },
     photo: { type: String },
+    phone: { type: String },
   },
   { timestamps: true }
 );
@@ -45,6 +46,9 @@ userSchema.methods.toJson = function toJson() {
     email: this.email,
     id: this._id,
     token: this.genToken(),
+    name: this.name,
+    photo: this.photo,
+    phone: this.phone,
   };
 };
 

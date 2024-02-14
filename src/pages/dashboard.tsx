@@ -1,5 +1,4 @@
-import React, { ReactElement, useEffect } from "react";
-import { useRouter } from "next/router";
+import React, { ReactElement } from "react";
 import { NextPageWithLayout } from "./_app";
 import {
   ActivitiesContainer,
@@ -38,7 +37,6 @@ import Image from "next/image";
 import { CountArrow } from "../../public/iconSvgs";
 import { CommonWrapper, StyledTableCell } from "@/styles/common.styles";
 import DashBoardLayout from "@/components/layout/dashboardLayout";
-import { useAuth } from "@/utils/context/auth-provider";
 
 interface StatisticBoxProps {
   countType: string;
@@ -139,12 +137,6 @@ const StatisticBox: React.FC<StatisticBoxProps> = ({
 };
 
 const Dashboard: NextPageWithLayout = () => {
-  //from useAuth provider
-  const data = useAuth();
-  console.log("user", data.user);
-
-  const router = useRouter();
-
   return (
     <CommonWrapper>
       <h1>Dashboard</h1>
