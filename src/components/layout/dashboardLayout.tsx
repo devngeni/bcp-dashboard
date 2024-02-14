@@ -13,19 +13,6 @@ const DashBoardLayout = ({
   pageTitle,
   showSearchComponent,
 }: layoutProps) => {
-  const router = useRouter();
-  const [isMounted, setIsMounted] = React.useState(false);
-  const { isAuthenticated } = useAuth();
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  if (isMounted) {
-    if (!isAuthenticated) {
-      router.push("/");
-    }
-  }
 
   return (
     <ProductDataProvider>

@@ -1,183 +1,336 @@
-import { useState } from "react";
-import {
-  useSession,
-  signIn,
-  signOut,
-  getProviders,
-  getSession,
-  getCsrfToken,
-} from "next-auth/react";
-import { GreenButton, StyledInputField } from "@/styles/common.styles";
-import {
-  ButtonSignIn,
-  DividerLine,
-  SignInContainer,
-  SignInForm,
-  SignInNav,
-  SocialItemsSignIn,
-  TC_Box,
-} from "@/styles/sign-in.styles";
-import { Box } from "@mui/material";
 import React, { ReactElement } from "react";
-
-import FacebookRoundedIcon from "@mui/icons-material/FacebookRounded";
-import { useRouter } from "next/router";
 import { NextPageWithLayout } from "./_app";
-import AuthLayout from "@/components/layout/authLayout";
-import { useAuth } from "@/utils/context/auth-provider";
-import GoogleIcon from "@mui/icons-material/Google";
-import TwitterIcon from "@mui/icons-material/Twitter";
-import toast from "react-hot-toast";
-import Loader from "@/components/common-components/loader";
+import {
+  ActivitiesContainer,
+  ChartContainer,
+  DatePickerInput,
+  RecentOrdersContainer,
+  StatisticsContainer,
+} from "@/styles/dashboard.styles";
+import {
+  Box,
+  Paper,
+  Table,
+  TableBody,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from "@mui/material";
 
-export interface Icredentials {
-  email: string;
-  password: string;
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  ComposedChart,
+  Bar,
+} from "recharts";
+
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
+import BrandIcon from "../../public/brandicon.svg";
+import Image from "next/image";
+import { CountArrow } from "../../public/iconSvgs";
+import { CommonWrapper, StyledTableCell } from "@/styles/common.styles";
+import DashBoardLayout from "@/components/layout/dashboardLayout";
+
+interface StatisticBoxProps {
+  countType: string;
+  countValue: string;
+  changeEffectValue: string;
 }
 
-const SignIn: NextPageWithLayout = ({ providers }: any) => {
-  const router = useRouter();
-  const { data: session } = useSession();
-
-  const [credentials, setCredentials] = useState<Icredentials>({
-    email: "",
-    password: "",
-  });
-  const [isLoading, setIsLoading] = useState(false);
-
-  //from useAuth provider
-  const { login } = useAuth();
-
-  const { email, password } = credentials;
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setCredentials({ ...credentials, [e.target.name]: e.target.value });
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (email !== "" || password !== "") {
-      setIsLoading(true);
-      const results = (await login(credentials)) as any;
-      if (results.user) {
-        toast.success("Logged in successfully");
-        router.push("/dashboard");
-        setIsLoading(false);
-      } else {
-        setIsLoading(false);
-        toast.error("Invalid credentials");
-      }
-    } else {
-      setIsLoading(false);
-      toast.error("Fill in all fields");
-    }
-  };
-
+function VisitorsChart() {
   return (
-    <SignInContainer>
-      <SignInNav>
-        <header>BETTER CALL PAUL</header>
-      </SignInNav>
-      <form onSubmit={handleSubmit}>
-        <SignInForm>
+    <ResponsiveContainer>
+      <AreaChart
+        data={data}
+        margin={{
+          top: 10,
+          right: 30,
+          left: 0,
+          bottom: 0,
+        }}
+      >
+        <CartesianGrid strokeDasharray="1 1" />
+        <XAxis dataKey="name" />
+        <YAxis />
+        <Tooltip />
+        <Area
+          type="monotone"
+          dataKey="uv"
+          stroke="#00453A"
+          fill="rgba(104, 166, 156, 0.5)"
+          dot={true}
+          strokeWidth={2}
+        />
+      </AreaChart>
+    </ResponsiveContainer>
+  );
+}
+
+function TopSellingServices() {
+  return (
+    <ResponsiveContainer>
+      <ComposedChart
+        layout="vertical"
+        data={data}
+        margin={{
+          top: 10,
+          right: 30,
+          left: 0,
+          bottom: 0,
+        }}
+      >
+        <CartesianGrid strokeDasharray="1 1" />
+        <XAxis type="number" />
+        <YAxis dataKey="name" type="category" scale="band" />
+        <Tooltip />
+        <Bar dataKey="pv" barSize={4} fill="#F1BC7E" />
+      </ComposedChart>
+    </ResponsiveContainer>
+  );
+}
+
+const StatisticBox: React.FC<StatisticBoxProps> = ({
+  countType,
+  countValue,
+  changeEffectValue,
+}) => {
+  return (
+    <Box className="count_box">
+      <Box
+        sx={{
+          display: "flex",
+          gap: "20px",
+          height: "52px",
+          alignItems: "center",
+        }}
+      >
+        <Image src={BrandIcon} alt="user" width={48} height={48} />
+
+        <Box sx={{ width: "100%", height: "48px" }}>
+          <Box className="count_type">{countType}</Box>
           <Box
             sx={{
               display: "flex",
-              flexDirection: "column",
-              gap: "20px",
-              margin: "50px 20px 40px 20px",
-
-              "@media (max-width: 599px)": {
-                width: "80%",
-              },
+              justifyContent: "space-between",
+              alignItems: "baseline",
             }}
           >
-            <header>Sign in as admin</header>
-            {/* <StyledInputField sx={{ width: "100%" }}>
-              <input type="text" placeholder="Full name" />
-            </StyledInputField> */}
-            <StyledInputField sx={{ width: "100%" }}>
-              <input
-                value={email}
-                name="email"
-                onChange={handleChange}
-                type="text"
-                placeholder="Email"
-              />
-            </StyledInputField>
-            <StyledInputField sx={{ width: "100%" }}>
-              <input
-                value={password}
-                name="password"
-                onChange={handleChange}
-                type="password"
-                placeholder="Password"
-              />
-            </StyledInputField>
-            <GreenButton sx={{ width: "100%" }} type="submit">
-              {isLoading ? <Loader /> : "Sign in"}
-            </GreenButton>
+            <Box className="count">{countValue}</Box>
 
-            <DividerLine>
-              <Box className="line">
-                <Box className="Or">Or</Box>
-              </Box>
-            </DividerLine>
-            <SocialItemsSignIn>
-              <header className="header">Sign in with</header>
-              {/* <ButtonSignIn>
-                <GoogleIcon sx={{ color: "#6B7280" }} />
-              </ButtonSignIn>
-              <ButtonSignIn>
-                <FacebookRoundedIcon sx={{ color: "#6B7280" }} />
-              </ButtonSignIn> */}
-              {Object.values(providers).map((provider: any) => {
-                console.log(provider);
-                return (
-                  <>
-                    <ButtonSignIn onClick={() => signIn(provider.id)}>
-                      {provider.name === "Twitter" ? (
-                        <TwitterIcon sx={{ color: "#6B7280" }} />
-                      ) : (
-                        <GoogleIcon sx={{ color: "#6B7280" }} />
-                      )}
-                    </ButtonSignIn>
-                  </>
-                );
-              })}
-            </SocialItemsSignIn>
-          </Box>
-          <TC_Box>
-            <Box className="text">
-              By signing up, you agree to our <span>Terms, Data Policy</span>{" "}
-              and <span>Cookies Policy.</span>
+            <Box className="change_effect">
+              <CountArrow />
+              {changeEffectValue}
             </Box>
-          </TC_Box>
-        </SignInForm>
-      </form>
-    </SignInContainer>
+          </Box>
+        </Box>
+      </Box>
+      <Box className="view_all">View all</Box>
+    </Box>
   );
 };
 
-SignIn.getLayout = function getLayout(page: ReactElement) {
-  return <AuthLayout pageTitle="Better call paul">{page}</AuthLayout>;
+const Dashboard: NextPageWithLayout = () => {
+  return (
+    <CommonWrapper>
+      <h1>Dashboard</h1>
+      <StatisticsContainer>
+        <header>Statistics</header>
+        <Box className="counts_container">
+          <StatisticBox
+            countType="Total sales"
+            countValue="17000"
+            changeEffectValue="122"
+          />
+          <StatisticBox
+            countType="Visitors"
+            countValue="365"
+            changeEffectValue="122"
+          />
+          <StatisticBox
+            countType="Products"
+            countValue="20016"
+            changeEffectValue="122"
+          />
+        </Box>
+      </StatisticsContainer>
+      <ActivitiesContainer>
+        <header>Activities</header>
+        <Box className="Activities_container">
+          <ChartContainer>
+            <Box className="chart_box">
+              <Box className="top_part">
+                <header className="header">Visitors</header>
+                <Box
+                  sx={{
+                    margin: "10px 0 10px auto",
+                  }}
+                >
+                  <DatePicker
+                    selected={new Date()}
+                    onChange={(date) => console.log(date)}
+                    customInput={(<DatePickerInput />) as any}
+                    className="date_picker"
+                    showYearPicker
+                    dateFormat="yyyy"
+                  />
+                </Box>
+              </Box>
+              <Box className="the_chart">
+                <VisitorsChart />
+                <header className="y_axis_label">Numbers of visitors</header>
+              </Box>
+            </Box>
+
+            <Box className="chart_box">
+              <Box className="top_part">
+                <header className="header">Top 5 Selling Services</header>
+              </Box>
+              <Box className="the_chart">
+                <TopSellingServices />
+              </Box>
+            </Box>
+          </ChartContainer>
+        </Box>
+      </ActivitiesContainer>
+      <RecentOrdersContainer>
+        <header>Recent Orders</header>
+        <Box className="recent_orders_box">
+          <TableContainer component={Paper}>
+            <Table aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell>#</StyledTableCell>
+                  <StyledTableCell>PRODUCT</StyledTableCell>
+                  <StyledTableCell>DATE PLACED</StyledTableCell>
+                  <StyledTableCell>QUANTITY</StyledTableCell>
+                  <StyledTableCell>IN STOCK</StyledTableCell>
+                  <StyledTableCell>COST (KSH)</StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {tableData.map((row: any, index: any) => (
+                  <TableRow key={index}>
+                    <StyledTableCell>{index + 1}</StyledTableCell>
+                    <StyledTableCell>{row.product}</StyledTableCell>
+                    <StyledTableCell>{row.datePlaced}</StyledTableCell>
+                    <StyledTableCell>{row.quantity}</StyledTableCell>
+                    <StyledTableCell>{row.inStock}</StyledTableCell>
+                    <StyledTableCell>{row.cost}</StyledTableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
+      </RecentOrdersContainer>
+    </CommonWrapper>
+  );
 };
 
-export default SignIn;
+Dashboard.getLayout = function getLayout(page: ReactElement) {
+  return (
+    <DashBoardLayout
+      pageTitle="Better call paul | Dashboard"
+      showSearchComponent={true}
+    >
+      {page}
+    </DashBoardLayout>
+  );
+};
 
-export async function getServerSideProps(context: any) {
-  const { req } = context;
-  const session = await getSession({ req });
+export default Dashboard;
 
-  if (session) {
-    return {
-      redirect: { destination: "/dashboard" },
-    };
-  }
+/**
+ * Dummy data for the dashboard
+ * Should be replaced with real data from the backend
+ */
 
-  return {
-    props: {
-      providers: await getProviders(),
-      csrfToken: await getCsrfToken(context),
-    },
-  };
-}
+const data = [
+  {
+    name: "A",
+    uv: 4000,
+    pv: 2400,
+    amt: 2400,
+  },
+  {
+    name: "B",
+    uv: 3000,
+    pv: 1398,
+    amt: 2210,
+  },
+  {
+    name: "C",
+    uv: 2000,
+    pv: 9800,
+    amt: 2290,
+  },
+  {
+    name: "D",
+    uv: 2780,
+    pv: 3908,
+    amt: 2000,
+  },
+  {
+    name: "E",
+    uv: 1890,
+    pv: 4800,
+    amt: 2181,
+  },
+  {
+    name: "F",
+    uv: 2390,
+    pv: 3800,
+    amt: 2500,
+  },
+  {
+    name: "G",
+    uv: 3490,
+    pv: 4300,
+    amt: 2100,
+  },
+];
+
+const tableData = [
+  {
+    product: "Product A",
+    datePlaced: "11 Jan 2024, 14:00pm",
+    quantity: 6,
+    inStock: 36,
+    cost: 15120,
+  },
+  {
+    product: "Product B",
+    datePlaced: "11 Jan 2024, 14:00pm",
+    quantity: 8,
+    inStock: 40,
+    cost: 20000,
+  },
+  {
+    product: "Product B",
+    datePlaced: "11 Jan 2024, 14:00pm",
+    quantity: 8,
+    inStock: 40,
+    cost: 20000,
+  },
+  {
+    product: "Product B",
+    datePlaced: "11 Jan 2024, 14:00pm",
+    quantity: 8,
+    inStock: 40,
+    cost: 20000,
+  },
+  {
+    product: "Product B",
+    datePlaced: "11 Jan 2024, 14:00pm",
+    quantity: 8,
+    inStock: 40,
+    cost: 20000,
+  },
+];

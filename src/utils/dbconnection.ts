@@ -2,7 +2,7 @@
 import mongoose from "mongoose";
 
 //const dbUrl = Environment._db__;
-const dbUrl = process.env.NEXT_PUBLIC_MONGO_URL;
+const dbUrl = process.env.MONGODB_URI;
 
 export const connectDB = async () => {
   try {

@@ -1,4 +1,4 @@
-import { Icredentials } from "@/pages";
+import { Icredentials } from "@/pages/sign-in";
 import { createContext, use, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
@@ -139,7 +139,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   // Replace with your logout function
   async function logout() {
     localStorage.removeItem("bcp-token");
-    return router.push("/");
+    setUser(null);
+    toast.success("Logged out successfully");
   }
 
   async function updateProfile(data: any) {

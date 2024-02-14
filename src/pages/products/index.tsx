@@ -40,6 +40,7 @@ import { useProductDataContext } from "@/utils/context/products-data";
 import DashBoardLayout from "@/components/layout/dashboardLayout";
 import DeleteModal from "../../components/products-page/deleteModal";
 import toast from "react-hot-toast";
+import { withAuth } from "@/hoc/withAuth";
 
 interface Product {
   price: number;
@@ -64,7 +65,6 @@ interface IProductRows {
   }: pageNavigateToQueryProps) => void;
   isSelected: boolean;
   onCheckboxClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  deleteFunc: (product_id: string) => void;
   selectedRows: any;
   eachSelectedRow: any;
   setSelectedRows?: any;
@@ -106,12 +106,11 @@ const ProductRow = ({
   onCheckboxClick,
   selectedRows,
   eachSelectedRow,
-  deleteFunc,
   setSelectedRows,
 }: IProductRows) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
+  const { deleteFunc } = useProductDataContext();
   const toggleDeleteModal = () => {
     if (selectedRows.length === 0) {
       toast.error("Select the item to delete");
@@ -236,8 +235,6 @@ const ProductRow = ({
 const ProductsPages: NextPageWithLayout = () => {
   const { services } = useProductDataContext();
 
-  //get data from context replace with your services state in this file
-
   const router = useRouter();
   const currentPageParam = router.query.page as string;
   const [currentPage, setCurrentPage] = useState(1);
@@ -246,9 +243,6 @@ const ProductsPages: NextPageWithLayout = () => {
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
 
   const [eachSelectedRow, setEachSelectedRow] = useState<any>();
-
-  const context = useProductDataContext();
-  const deleteFunc = context?.deleteFunc;
 
   const toggleOpen = () => setOpen((prev) => !prev);
 
@@ -352,11 +346,6 @@ const ProductsPages: NextPageWithLayout = () => {
     }
   };
 
-  if (!deleteFunc) {
-    console.error("deleteFunc is not defined");
-    return null;
-  }
-
   return (
     <CommonWrapper>
       <ProductsContainer>
@@ -436,7 +425,6 @@ const ProductsPages: NextPageWithLayout = () => {
                       selectedRows={selectedRows}
                       eachSelectedRow={eachSelectedRow}
                       setSelectedRows={setSelectedRows}
-                      deleteFunc={deleteFunc}
                     />
                   ))}
               </TableBody>
@@ -509,12 +497,12 @@ const ProductsPages: NextPageWithLayout = () => {
   );
 };
 
-ProductsPages.getLayout = function getLayout(page: ReactElement) {
-  return (
-    <DashBoardLayout pageTitle="Better call paul | Products">
-      {page}
-    </DashBoardLayout>
-  );
-};
+// ProductsPages.getLayout = function getLayout(page: ReactElement) {
+//   return (
+//     <DashBoardLayout pageTitle="Better call paul | Products">
+//       {page}
+//     </DashBoardLayout>
+//   );
+// };
 
-export default ProductsPages;
+export default withAuth(ProductsPages);

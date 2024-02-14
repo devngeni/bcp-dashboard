@@ -110,7 +110,7 @@ const MyAccount: NextPageWithLayout = () => {
           toast.success("Password changed successfully");
         } else {
           setIsLoading(false);
-          toast.error("Password change failed, log out and log in again");
+          toast.error("Password change failed, try again later");
         }
       } else {
         setIsLoading(false);

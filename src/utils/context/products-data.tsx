@@ -24,7 +24,7 @@ interface ProductDataProps {
     price: number,
     existingImagePath: any
   ) => void;
-  deleteFunc?: (product_id: string) => void;
+  deleteFunc: (product_id: string) => void;
 }
 
 // Product Data Context
@@ -119,8 +119,7 @@ export const ProductDataProvider = ({ children }: any) => {
     existingImagePath: any
   ): Promise<any> => {
     try {
-      let cloudinaryImageUrl = existingImagePath; // Set the default image URL to the existing one
-
+      let cloudinaryImageUrl = existingImagePath;
       if (selectedFile) {
         const formData = new FormData();
         formData.append("file", selectedFile);
@@ -138,7 +137,7 @@ export const ProductDataProvider = ({ children }: any) => {
 
         cloudinaryImageUrl = cloudinaryResponse.data.secure_url;
       } else {
-        toast.error("No file selected."); // Notify the user if no file is selected
+        toast.error("No file selected.");
         return;
       }
 
@@ -178,7 +177,7 @@ export const ProductDataProvider = ({ children }: any) => {
     }
   };
 
-  const deleteProduct = async (product_id: string) => {
+  const deleteFunc = async (product_id: string) => {
     try {
       const res = await axios.delete(`/api/service/${product_id}`);
 
@@ -218,7 +217,7 @@ export const ProductDataProvider = ({ children }: any) => {
     <ProductDataContext.Provider
       value={{
         services,
-        deleteFunc: deleteProduct,
+        deleteFunc,
         editFunc: editProduct,
         newProductFunc: newProduct,
       }}

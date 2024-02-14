@@ -71,9 +71,7 @@ const SidebarComponent = () => {
       <HoverableButton
         icon={HomeIcon}
         isActive={activeButton === "Dashboard"}
-        onClick={() =>
-          handleButtonClick({ buttonName: "Dashboard", path: "dashboard" })
-        }
+        onClick={() => handleButtonClick({ buttonName: "Dashboard", path: "" })}
       >
         <span>Dashboard</span>
       </HoverableButton>
