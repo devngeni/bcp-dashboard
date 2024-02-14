@@ -11,12 +11,20 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
+    name: {
+      type: String,
+      required: false,
+    },
+    subId: {
+      type: String,
+      required: false,
+      default: "",
+    },
     role: {
       type: String,
       enum: ["admin", "operator"],
       default: "admin",
     },
-    name: { type: String },
     photo: { type: String },
     phone: { type: String },
   },

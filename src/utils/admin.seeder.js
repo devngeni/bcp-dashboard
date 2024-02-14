@@ -3,7 +3,9 @@ const mongoose = require("mongoose");
 const argon2 = require("argon2");
 
 mongoose
-  .connect(``)
+  .connect(
+    `mongodb+srv://bettercallpaul:sQOkWzfk5e6FTuRW@bcp-dev.el8ezcc.mongodb.net/bcb-dev`
+  )
   .then(() => console.log(`connected successfully`))
   .catch((e) => console.log("error while connecting to db"));
 
@@ -17,9 +19,19 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    name: {
+      type: String,
+      required: false,
+    },
+    subId: {
+      type: String,
+      required: false,
+      default: "",
+    },
+    photo: { type: String, required: false },
     role: {
       type: String,
-      enum: ["admin"],
+      enum: ["admin", "operator"],
       default: "admin",
     },
   },
