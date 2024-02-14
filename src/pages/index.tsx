@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { useSession, signIn, signOut } from "next-auth/react";
+import {
+  useSession,
+  signIn,
+  signOut,
+  getProviders,
+  getSession,
+  getCsrfToken
+} from "next-auth/react";
 import { GreenButton, StyledInputField } from "@/styles/common.styles";
 import {
   ButtonSignIn,
@@ -27,7 +34,7 @@ export interface Icredentials {
   password: string;
 }
 
-const SignIn: NextPageWithLayout = () => {
+const SignIn: NextPageWithLayout = ({ providers }: any) => {
   const router = useRouter();
   const { data: session } = useSession();
 
@@ -120,12 +127,25 @@ const SignIn: NextPageWithLayout = () => {
             </DividerLine>
             <SocialItemsSignIn>
               <header className="header">Sign in with</header>
-              <ButtonSignIn>
+              {/* <ButtonSignIn>
                 <GoogleIcon sx={{ color: "#6B7280" }} />
               </ButtonSignIn>
               <ButtonSignIn>
                 <FacebookRoundedIcon sx={{ color: "#6B7280" }} />
-              </ButtonSignIn>
+              </ButtonSignIn> */}
+              {Object.values(providers).map((provider: any) => {
+                return (
+                  <>
+                    <ButtonSignIn onClick={() => signIn(provider.id)}>
+                      {provider.name === "Facebook" ? (
+                        <FacebookRoundedIcon sx={{ color: "#6B7280" }} />
+                      ) : (
+                        <GoogleIcon sx={{ color: "#6B7280" }} />
+                      )}
+                    </ButtonSignIn>
+                  </>
+                );
+              })}
             </SocialItemsSignIn>
           </Box>
           <TC_Box>
@@ -145,3 +165,21 @@ SignIn.getLayout = function getLayout(page: ReactElement) {
 };
 
 export default SignIn;
+
+export async function getServerSideProps(context: any) {
+  const { req } = context;
+  const session = await getSession({ req });
+
+  if (session) {
+    return {
+      redirect: { destination: "/dashboard" },
+    };
+  }
+
+  return {
+    props: {
+      providers: await getProviders(),
+      csrfToken: await getCsrfToken(context),
+    },
+  };
+}

@@ -4,6 +4,7 @@ import { ClickAwayListener } from "@mui/base/ClickAwayListener";
 import { useAuth } from "@/utils/context/auth-provider";
 import Image from "next/image";
 import { LogoutIcon } from "../../../../public/iconSvgs";
+import { signOut } from "next-auth/react";
 
 interface QuickActionModalProps {
   handleClose: () => void;
@@ -22,7 +23,8 @@ const QuickActionModal: React.FC<QuickActionModalProps> = ({ handleClose }) => {
         <Box sx={styles.logoutButton}>
           <Button
             sx={styles.button}
-            onClick={logout}
+            // onClick={logout}
+            onClick={() => signOut()}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
           >
