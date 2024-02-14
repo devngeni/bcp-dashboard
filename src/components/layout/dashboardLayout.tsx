@@ -1,5 +1,5 @@
 import { MainComponent, PageContainer } from "@/styles/common.styles";
-import React, { use, useEffect } from "react";
+import React, { useEffect } from "react";
 import HeadMetaData from "../HeadMetadata";
 import SidebarComponent from "../common-components/navbar/sidebar";
 import TopbarComponent from "../common-components/navbar/topbar";
@@ -15,7 +15,7 @@ const DashBoardLayout = ({
 }: layoutProps) => {
   const router = useRouter();
   const [isMounted, setIsMounted] = React.useState(false);
-  const { user, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     setIsMounted(true);

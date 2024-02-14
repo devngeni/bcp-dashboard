@@ -16,7 +16,7 @@ export const authOptions: NextAuthOptions = {
       clientId: process.env.NEXT_PUBLIC_TWITTER_CLIENT_ID as string,
       clientSecret: process.env.NEXT_PUBLIC_TWITTER_CLIENT_SECRET as string,
       version: "2.0",
-      checks: ["none"],
+      // checks: ["none"],
     }),
     // FacebookProvider({
     //   clientId: process.env.NEXT_PUBLIC_FACEBOOK_CLIENT_ID as string,
@@ -25,7 +25,7 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET as string,
-      checks: ["none"],
+      // checks: ["none"],
     }),
   ],
   pages: {

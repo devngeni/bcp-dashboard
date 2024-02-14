@@ -2,29 +2,41 @@ import React, { useState } from "react";
 import { Box, Button } from "@mui/material";
 import { ClickAwayListener } from "@mui/base/ClickAwayListener";
 import { useAuth } from "@/utils/context/auth-provider";
-import Image from "next/image";
 import { LogoutIcon } from "../../../../public/iconSvgs";
 import { signOut } from "next-auth/react";
 
 interface QuickActionModalProps {
   handleClose: () => void;
+  email?: string | null;
+  name?: string | null;
 }
 
-const QuickActionModal: React.FC<QuickActionModalProps> = ({ handleClose }) => {
+const QuickActionModal: React.FC<QuickActionModalProps> = ({
+  handleClose,
+  email,
+  name,
+}) => {
   const { user, logout } = useAuth();
   const [isHovered, setIsHovered] = useState(false);
+
+  const handleLogout = () => {
+    if (user?.email) {
+      logout?.();
+    } else {
+      signOut();
+    }
+  };
 
   return (
     <ClickAwayListener onClickAway={handleClose}>
       <Box sx={styles.modal}>
         <Box sx={styles.userInfo}>
-          <p>{user?.email}</p>
+          <p>{user?.email || email || name}</p>
         </Box>
         <Box sx={styles.logoutButton}>
           <Button
             sx={styles.button}
-            // onClick={logout}
-            onClick={() => signOut()}
+            onClick={() => handleLogout()}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
           >
