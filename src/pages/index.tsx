@@ -39,10 +39,6 @@ const SignIn: NextPageWithLayout = ({ providers }: any) => {
   const router = useRouter();
   const { data: session } = useSession();
 
-  if (session) {
-    console.log(session.user);
-  }
-
   const [credentials, setCredentials] = useState<Icredentials>({
     email: "",
     password: "",
