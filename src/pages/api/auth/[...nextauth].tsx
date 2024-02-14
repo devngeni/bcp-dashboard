@@ -12,15 +12,15 @@ import argon2 from "argon2";
 
 export const authOptions: NextAuthOptions = {
   providers: [
-    // TwitterProvider({
-    //   clientId: process.env.NEXT_PUBLIC_TWITTER_CLIENT_ID as string,
-    //   clientSecret: process.env.NEXT_PUBLIC_TWITTER_CLIENT_SECRET as string,
-    //   version: "2.0",
-    // }),
-    FacebookProvider({
-      clientId: process.env.NEXT_PUBLIC_FACEBOOK_CLIENT_ID as string,
-      clientSecret: process.env.NEXT_FACEBOOK_CLIENT_SECRET as string,
+    TwitterProvider({
+      clientId: process.env.NEXT_PUBLIC_TWITTER_CLIENT_ID as string,
+      clientSecret: process.env.NEXT_PUBLIC_TWITTER_CLIENT_SECRET as string,
+      version: "2.0",
     }),
+    // FacebookProvider({
+    //   clientId: process.env.NEXT_PUBLIC_FACEBOOK_CLIENT_ID as string,
+    //   clientSecret: process.env.NEXT_FACEBOOK_CLIENT_SECRET as string,
+    // }),
     GoogleProvider({
       clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET as string,

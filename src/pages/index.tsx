@@ -5,7 +5,7 @@ import {
   signOut,
   getProviders,
   getSession,
-  getCsrfToken
+  getCsrfToken,
 } from "next-auth/react";
 import { GreenButton, StyledInputField } from "@/styles/common.styles";
 import {
@@ -26,6 +26,7 @@ import { NextPageWithLayout } from "./_app";
 import AuthLayout from "@/components/layout/authLayout";
 import { useAuth } from "@/utils/context/auth-provider";
 import GoogleIcon from "@mui/icons-material/Google";
+import TwitterIcon from "@mui/icons-material/Twitter";
 import toast from "react-hot-toast";
 import Loader from "@/components/common-components/loader";
 
@@ -134,11 +135,12 @@ const SignIn: NextPageWithLayout = ({ providers }: any) => {
                 <FacebookRoundedIcon sx={{ color: "#6B7280" }} />
               </ButtonSignIn> */}
               {Object.values(providers).map((provider: any) => {
+                console.log(provider);
                 return (
                   <>
                     <ButtonSignIn onClick={() => signIn(provider.id)}>
-                      {provider.name === "Facebook" ? (
-                        <FacebookRoundedIcon sx={{ color: "#6B7280" }} />
+                      {provider.name === "Twitter" ? (
+                        <TwitterIcon sx={{ color: "#6B7280" }} />
                       ) : (
                         <GoogleIcon sx={{ color: "#6B7280" }} />
                       )}
