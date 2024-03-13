@@ -15,7 +15,7 @@ export const ProductsContainer = styled(Box)(() => ({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    width: "385px",
+    // width: "385px",
     height: "38px",
     border: "1px solid #D1D5DB",
     borderRadius: "6px",
@@ -26,6 +26,7 @@ export const ProductsContainer = styled(Box)(() => ({
       border: "none",
       height: "100%",
       padding: "0px 16px",
+      background: "transparent",
     },
   },
 

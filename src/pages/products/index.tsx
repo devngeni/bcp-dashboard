@@ -244,8 +244,8 @@ const ProductsPages: NextPageWithLayout = () => {
   const [open, setOpen] = useState(false);
   const [selectAll, setSelectAll] = useState(false);
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
-
   const [eachSelectedRow, setEachSelectedRow] = useState<any>();
+  const [searchQuery, setSearchQuery] = useState("");
 
   const context = useProductDataContext();
   const deleteFunc = context?.deleteFunc;
@@ -288,7 +288,16 @@ const ProductsPages: NextPageWithLayout = () => {
   const handlePageChange = (newPage: number) => {
     router.push(`/products?page=${newPage}`);
     setCurrentPage(newPage);
+    setSearchQuery("");
   };
+
+  const filteredData = services.filter((item: Product) => {
+    return (
+      item.content[0].name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.subTitle.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  });
 
   // Function to get page numbers
   const getPageNumbers = (): (number | string)[] => {
@@ -377,13 +386,18 @@ const ProductsPages: NextPageWithLayout = () => {
                 sx={{ display: "flex", alignItems: "center", height: "100%" }}
               >
                 <Image src={SearchIcon} alt="search" />
-                <input type="text" placeholder="Search" />
+                <input
+                  type="text"
+                  placeholder="Search"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
               </Box>
-              <SortBox>
+              {/* <SortBox>
                 <Image src={SortIcon} alt="sortIcon" />
                 <Box className="sort_text">Sort</Box>
                 <Image src={ArrowIcon} alt="arrow" className="sort_arrow" />
-              </SortBox>
+              </SortBox> */}
             </Box>
             <YelloWButton
               onClick={() =>
@@ -424,21 +438,37 @@ const ProductsPages: NextPageWithLayout = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {visibleItems &&
-                  visibleItems.map((row: any, index: any) => (
-                    <ProductRow
-                      key={index}
-                      row={row}
-                      index={index}
-                      isSelected={selectedRows.includes(index)}
-                      onCheckboxClick={() => handleCheckboxClick(index)}
-                      pageNavigateToQueryParam={pageNavigateToQueryParam}
-                      selectedRows={selectedRows}
-                      eachSelectedRow={eachSelectedRow}
-                      setSelectedRows={setSelectedRows}
-                      deleteFunc={deleteFunc}
-                    />
-                  ))}
+                {searchQuery === ""
+                  ? visibleItems &&
+                    visibleItems.map((row: any, index: any) => (
+                      <ProductRow
+                        key={index}
+                        row={row}
+                        index={index}
+                        isSelected={selectedRows.includes(index)}
+                        onCheckboxClick={() => handleCheckboxClick(index)}
+                        pageNavigateToQueryParam={pageNavigateToQueryParam}
+                        selectedRows={selectedRows}
+                        eachSelectedRow={eachSelectedRow}
+                        setSelectedRows={setSelectedRows}
+                        deleteFunc={deleteFunc}
+                      />
+                    ))
+                  : filteredData &&
+                    filteredData.map((row: any, index: any) => (
+                      <ProductRow
+                        key={index}
+                        row={row}
+                        index={index}
+                        isSelected={selectedRows.includes(index)}
+                        onCheckboxClick={() => handleCheckboxClick(index)}
+                        pageNavigateToQueryParam={pageNavigateToQueryParam}
+                        selectedRows={selectedRows}
+                        eachSelectedRow={eachSelectedRow}
+                        setSelectedRows={setSelectedRows}
+                        deleteFunc={deleteFunc}
+                      />
+                    ))}
               </TableBody>
             </Table>
           </TableContainer>
