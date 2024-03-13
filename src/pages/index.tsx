@@ -57,8 +57,7 @@ const SignIn: NextPageWithLayout = ({ providers }: any) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     if (email !== "" || password !== "") {
       setIsLoading(true);
       const results = (await login(credentials)) as any;
@@ -81,83 +80,74 @@ const SignIn: NextPageWithLayout = ({ providers }: any) => {
       <SignInNav>
         <header>BETTER CALL PAUL</header>
       </SignInNav>
-      <form onSubmit={handleSubmit}>
-        <SignInForm>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "20px",
-              margin: "50px 20px 40px 20px",
 
-              "@media (max-width: 599px)": {
-                width: "80%",
-              },
-            }}
-          >
-            <header>Sign in as admin</header>
-            {/* <StyledInputField sx={{ width: "100%" }}>
+      <SignInForm>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "20px",
+            margin: "50px 20px 40px 20px",
+            width: "80%",
+          }}
+        >
+          <header>Sign in as admin</header>
+          {/* <StyledInputField sx={{ width: "100%" }}>
               <input type="text" placeholder="Full name" />
             </StyledInputField> */}
-            <StyledInputField sx={{ width: "100%" }}>
-              <input
-                value={email}
-                name="email"
-                onChange={handleChange}
-                type="text"
-                placeholder="Email"
-              />
-            </StyledInputField>
-            <StyledInputField sx={{ width: "100%" }}>
-              <input
-                value={password}
-                name="password"
-                onChange={handleChange}
-                type="password"
-                placeholder="Password"
-              />
-            </StyledInputField>
-            <GreenButton sx={{ width: "100%" }} type="submit">
-              {isLoading ? <Loader /> : "Sign in"}
-            </GreenButton>
+          <StyledInputField sx={{ width: "100%" }}>
+            <input
+              value={email}
+              name="email"
+              onChange={handleChange}
+              type="text"
+              placeholder="Email"
+            />
+          </StyledInputField>
+          <StyledInputField sx={{ width: "100%" }}>
+            <input
+              value={password}
+              name="password"
+              onChange={handleChange}
+              type="password"
+              placeholder="Password"
+            />
+          </StyledInputField>
+          <GreenButton sx={{ width: "100%" }} onClick={() => handleSubmit()}>
+            {isLoading ? <Loader /> : "Sign in"}
+          </GreenButton>
 
-            <DividerLine>
-              <Box className="line">
-                <Box className="Or">Or</Box>
-              </Box>
-            </DividerLine>
-            <SocialItemsSignIn>
-              <header className="header">Sign in with</header>
-              {/* <ButtonSignIn>
-                <GoogleIcon sx={{ color: "#6B7280" }} />
-              </ButtonSignIn>
-              <ButtonSignIn>
-                <FacebookRoundedIcon sx={{ color: "#6B7280" }} />
-              </ButtonSignIn> */}
-              {Object.values(providers).map((provider: any) => {
-                console.log(provider);
-                return (
-                  <>
-                    <ButtonSignIn onClick={() => signIn(provider.id)}>
-                      {provider.name === "Twitter" ? (
-                        <TwitterIcon sx={{ color: "#6B7280" }} />
-                      ) : (
-                        <GoogleIcon sx={{ color: "#6B7280" }} />
-                      )}
-                    </ButtonSignIn>
-                  </>
-                );
-              })}
-            </SocialItemsSignIn>
-          </Box>
-          <TC_Box>
-            <Box className="text">
-              By signing up, you agree to our <span>Terms, Data Policy</span>{" "}
-              and <span>Cookies Policy.</span>
+          {/* <DividerLine>
+            <Box className="line">
+              <Box className="Or">Or</Box>
             </Box>
-          </TC_Box>
-        </SignInForm>
-      </form>
+          </DividerLine> */}
+          {/* <SocialItemsSignIn>
+            <header className="header">Sign in with</header>
+
+            {Object.values(providers).map((provider: any) => {
+              console.log(provider);
+              return (
+                <>
+                  <ButtonSignIn onClick={() => signIn(provider.id)}>
+                    {provider.name === "Twitter" ? (
+                      <TwitterIcon sx={{ color: "#6B7280" }} />
+                    ) : (
+                      <GoogleIcon sx={{ color: "#6B7280" }} />
+                    )}
+                  </ButtonSignIn>
+                </>
+              );
+            })}
+          </SocialItemsSignIn> */}
+        </Box>
+        <TC_Box>
+          <Box className="text">
+            By signing up, you agree to our <span>Terms, Data Policy</span> and{" "}
+            <span>Cookies Policy.</span>
+          </Box>
+        </TC_Box>
+      </SignInForm>
     </SignInContainer>
   );
 };
@@ -168,20 +158,20 @@ SignIn.getLayout = function getLayout(page: ReactElement) {
 
 export default SignIn;
 
-export async function getServerSideProps(context: any) {
-  const { req } = context;
-  const session = await getSession({ req });
+// export async function getServerSideProps(context: any) {
+//   const { req } = context;
+//   const session = await getSession({ req });
 
-  if (session) {
-    return {
-      redirect: { destination: "/dashboard" },
-    };
-  }
+//   if (session) {
+//     return {
+//       redirect: { destination: "/dashboard" },
+//     };
+//   }
 
-  return {
-    props: {
-      providers: await getProviders(),
-      csrfToken: await getCsrfToken(context),
-    },
-  };
-}
+//   return {
+//     props: {
+//       providers: await getProviders(),
+//       csrfToken: await getCsrfToken(context),
+//     },
+//   };
+// }
