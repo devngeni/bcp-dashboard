@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Button } from "@mui/material";
 import { ClickAwayListener } from "@mui/base/ClickAwayListener";
 import { useAuth } from "@/utils/context/auth-provider";
@@ -23,8 +23,7 @@ const QuickActionModal: React.FC<QuickActionModalProps> = ({ handleClose }) => {
         <Box sx={styles.logoutButton}>
           <Button
             sx={styles.button}
-            // onClick={logout}
-            onClick={() => signOut()}
+            onClick={() => logout?.()}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
           >
