@@ -19,7 +19,7 @@ const HeadMetaData = ({ pageTitle }: HeadMetaDataProps) => {
           content="Better call paul, One touch for all service"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/logo.svg" />
 
         <meta property="og:title" content={pageTitle} />
         <meta
