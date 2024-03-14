@@ -39,6 +39,35 @@ export const CommonWrapper = styled(Box)(() => ({
     fontFamily: "Montserrat",
     color: "#111827",
   },
+
+  ".searchProduct_box": {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    height: "38px",
+    border: "1px solid #D1D5DB",
+    borderRadius: "6px",
+    padding: "0px 16px",
+
+    input: {
+      outline: "none",
+      border: "none",
+      height: "100%",
+      padding: "0px 16px",
+      background: "transparent",
+    },
+  },
+
+  "@media screen and (max-width: 550px)": {
+    ".searchProduct_box": {
+      width: "100%",
+
+      input: {
+        width: "100%",
+      },
+    },
+  },
 }));
 
 export const StyledTableCell = styled(TableCell)({
