@@ -27,9 +27,15 @@ export const CommonWrapper = styled(Box)(() => ({
   width: "100%",
 
   h1: {
+    fontFamily: "Montserrat",
     fontSize: "24px",
     fontWeight: "600",
-    fontFamily: "Inter",
+    color: "#111827",
+  },
+  h2: {
+    fontFamily: "Montserrat",
+    fontSize: "20px",
+    fontWeight: "600",
     color: "#111827",
   },
 

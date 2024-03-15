@@ -74,4 +74,67 @@ export const DeleteViewButton = styled(Button)<DeleteViewButtonProps>(
   })
 );
 
-export const VendorMoreDetails = styled(Box)(() => ({}));
+export const VendorMoreDetails = styled(Box)(() => ({
+  display: "flex",
+  flexDirection: "column",
+  marginTop: "20px",
+
+  h1: {
+    fontFamily: "Montserrat",
+    fontSize: "20px",
+    color: "#111827",
+    fontWeight: "500",
+    marginTop: "10px",
+  },
+
+  input: {
+    fontFamily: "Montserrat",
+    fontSize: "20px",
+    color: "#111827",
+    fontWeight: "500",
+    marginTop: "10px",
+    border: "none",
+    background: "transparent",
+    padding: "5px",
+    borderRadius: "5px",
+
+    "&:hover": {
+      outline: "1px solid #111827",
+    },
+  },
+
+  p: {
+    fontFamily: "Montserrat",
+    fontSize: "16px",
+    color: "#6B7280",
+    fontWeight: "400",
+    marginTop: "10px",
+  },
+
+  ".vendor_image": {
+    position: "relative",
+    display: "flex",
+    flexDirection: "row",
+    // width: "345px",
+    gap: "10px",
+    height: "185px",
+    borderRadius: "6px",
+
+    img: {
+      width: "345px",
+      height: "100%",
+      borderRadius: "6px",
+      objectFit: "cover",
+    },
+    ".change_image_btn": {
+      position: "absolute",
+      top: "0",
+      left: "calc(345px + 10px)",
+    },
+  },
+
+  ".update_btn": {
+    width: "354px",
+    marginTop: "15px",
+  },
+}));

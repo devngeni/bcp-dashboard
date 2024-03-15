@@ -106,7 +106,7 @@ const Vendors = () => {
           </Box>
           <YelloWButton
             onClick={() =>
-              pageNavigateToQueryParam({ queryParam: "more-details" })
+              pageNavigateToQueryParam({ queryParam: "new-vendor" })
             }
           >
             Add Vendor

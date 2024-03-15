@@ -85,7 +85,7 @@ export const SortBox = styled(Box)<ProductsContainerProps>((props) => ({
 export const ProductsTable = styled(Box)(() => ({
   display: "flex",
   flexDirection: "column",
-  marginTop: "24px",
+  marginTop: "10px",
   paddingBottom: "80px",
 }));
 
