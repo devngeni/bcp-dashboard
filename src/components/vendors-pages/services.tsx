@@ -319,7 +319,7 @@ const VendorServices = ({ searchQuery }: any) => {
             </TableHead>
             <TableBody>
               {filterDataBySearchQuery().map((row: any, index: any) => (
-                <TableRow>
+                <TableRow key={index}>
                   <TableCell>1</TableCell>
                   <TableCell>
                     <StyledCheckBox />
