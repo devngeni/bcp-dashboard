@@ -70,7 +70,7 @@ interface IProductRows {
   setSelectedRows?: any;
 }
 
-function isValidImageUrl(url: any) {
+export function isValidImageUrl(url: any) {
   return (
     url &&
     (url.startsWith("http://") ||
@@ -225,6 +225,7 @@ const ProductRow = ({
               isDeleteModalOpen={isDeleteModalOpen}
               handleClose={toggleDeleteModal}
               handleDelete={() => handleDelete(row._id)}
+              styles={{ background: "rgba(0,0,0,0.5)" }}
             />
           </div>
         </Box>
@@ -412,18 +413,18 @@ const ProductsPages: NextPageWithLayout = () => {
           </Box>
         </TopLevel>
         <ProductsTable>
-          <TableContainer component={Paper}>
-            <Table aria-label="simple table">
+          <TableContainer component={Paper} sx={{ maxHeight: 780 }}>
+            <Table stickyHeader aria-label="sticky table">
               <TableHead>
                 <TableRow>
                   <StyledTableCell className="bold small_size">
                     #
                   </StyledTableCell>
                   <StyledTableCell className="bold">
-                    <StyledCheckBox
+                    {/* <StyledCheckBox
                       checked={selectAll}
                       onChange={handleSelectAllClick}
-                    />
+                    /> */}
                   </StyledTableCell>
                   <StyledTableCell className="bold product_size">
                     PRODUCT

@@ -351,13 +351,11 @@ const EditProductPage = ({
                   },
                 }}
               >
-                <Image
+                <img
                   src={
                     previewImage ? previewImage : product.content[0].imagePath
                   }
-                  alt=""
-                  width={1}
-                  height={1}
+                  alt={"productName"}
                 />
               </Box>
             )}

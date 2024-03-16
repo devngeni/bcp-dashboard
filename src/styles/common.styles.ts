@@ -27,9 +27,15 @@ export const CommonWrapper = styled(Box)(() => ({
   width: "100%",
 
   h1: {
+    fontFamily: "Montserrat",
     fontSize: "24px",
     fontWeight: "600",
-    fontFamily: "Inter",
+    color: "#111827",
+  },
+  h2: {
+    fontFamily: "Montserrat",
+    fontSize: "20px",
+    fontWeight: "600",
     color: "#111827",
   },
 
@@ -38,6 +44,35 @@ export const CommonWrapper = styled(Box)(() => ({
     fontWeight: "500",
     fontFamily: "Montserrat",
     color: "#111827",
+  },
+
+  ".searchProduct_box": {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    height: "38px",
+    border: "1px solid #D1D5DB",
+    borderRadius: "6px",
+    padding: "0px 16px",
+
+    input: {
+      outline: "none",
+      border: "none",
+      height: "100%",
+      padding: "0px 16px",
+      background: "transparent",
+    },
+  },
+
+  "@media screen and (max-width: 550px)": {
+    ".searchProduct_box": {
+      width: "100%",
+
+      input: {
+        width: "100%",
+      },
+    },
   },
 }));
 
