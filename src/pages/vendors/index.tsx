@@ -12,72 +12,57 @@ import {
   DeleteViewButton,
   VendorsSubWrapper,
 } from "@/styles/vendors.styles";
+import { useVendorsDataContext } from "@/utils/context/vendors-provider";
+import DeleteModal from "@/components/products-page/deleteModal";
+
+export interface VendorProps {
+  _id: string;
+  title: string;
+  image: string;
+  description: string;
+}
+
+export interface VendorServicesProps extends VendorProps {
+  _id: string;
+  content: {
+    _id: string;
+    name: string;
+    description: string;
+    imagePath: string;
+    price: string;
+  }[];
+  category: string;
+  subTitle: string;
+  price: number;
+  description: string;
+}
 
 const Vendors = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-
   const router = useRouter();
+  const [vendors, setVendors] = useState<VendorProps[]>([]); // [1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  const pageNavigateToQueryParam = ({ queryParam, vendorName }: any) => {
-    if (vendorName) {
-      router.push(`/vendors/${queryParam}?vendor=${vendorName}`);
+  const toggleDeleteModal = () => setIsDeleteModalOpen((prev) => !prev);
+
+  const pageNavigateToQueryParam = ({ queryParam, vendor_id }: any) => {
+    if (vendor_id) {
+      router.push(`/vendors/${queryParam}?vendor_id=${vendor_id}`);
     } else {
       router.push(`/vendors/${queryParam}`);
     }
   };
 
-  const vendors = [
-    {
-      name: "Mammy Mbuta",
-      description: `Savour the essence of West Africa at Mammy Mbuta, where "Taste
-      De Kinshasa" invites you to indulge in an authentic culinary
-      experience, celebrating the rich and diverse flavours of the
-      region.`,
-      imageSrc: "/logo.svg",
-      id: 1,
-    },
-    {
-      name: "Jajamelo Hotel",
-      description: `Savour the essence of West Africa at Mammy Mbuta, where "Taste
-      De Kinshasa" invites you to indulge in an authentic culinary
-      experience, celebrating the rich and diverse flavours of the
-      region.`,
-      imageSrc: "/logo.svg",
-      id: 2,
-    },
-    {
-      name: "Jajamelo Hotel",
-      description: `Savour the essence of West Africa at Mammy Mbuta, where "Taste
-        De Kinshasa" invites you to indulge in an authentic culinary
-        experience, celebrating the rich and diverse flavours of the
-        region.`,
-      imageSrc: "/logo.svg",
-      id: 2,
-    },
-    {
-      name: "Jajamelo Hotel",
-      description: `Savour the essence of West Africa at Mammy Mbuta, where "Taste
-        De Kinshasa" invites you to indulge in an authentic culinary
-        experience, celebrating the rich and diverse flavours of the
-        region.`,
-      imageSrc: "/logo.svg",
-      id: 2,
-    },
-    {
-      name: "Jajamelo Hotel",
-      description: `Savour the essence of West Africa at Mammy Mbuta, where "Taste
-        De Kinshasa" invites you to indulge in an authentic culinary
-        experience, celebrating the rich and diverse flavours of the
-        region.`,
-      imageSrc: "/logo.svg",
-      id: 2,
-    },
-    // Add more vendor objects as needed
-  ];
+  const { getVendorsFunc } = useVendorsDataContext();
 
-  const handleClickView = (vendorName: string) => {
-    pageNavigateToQueryParam({ queryParam: "more-details", vendorName });
+  const fetchVendors = async () => {
+    const vendorsData = await getVendorsFunc?.();
+    console.log(vendorsData, "vendorsData");
+    setVendors(vendorsData.data);
   };
+  useState(() => {
+    fetchVendors();
+  });
 
   return (
     <CommonWrapper>
@@ -134,13 +119,13 @@ const Vendors = () => {
               }}
             >
               <Box>
-                <h1>{vendor.name}</h1>
+                <h1>{vendor.title}</h1>
                 <p>{vendor.description}</p>
               </Box>
               <Box>
                 <Image
-                  src={vendor.imageSrc}
-                  alt={vendor.name}
+                  src={vendor?.image}
+                  alt={vendor?.title}
                   width={81}
                   height={84}
                 />
@@ -151,14 +136,34 @@ const Vendors = () => {
                 sx={{ borderRight: "1px solid rgba(0, 0, 0, 0.1)" }}
                 className="buttons"
               >
-                <DeleteViewButton>Delete</DeleteViewButton>
+                <DeleteViewButton onClick={toggleDeleteModal}>
+                  Delete
+                </DeleteViewButton>
+                {isDeleteModalOpen && (
+                  <DeleteModal
+                    isDeleteModalOpen={isDeleteModalOpen}
+                    handleClose={toggleDeleteModal}
+                    handleDelete={function (): void {
+                      throw new Error("Function not implemented.");
+                    }}
+                    message="Are you sure you want to delete this vendor?"
+                    styles={{
+                      background: "rgba(0,0,0,0.05)",
+                      boxShadow: "none",
+                    }}
+                  />
+                )}
               </Box>
               <Box className="buttons">
                 <DeleteViewButton
                   toColor={"#095F51"}
-                  onClick={() => handleClickView(vendor.name)}
+                  onClick={() =>
+                    pageNavigateToQueryParam({
+                      queryParam: "more-details",
+                      vendor_id: vendor._id,
+                    })
+                  }
                 >
-                  {" "}
                   View
                 </DeleteViewButton>
               </Box>

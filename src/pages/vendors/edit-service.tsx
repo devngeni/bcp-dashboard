@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState } from "react";
 import axios from "axios";
-import { Box, LinearProgress } from "@mui/material";
+import { Box, Button, LinearProgress } from "@mui/material";
 import Image from "next/image";
 import {
   CommonWrapper,
@@ -36,7 +36,7 @@ const simulateUpload = (setProgress: any) => {
   }, 100);
 };
 
-const EditProductPage = ({
+const EditVendorService = ({
   selectItem,
   setSelectItem,
   menuItemPlaceholder,
@@ -58,6 +58,8 @@ const EditProductPage = ({
   const handleRadioButtonChange = (event: any) => {
     setSelectedRadio(event.target.value);
   };
+
+  console.log("tag", selectedRadio);
 
   const handleFileChange = (event: any) => {
     const file = event.target.files && event.target.files[0];
@@ -204,6 +206,7 @@ const EditProductPage = ({
                   flexWrap: "wrap",
                   gap: "20px",
                   mt: "28px",
+                  maxWidth: "743px",
                   label: {
                     fontWeight: 400,
                   },
@@ -233,6 +236,25 @@ const EditProductPage = ({
                     <label>{label}</label>
                   </Box>
                 ))}
+                {selectedRadio.trim() !== "" && (
+                  <Button
+                    sx={{
+                      color: "#fff",
+                      background: "#FF0000",
+                      textTransform: "none",
+
+                      "&:hover": {
+                        background: "#FF0000",
+                        color: "#fff",
+                      },
+                    }}
+                    onClick={() => {
+                      setSelectedRadio("");
+                    }}
+                  >
+                    Remove tag
+                  </Button>
+                )}
               </Box>
 
               <UploadProductPicture
@@ -313,7 +335,7 @@ const EditProductPage = ({
   );
 };
 
-EditProductPage.getLayout = function getLayout(page: ReactElement) {
+EditVendorService.getLayout = function getLayout(page: ReactElement) {
   return (
     <DashBoardLayout pageTitle="Better call paul | Vendors (edit-service)">
       {page}
@@ -321,4 +343,4 @@ EditProductPage.getLayout = function getLayout(page: ReactElement) {
   );
 };
 
-export default EditProductPage;
+export default EditVendorService;

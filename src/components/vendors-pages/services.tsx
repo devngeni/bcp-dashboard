@@ -21,252 +21,12 @@ import { useRouter } from "next/router";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import DeleteModal from "../products-page/deleteModal";
+import { VendorServicesProps } from "@/pages/vendors";
 
-const rowData: any[] = [
-  {
-    _id: "1",
-    content: [
-      {
-        name: "Mammy Mbuta",
-        imagePath: "/logo.svg",
-      },
-    ],
-    description: `Savour the essence of West Africa at Mammy Mbuta, where "Taste
-        De Kinshasa" invites you to indulge in an authentic culinary
-        experience, celebrating the rich and diverse flavours of the
-        region.`,
-    category: "Food",
-    subTitle: "Taste De Kinshasa",
-    price: "20",
-  },
-  {
-    _id: "2",
-    content: [
-      {
-        name: "Jajamelo Hotel",
-        imagePath: "/logo.svg",
-      },
-    ],
-    description: `Savour the essence of West Africa at Mammy Mbuta, where "Taste
-        De Kinshasa" invites you to indulge in an authentic culinary
-        experience, celebrating the rich and diverse flavours of the
-        region.`,
-    category: "Food",
-    subTitle: "Taste De Kinshasa",
-    price: "20",
-  },
-  {
-    _id: "2",
-    content: [
-      {
-        name: "Jajamelo Hotel",
-        imagePath: "/logo.svg",
-      },
-    ],
-    description: `Savour the essence of West Africa at Mammy Mbuta, where "Taste
-        De Kinshasa" invites you to indulge in an authentic culinary
-        experience, celebrating the rich and diverse flavours of the
-        region.`,
-    category: "Food",
-    subTitle: "Taste De Kinshasa",
-    price: "20",
-  },
-  {
-    _id: "2",
-    content: [
-      {
-        name: "Jajamelo Hotel",
-        imagePath: "/logo.svg",
-      },
-    ],
-    description: `Savour the essence of West Africa at Mammy Mbuta, where "Taste
-        De Kinshasa" invites you to indulge in an authentic culinary
-        experience, celebrating the rich and diverse flavours of the
-        region.`,
-    category: "Food",
-    subTitle: "Taste De Kinshasa",
-    price: "20",
-  },
-  {
-    _id: "2",
-    content: [
-      {
-        name: "Jajamelo Hotel",
-        imagePath: "/logo.svg",
-      },
-    ],
-    description: `Savour the essence of West Africa at Mammy Mbuta, where "Taste
-        De Kinshasa" invites you to indulge in an authentic culinary
-        experience, celebrating the rich and diverse flavours of the
-        region.`,
-    category: "Food",
-    subTitle: "Taste De Kinshasa",
-    price: "20",
-  },
-  {
-    _id: "2",
-    content: [
-      {
-        name: "Jajamelo Hotel",
-        imagePath: "/logo.svg",
-      },
-    ],
-    description: `Savour the essence of West Africa at Mammy Mbuta, where "Taste
-        De Kinshasa" invites you to indulge in an authentic culinary
-        experience, celebrating the rich and diverse flavours of the
-        region.`,
-    category: "Food",
-    subTitle: "Taste De Kinshasa",
-    price: "20",
-  },
-  {
-    _id: "2",
-    content: [
-      {
-        name: "Jajamelo Hotel",
-        imagePath: "/logo.svg",
-      },
-    ],
-    description: `Savour the essence of West Africa at Mammy Mbuta, where "Taste
-        De Kinshasa" invites you to indulge in an authentic culinary
-        experience, celebrating the rich and diverse flavours of the
-        region.`,
-    category: "Food",
-    subTitle: "Taste De Kinshasa",
-    price: "20",
-  },
-  {
-    _id: "2",
-    content: [
-      {
-        name: "Jajamelo Hotel",
-        imagePath: "/logo.svg",
-      },
-    ],
-    description: `Savour the essence of West Africa at Mammy Mbuta, where "Taste
-        De Kinshasa" invites you to indulge in an authentic culinary
-        experience, celebrating the rich and diverse flavours of the
-        region.`,
-    category: "Food",
-    subTitle: "Taste De Kinshasa",
-    price: "20",
-  },
-  {
-    _id: "2",
-    content: [
-      {
-        name: "Jajamelo Hotel",
-        imagePath: "/logo.svg",
-      },
-    ],
-    description: `Savour the essence of West Africa at Mammy Mbuta, where "Taste
-        De Kinshasa" invites you to indulge in an authentic culinary
-        experience, celebrating the rich and diverse flavours of the
-        region.`,
-    category: "Food",
-    subTitle: "Taste De Kinshasa",
-    price: "20",
-  },
-  {
-    _id: "2",
-    content: [
-      {
-        name: "Jajamelo Hotel",
-        imagePath: "/logo.svg",
-      },
-    ],
-    description: `Savour the essence of West Africa at Mammy Mbuta, where "Taste
-        De Kinshasa" invites you to indulge in an authentic culinary
-        experience, celebrating the rich and diverse flavours of the
-        region.`,
-    category: "Food",
-    subTitle: "Taste De Kinshasa",
-    price: "20",
-  },
-  {
-    _id: "2",
-    content: [
-      {
-        name: "Jajamelo Hotel",
-        imagePath: "/logo.svg",
-      },
-    ],
-    description: `Savour the essence of West Africa at Mammy Mbuta, where "Taste
-        De Kinshasa" invites you to indulge in an authentic culinary
-        experience, celebrating the rich and diverse flavours of the
-        region.`,
-    category: "Food",
-    subTitle: "Taste De Kinshasa",
-    price: "20",
-  },
-  {
-    _id: "2",
-    content: [
-      {
-        name: "Jajamelo Hotel",
-        imagePath: "/logo.svg",
-      },
-    ],
-    description: `Savour the essence of West Africa at Mammy Mbuta, where "Taste
-        De Kinshasa" invites you to indulge in an authentic culinary
-        experience, celebrating the rich and diverse flavours of the
-        region.`,
-    category: "Food",
-    subTitle: "Taste De Kinshasa",
-    price: "20",
-  },
-  {
-    _id: "2",
-    content: [
-      {
-        name: "Jajamelo Hotel",
-        imagePath: "/logo.svg",
-      },
-    ],
-    description: `Savour the essence of West Africa at Mammy Mbuta, where "Taste
-        De Kinshasa" invites you to indulge in an authentic culinary
-        experience, celebrating the rich and diverse flavours of the
-        region.`,
-    category: "Food",
-    subTitle: "Taste De Kinshasa",
-    price: "20",
-  },
-  {
-    _id: "2",
-    content: [
-      {
-        name: "Jajamelo Hotel",
-        imagePath: "/logo.svg",
-      },
-    ],
-    description: `Savour the essence of West Africa at Mammy Mbuta, where "Taste
-        De Kinshasa" invites you to indulge in an authentic culinary
-        experience, celebrating the rich and diverse flavours of the
-        region.`,
-    category: "Food",
-    subTitle: "Taste De Kinshasa",
-    price: "20",
-  },
-  {
-    _id: "2",
-    content: [
-      {
-        name: "Jajamelo Hotel",
-        imagePath: "/logo.svg",
-      },
-    ],
-    description: `Savour the essence of West Africa at Mammy Mbuta, where "Taste
-        De Kinshasa" invites you to indulge in an authentic culinary
-        experience, celebrating the rich and diverse flavours of the
-        region.`,
-    category: "chakula",
-    subTitle: "the food",
-    price: "20",
-  },
-];
-const VendorServices = ({ searchQuery }: any) => {
+const VendorServices = ({ searchQuery, rowData }: any) => {
   const router = useRouter();
   const { vendor } = router.query;
+  console.log(rowData, "rowData");
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -281,7 +41,7 @@ const VendorServices = ({ searchQuery }: any) => {
     if (searchQuery.trim() !== "") {
       //by name, category, subtitle
       return rowData.filter(
-        (row) =>
+        (row: VendorServicesProps) =>
           row.content[0].name
             .toLowerCase()
             .includes(searchQuery.toLowerCase()) ||
@@ -350,7 +110,18 @@ const VendorServices = ({ searchQuery }: any) => {
                       </ProductItemBox>
                     </Box>
                   </TableCell>
-                  <TableCell>{row.description}</TableCell>
+                  <TableCell sx={{ maxWidth: "150px" }}>
+                    <Box
+                      sx={{
+                        overflow: "hidden",
+                        display: "-webkit-box",
+                        WebkitBoxOrient: "vertical",
+                        WebkitLineClamp: 2,
+                      }}
+                    >
+                      {row.description}
+                    </Box>
+                  </TableCell>
                   <TableCell>{row.category}</TableCell>
                   <TableCell>{row.subTitle}</TableCell>
                   <TableCell>{row.price}</TableCell>
@@ -370,7 +141,7 @@ const VendorServices = ({ searchQuery }: any) => {
                         title="Edit"
                         onClick={() =>
                           router.push(
-                            `/vendors/edit-service?product_id=${row.id}`
+                            `/vendors/edit-service?product_id=${row._id}`
                           )
                         }
                       >
@@ -384,14 +155,20 @@ const VendorServices = ({ searchQuery }: any) => {
                             toggleDeleteModal();
                           }}
                         />
+                      </div>
+                      {isDeleteModalOpen && (
                         <DeleteModal
                           isLoading={isLoading}
                           isDeleteModalOpen={isDeleteModalOpen}
                           handleClose={toggleDeleteModal}
                           handleDelete={() => handleDelete(row.id)}
-                          styles={{ background: "rgba(0,0,0,0.01)" }}
+                          styles={{
+                            background: "rgba(0,0,0,0.01)",
+                            boxShadow: "none !important",
+                            border:'none'
+                          }}
                         />
-                      </div>
+                      )}
                     </Box>
                   </TableCell>
                 </TableRow>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Box, LinearProgress } from "@mui/material";
+import { Box, Button, LinearProgress } from "@mui/material";
 import Image from "next/image";
 import {
   StyledInputField,
@@ -255,6 +255,7 @@ const EditProductPage = ({
               sx={{
                 display: "flex",
                 flexWrap: "wrap",
+                maxWidth: "743px",
                 gap: "20px",
                 mt: "28px",
                 label: {
@@ -267,6 +268,7 @@ const EditProductPage = ({
                 "Deal of the Month",
                 "Add to quick actions",
                 "On Offer/Discount",
+                "Banner Ad",
               ].map((label, index) => (
                 <Box
                   key={index}
@@ -286,6 +288,26 @@ const EditProductPage = ({
                   <label>{label}</label>
                 </Box>
               ))}
+
+              {selectedRadio.trim() !== "" && (
+                <Button
+                  sx={{
+                    color: "#fff",
+                    background: "#FF0000",
+                    textTransform: "none",
+
+                    "&:hover": {
+                      background: "#FF0000",
+                      color: "#fff",
+                    },
+                  }}
+                  onClick={() => {
+                    setSelectedRadio("");
+                  }}
+                >
+                  Remove tag
+                </Button>
+              )}
             </Box>
 
             <UploadProductPicture

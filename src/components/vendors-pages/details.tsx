@@ -3,16 +3,19 @@ import { VendorMoreDetails } from "@/styles/vendors.styles";
 import { Box } from "@mui/material";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Loader from "../common-components/loader";
 import { ChangeImageButton } from "@/styles/myAccount.styles";
+import { VendorProps } from "@/pages/vendors";
 
-const Details = () => {
+const Details = ({ vendor }: any) => {
   const router = useRouter();
-  const { vendor } = router.query;
+  const { vendor_id } = router.query;
 
-  const [vendorDetails, setVendorDetails] = useState("");
-  const [vendorName, setVendorName] = useState(vendor ?? "");
+  console.log("vendor_id", vendor);
+
+  const [vendorDetails, setVendorDetails] = useState("" ?? vendor.description);
+  const [vendorName, setVendorName] = useState("" ?? vendor.title);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState({
     file: null,
@@ -39,6 +42,12 @@ const Details = () => {
     fileInputRef.current.click(); // Trigger click on file input
   };
 
+  useEffect(() => {
+    // Set initial state values after the component mounts and vendor data is available
+    setVendorDetails(vendor.description ?? "");
+    setVendorName(vendor.title ?? "");
+  }, [vendor]);
+
   return (
     <Box>
       <VendorMoreDetails>
@@ -53,8 +62,7 @@ const Details = () => {
               id="fileInput"
             />
             <Image
-              src={selectedImage.previewImage ?? "/logo.svg"}
-              // "/logo.svg"
+              src={selectedImage.previewImage ?? vendor.image}
               alt="vendor-img"
               width={345}
               height={185}
@@ -85,7 +93,6 @@ const Details = () => {
                 lineHeight: "25px !important",
                 background: "transparent !important",
                 padding: "25px 5px !important",
-
               },
             }}
           >

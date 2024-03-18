@@ -8,6 +8,7 @@ interface DeleteModalProps {
   handleClose: () => void;
   handleDelete: () => void;
   styles?: any;
+  message?: string;
 }
 
 const DeleteModal: React.FC<DeleteModalProps> = ({
@@ -16,6 +17,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
   handleClose,
   handleDelete,
   styles,
+  message,
 }) => {
   return (
     <>
@@ -31,7 +33,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
             left: "0",
             top: "0",
             zIndex: 102,
-            ...styles
+            ...styles,
           }}
         >
           <ClickAwayListener onClickAway={handleClose}>
@@ -41,7 +43,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                boxShadow: "0px 4px 8px 0px #00000014",
+                boxShadow: "0px 4px 8px 0px rgba(0,0,0,0.01)",
                 padding: "20px",
                 backgroundColor: "rgba(255, 255, 255)",
                 gap: "10px",
@@ -63,7 +65,11 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
               }}
             >
               <h1>Confirm Actions</h1>
-              <p>Are you sure you want to delete this product?</p>
+              <p>
+                {message
+                  ? message
+                  : "Are you sure you want to delete this product?"}
+              </p>
               <Box
                 sx={{
                   display: "flex",

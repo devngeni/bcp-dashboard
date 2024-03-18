@@ -9,12 +9,19 @@ import Image from "next/image";
 import SearchIcon from "../../../public/searchIco.svg";
 import React, { ReactElement, useState } from "react";
 import NewService from "@/components/vendors-pages/new-service";
+import { useVendorsDataContext } from "@/utils/context/vendors-provider";
+import { useRouter } from "next/router";
+import { VendorProps } from ".";
 
 const Vendor = () => {
+  const router = useRouter();
+  const { vendor_id } = router.query;
   const tabs = ["Details", "Services", "New Service"];
   const [activeTab, setActiveTab] = useState("Details");
   const [title, setTitle] = useState("Vendor");
   const [searchQuery, setSearchQuery] = useState("");
+  const [vendorServices, setVendorServices] = useState([]);
+  const [vendor, setVendor] = useState({} as VendorProps);
 
   const handleTabClick = (tabName: string) => {
     setActiveTab(tabName);
@@ -26,6 +33,19 @@ const Vendor = () => {
       setTitle("New Service");
     }
   };
+
+  const { getVendorServicesFunc } = useVendorsDataContext();
+
+  const fetchVendorServices = async () => {
+    const vendorServicesData = await getVendorServicesFunc?.(vendor_id);
+    setVendorServices(vendorServicesData.data);
+    setVendor(vendorServicesData.serviceProvider);
+    console.log(vendorServicesData.serviceProvider, "vendorServicesData");
+  };
+
+  useState(() => {
+    fetchVendorServices();
+  });
 
   return (
     <CommonWrapper>
@@ -60,9 +80,12 @@ const Vendor = () => {
               </Box>
             )}
           </TabsBar>
-          {activeTab === "Details" && <Details />}
+          {activeTab === "Details" && <Details vendor={vendor} />}
           {activeTab === "Services" && (
-            <VendorServices searchQuery={searchQuery} />
+            <VendorServices
+              searchQuery={searchQuery}
+              rowData={vendorServices}
+            />
           )}
           {activeTab === "New Service" && (
             <NewService
