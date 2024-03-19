@@ -39,9 +39,12 @@ export interface VendorServicesProps extends VendorProps {
 
 const Vendors = () => {
   const router = useRouter();
-  const [vendors, setVendors] = useState<VendorProps[]>([]); // [1, 2, 3, 4, 5, 6, 7, 8, 9, 10
   const [searchQuery, setSearchQuery] = useState("");
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { vendorsData, deleteVendorFunc } = useVendorsDataContext();
+  console.log("vendorsData", vendorsData);
 
   const toggleDeleteModal = () => setIsDeleteModalOpen((prev) => !prev);
 
@@ -53,16 +56,31 @@ const Vendors = () => {
     }
   };
 
-  const { getVendorsFunc } = useVendorsDataContext();
+  //handle delete function by _id
+  const handleDelete = async (vendor_id: string) => {
+    try {
+      setIsLoading(true);
+      const data = await deleteVendorFunc(vendor_id);
 
-  const fetchVendors = async () => {
-    const vendorsData = await getVendorsFunc?.();
-    console.log(vendorsData, "vendorsData");
-    setVendors(vendorsData.data);
+      if (data) {
+        setIsLoading(false);
+      }
+    } catch (error) {
+      console.error("error", error);
+      setIsLoading(false);
+    }
   };
-  useState(() => {
-    fetchVendors();
-  });
+
+  const filterDataBySearch = () => {
+    if (searchQuery.trim() !== "") {
+      return vendorsData.filter(
+        (vendor) =>
+          vendor.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          vendor.description.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+    return vendorsData;
+  };
 
   return (
     <CommonWrapper>
@@ -108,7 +126,7 @@ const Vendors = () => {
           gap: "20px",
         }}
       >
-        {vendors.map((vendor, index) => (
+        {filterDataBySearch().map((vendor, index) => (
           <VendorsSubWrapper key={index}>
             <Box
               sx={{
@@ -141,11 +159,10 @@ const Vendors = () => {
                 </DeleteViewButton>
                 {isDeleteModalOpen && (
                   <DeleteModal
+                    isLoading={isLoading}
                     isDeleteModalOpen={isDeleteModalOpen}
                     handleClose={toggleDeleteModal}
-                    handleDelete={function (): void {
-                      throw new Error("Function not implemented.");
-                    }}
+                    handleDelete={() => handleDelete(vendor._id)}
                     message="Are you sure you want to delete this vendor?"
                     styles={{
                       background: "rgba(0,0,0,0.05)",

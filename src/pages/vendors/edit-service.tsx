@@ -43,6 +43,8 @@ const EditVendorService = ({
   selectDataItems,
 }: HandleSelectCategoryProps) => {
   const router = useRouter();
+  const { product_id } = router.query;
+
   const [product, setProduct] = useState<any>({});
   const [productName, setProductName] = useState<string>("");
   const [price, setPrice] = useState<number>(0);
@@ -59,7 +61,27 @@ const EditVendorService = ({
     setSelectedRadio(event.target.value);
   };
 
-  console.log("tag", selectedRadio);
+  useEffect(() => {
+    const getProductDetails = async () => {
+      const { product_id } = router.query;
+      try {
+        const response = await axios.get(`/api/service/${product_id}`);
+        const fetchedProduct = response.data.service;
+        setProduct(fetchedProduct);
+        setProductName(fetchedProduct.content[0]?.name || "");
+        setPrice(fetchedProduct.content[0]?.price || 0);
+        setSelectItem(fetchedProduct.category || "");
+        setSubtitle(fetchedProduct.subTitle || "");
+        setDescription(fetchedProduct.content[0]?.description || "");
+        setSelectedRadio(fetchedProduct.tag || "");
+        setSelectedFile(fetchedProduct.content[0]?.imagePath || "");
+      } catch (error) {
+        console.error("Error fetching product details", error);
+      }
+    };
+
+    getProductDetails();
+  }, [router.query, setSelectItem]);
 
   const handleFileChange = (event: any) => {
     const file = event.target.files && event.target.files[0];

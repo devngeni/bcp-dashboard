@@ -12,6 +12,7 @@ import NewService from "@/components/vendors-pages/new-service";
 import { useVendorsDataContext } from "@/utils/context/vendors-provider";
 import { useRouter } from "next/router";
 import { VendorProps } from ".";
+import { set } from "lodash";
 
 const Vendor = () => {
   const router = useRouter();
@@ -20,6 +21,7 @@ const Vendor = () => {
   const [activeTab, setActiveTab] = useState("Details");
   const [title, setTitle] = useState("Vendor");
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectItem, setSelectItem] = useState("");
   const [vendorServices, setVendorServices] = useState([]);
   const [vendor, setVendor] = useState({} as VendorProps);
 
@@ -85,13 +87,15 @@ const Vendor = () => {
             <VendorServices
               searchQuery={searchQuery}
               rowData={vendorServices}
+              vendorDetails={vendor}
             />
           )}
           {activeTab === "New Service" && (
             <NewService
-              selectItem={""}
-              setSelectItem={undefined}
-              selectDataItems={[]}
+              selectItem={selectItem}
+              setSelectItem={setSelectItem}
+              selectDataItems={["PRIVATE CHEF & MEAL PREP"]}
+              menuItemPlaceholder="select category"
             />
           )}
         </Box>

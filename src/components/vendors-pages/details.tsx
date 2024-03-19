@@ -44,8 +44,8 @@ const Details = ({ vendor }: any) => {
 
   useEffect(() => {
     // Set initial state values after the component mounts and vendor data is available
-    setVendorDetails(vendor.description ?? "");
-    setVendorName(vendor.title ?? "");
+    setVendorDetails(vendor?.description ?? "");
+    setVendorName(vendor?.title ?? "");
   }, [vendor]);
 
   return (
@@ -62,7 +62,7 @@ const Details = ({ vendor }: any) => {
               id="fileInput"
             />
             <Image
-              src={selectedImage.previewImage ?? vendor.image}
+              src={selectedImage.previewImage ?? vendor?.image}
               alt="vendor-img"
               width={345}
               height={185}

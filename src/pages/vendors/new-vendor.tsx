@@ -11,6 +11,7 @@ import { Box, LinearProgress } from "@mui/material";
 import Image from "next/image";
 import UploadImageIcon from "../../../public/uploadImageicon.svg";
 import DashBoardLayout from "@/components/layout/dashboardLayout";
+import { useVendorsDataContext } from "@/utils/context/vendors-provider";
 
 type FileType = File | null;
 
@@ -33,8 +34,18 @@ const NewVendor = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
 
+  const { addVendorFunc } = useVendorsDataContext();
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    try {
+      setIsLoading(true);
+      await addVendorFunc({ vendorName, selectedFile, description });
+      setIsLoading(false);
+    } catch (error) {
+      console.error("error", error);
+      setIsLoading(false);
+    }
   };
 
   const handleFileChange = (event: any) => {
