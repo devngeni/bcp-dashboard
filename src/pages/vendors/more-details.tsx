@@ -12,7 +12,6 @@ import NewService from "@/components/vendors-pages/new-service";
 import { useVendorsDataContext } from "@/utils/context/vendors-provider";
 import { useRouter } from "next/router";
 import { VendorProps } from ".";
-import { set } from "lodash";
 
 const Vendor = () => {
   const router = useRouter();
@@ -36,18 +35,7 @@ const Vendor = () => {
     }
   };
 
-  const { getVendorServicesFunc } = useVendorsDataContext();
-
-  const fetchVendorServices = async () => {
-    const vendorServicesData = await getVendorServicesFunc?.(vendor_id);
-    setVendorServices(vendorServicesData.data);
-    setVendor(vendorServicesData.serviceProvider);
-    console.log(vendorServicesData.serviceProvider, "vendorServicesData");
-  };
-
-  useState(() => {
-    fetchVendorServices();
-  });
+  const { servicesFromVendor, singleVendorData } = useVendorsDataContext();
 
   return (
     <CommonWrapper>
@@ -82,12 +70,12 @@ const Vendor = () => {
               </Box>
             )}
           </TabsBar>
-          {activeTab === "Details" && <Details vendor={vendor} />}
+          {activeTab === "Details" && <Details vendor={singleVendorData} />}
           {activeTab === "Services" && (
             <VendorServices
               searchQuery={searchQuery}
-              rowData={vendorServices}
-              vendorDetails={vendor}
+              rowData={servicesFromVendor}
+              vendorDetails={singleVendorData}
             />
           )}
           {activeTab === "New Service" && (
@@ -96,6 +84,7 @@ const Vendor = () => {
               setSelectItem={setSelectItem}
               selectDataItems={["PRIVATE CHEF & MEAL PREP"]}
               menuItemPlaceholder="select category"
+              vendorName={singleVendorData.title}
             />
           )}
         </Box>

@@ -126,7 +126,7 @@ const Vendors = () => {
           gap: "20px",
         }}
       >
-        {filterDataBySearch().map((vendor, index) => (
+        {filterDataBySearch()?.map((vendor, index) => (
           <VendorsSubWrapper key={index}>
             <Box
               sx={{
@@ -142,7 +142,7 @@ const Vendors = () => {
               </Box>
               <Box>
                 <Image
-                  src={vendor?.image}
+                  src={vendor?.image ?? "/vendor.png"}
                   alt={vendor?.title}
                   width={81}
                   height={84}

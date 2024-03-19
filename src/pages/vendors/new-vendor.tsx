@@ -40,8 +40,17 @@ const NewVendor = () => {
     event.preventDefault();
     try {
       setIsLoading(true);
-      await addVendorFunc({ vendorName, selectedFile, description });
-      setIsLoading(false);
+      const res = await addVendorFunc({
+        vendorName,
+        selectedFile,
+        description,
+      });
+      if (res.data.success) {
+        setIsLoading(false);
+        setVendorName("");
+        setDescription("");
+        setSelectedFile(null);
+      }
     } catch (error) {
       console.error("error", error);
       setIsLoading(false);

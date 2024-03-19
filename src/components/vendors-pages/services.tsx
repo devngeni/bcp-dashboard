@@ -26,7 +26,7 @@ import { VendorServicesProps } from "@/pages/vendors";
 const VendorServices = ({ searchQuery, vendorDetails, rowData }: any) => {
   const router = useRouter();
   // const { vendor } = router.query;
-  // console.log(rowData, "rowData");
+  console.log(rowData, "rowData");
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -54,7 +54,7 @@ const VendorServices = ({ searchQuery, vendorDetails, rowData }: any) => {
 
   return (
     <CommonWrapper sx={{ p: "20px 0 0 0" }}>
-      <h2>{vendorDetails.title}</h2>
+      <h2>{vendorDetails?.title}</h2>
       <ProductsTable sx={{ paddingBottom: "0", pt: "10px" }}>
         <TableContainer component={Paper} sx={{ maxHeight: 700 }}>
           <Table stickyHeader aria-label="sticky table">
