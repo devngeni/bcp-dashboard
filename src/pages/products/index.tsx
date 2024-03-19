@@ -48,6 +48,7 @@ interface Product {
   subTitle: string;
   content: any;
   id: any;
+  tag?: string;
 }
 
 interface pageNavigateToQueryProps {
@@ -237,6 +238,8 @@ const ProductRow = ({
 const ProductsPages: NextPageWithLayout = () => {
   const { services } = useProductDataContext();
 
+  console.log("services data", services);
+
   //get data from context replace with your services state in this file
 
   const router = useRouter();
@@ -296,7 +299,8 @@ const ProductsPages: NextPageWithLayout = () => {
     return (
       item.content[0].name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.subTitle.toLowerCase().includes(searchQuery.toLowerCase())
+      item.subTitle.toLowerCase().includes(searchQuery.toLowerCase())||
+      item.tag?.toLowerCase().includes(searchQuery.toLowerCase())
     );
   });
 

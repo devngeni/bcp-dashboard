@@ -1,6 +1,6 @@
 import "dotenv/config";
 import React, { useState } from "react";
-import { Box, LinearProgress } from "@mui/material";
+import { Box, Button, LinearProgress } from "@mui/material";
 import Image from "next/image";
 import {
   StyledInputField,
@@ -204,6 +204,7 @@ const NewService = ({
               flexWrap: "wrap",
               gap: "20px",
               mt: "28px",
+              maxWidth: "743px",
               label: {
                 fontWeight: 400,
               },
@@ -233,6 +234,25 @@ const NewService = ({
                 <label>{label}</label>
               </Box>
             ))}
+            {selectedRadio.trim() !== "" && (
+              <Button
+                sx={{
+                  color: "#fff",
+                  background: "#FF0000",
+                  textTransform: "none",
+
+                  "&:hover": {
+                    background: "#FF0000",
+                    color: "#fff",
+                  },
+                }}
+                onClick={() => {
+                  setSelectedRadio("");
+                }}
+              >
+                Remove tag
+              </Button>
+            )}
           </Box>
 
           <UploadProductPicture onDragOver={handleDragOver} onDrop={handleDrop}>

@@ -27,6 +27,7 @@ const ProductPage = () => {
       "GIFTSHOP",
       "RENTABLES",
       "LAUGGAGE SHOP",
+      "BANNER AD",
     ],
     menuItemPlaceholder: "Select Category",
   };
@@ -50,7 +51,11 @@ const ProductPage = () => {
 };
 
 ProductPage.getLayout = function getLayout(page: ReactElement) {
-  return <DashBoardLayout pageTitle="Better call paul | Products">{page}</DashBoardLayout>;
+  return (
+    <DashBoardLayout pageTitle="Better call paul | Products">
+      {page}
+    </DashBoardLayout>
+  );
 };
 
 export default ProductPage;

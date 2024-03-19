@@ -13,6 +13,7 @@ enum Category {
   Giftshop = "GIFTSHOP",
   Rentables = "RENTABLES",
   LauggageShop = "LAUGGAGE SHOP",
+  BannerAd = "BANNER AD",
 }
 
 interface IContentItem {
