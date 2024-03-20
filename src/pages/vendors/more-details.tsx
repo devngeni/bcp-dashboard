@@ -88,7 +88,7 @@ const Vendor = () => {
               setSelectItem={setSelectItem}
               selectDataItems={["PRIVATE CHEF & MEAL PREP"]}
               menuItemPlaceholder="select category"
-              vendorName={singleVendorData.title}
+              vendorName={singleVendorData?.title}
             />
           )}
         </Box>

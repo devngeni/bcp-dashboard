@@ -175,9 +175,9 @@ const EditProductPage = ({
             <YelloWButton type="submit">
               {isLoading ? <Loader /> : "Save Changes"}
             </YelloWButton>
-            <Box sx={{ display: "flex", alignItems: "center" }}>
+            {/* <Box sx={{ display: "flex", alignItems: "center" }}>
               <Image src={ArrowIcon} alt="arrow" className="sort_arrow" />
-            </Box>
+            </Box> */}
           </Box>
         </TopLevel>
         <Box sx={{ display: "flex", gap: "50px", flexWrap: "wrap" }}>
