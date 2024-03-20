@@ -12,9 +12,12 @@ interface vendorsDataProps {
   vendorsData: any[];
   servicesFromVendor: any[];
   singleVendorData: VendorProps;
+
   addVendorFunc: any;
   deleteVendorFunc: any;
   editVendorFunc: any;
+
+  deleteServiceOfSpecificVendor: any;
   addNewServicetoVendorFunc: any;
   editServiceOfSpecificVendor: any;
 }
@@ -88,7 +91,6 @@ export const VendorsDataProvider = ({ children }: any) => {
 
       // Send POST request using Axios
       const response = await axios.post(`${vendorsUrl}`, postData);
-      console.log("response", response);
       if (response.data.success) {
         toast.success("Vendor added successfully");
         refetchVendors();
@@ -111,7 +113,6 @@ export const VendorsDataProvider = ({ children }: any) => {
         },
       });
       const data = await res.json();
-      console.log("delete data", data);
       if (data) {
         toast.success("Vendor deleted successfully");
         refetchVendors();
@@ -322,11 +323,36 @@ export const VendorsDataProvider = ({ children }: any) => {
         toast.success("Product updated successfully.");
         refetchVendorServices();
       }
-      console.log("response", response);
       return response.data;
     } catch (error) {
       console.log("vendors fetch error", error);
       toast.error("Error creating product. Please try again.");
+    }
+  };
+
+  const deleteServiceOfSpecificVendor = async (
+    product_id: string,
+    vendor_id: string
+  ) => {
+    try {
+      const res = await fetch(
+        `${vendorsUrl}/single/${vendor_id}/${product_id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Allow-Control-Allow-Origin": "*",
+          },
+        }
+      );
+      const data = await res.json();
+      if (data.success) {
+        toast.success("Service item deleted successfully");
+        refetchVendorServices();
+      }
+      return data;
+    } catch (error) {
+      console.error("vendors fetch error", error);
+      toast.error("Error deleting product. Please try again.");
     }
   };
 
@@ -347,6 +373,7 @@ export const VendorsDataProvider = ({ children }: any) => {
         vendorsData,
         servicesFromVendor,
         editVendorFunc,
+        deleteServiceOfSpecificVendor,
         addNewServicetoVendorFunc,
         editServiceOfSpecificVendor,
       }}

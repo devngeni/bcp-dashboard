@@ -44,7 +44,6 @@ const Vendors = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const { vendorsData, deleteVendorFunc } = useVendorsDataContext();
-  console.log("vendorsData", vendorsData);
 
   const toggleDeleteModal = () => setIsDeleteModalOpen((prev) => !prev);
 

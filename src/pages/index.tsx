@@ -40,7 +40,7 @@ const SignIn: NextPageWithLayout = ({ providers }: any) => {
   const { data: session } = useSession();
 
   if (session) {
-    console.log(session.user);
+    // console.log(session.user);
   }
 
   const [credentials, setCredentials] = useState<Icredentials>({
