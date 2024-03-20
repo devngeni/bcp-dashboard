@@ -9,6 +9,7 @@ import {
 } from "../../../../public/iconSvgs";
 import { Box } from "@mui/material";
 import { useRouter } from "next/router";
+import Image from "next/image";
 
 const HoverableButton = ({ children, icon, isActive, onClick }: any) => {
   const [isHovered, setIsHovered] = useState(false);
