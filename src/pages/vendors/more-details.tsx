@@ -15,14 +15,12 @@ import { VendorProps } from ".";
 
 const Vendor = () => {
   const router = useRouter();
-  const { vendor_id } = router.query;
+  const { vendor_id, tabName } = router.query;
   const tabs = ["Details", "Services", "New Service"];
   const [activeTab, setActiveTab] = useState("Details");
   const [title, setTitle] = useState("Vendor");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectItem, setSelectItem] = useState("");
-  const [vendorServices, setVendorServices] = useState([]);
-  const [vendor, setVendor] = useState({} as VendorProps);
 
   const handleTabClick = (tabName: string) => {
     setActiveTab(tabName);
@@ -36,6 +34,12 @@ const Vendor = () => {
   };
 
   const { servicesFromVendor, singleVendorData } = useVendorsDataContext();
+
+  React.useEffect(() => {
+    if (tabName === "Services") {
+      setActiveTab("Services");
+    }
+  }, [tabName]);
 
   return (
     <CommonWrapper>

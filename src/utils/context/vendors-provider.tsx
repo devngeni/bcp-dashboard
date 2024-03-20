@@ -16,6 +16,7 @@ interface vendorsDataProps {
   deleteVendorFunc: any;
   editVendorFunc: any;
   addNewServicetoVendorFunc: any;
+  editServiceOfSpecificVendor: any;
 }
 
 const VendorsDataContext = createContext({} as vendorsDataProps);
@@ -33,7 +34,7 @@ export function useVendorsDataContext() {
 
 export const VendorsDataProvider = ({ children }: any) => {
   const router = useRouter();
-  const { vendor_id } = router.query;
+  const { vendor_id, product_id } = router.query;
   const [vendorsData, setVendorsData] = useState<any[]>([]);
   const [servicesFromVendor, setVendorServices] = useState([]);
   const [singleVendorData, setSingleVendorData] = useState({} as VendorProps);
@@ -49,6 +50,7 @@ export const VendorsDataProvider = ({ children }: any) => {
     }
   };
 
+  //adding a new vendor(hotel, restaurant.)
   const addVendorFunc = async ({
     vendorName,
     selectedFile,
@@ -98,6 +100,7 @@ export const VendorsDataProvider = ({ children }: any) => {
     }
   };
 
+  //deleting a vendor
   const deleteVendorFunc = async (vendor_id: string) => {
     try {
       const res = await fetch(`${vendorsUrl}/${vendor_id}`, {
@@ -194,14 +197,7 @@ export const VendorsDataProvider = ({ children }: any) => {
     setVendorsData(updatedVendors?.data);
   };
 
-  useEffect(() => {
-    refetchVendors();
-  }, []);
-
-  useEffect(() => {
-    refetchVendorServices();
-  }, [vendor_id]);
-
+  //add new service to vendor
   const addNewServicetoVendorFunc = async (
     vendor_id: string,
     selectedFile: File | null,
@@ -270,6 +266,78 @@ export const VendorsDataProvider = ({ children }: any) => {
     }
   };
 
+  //editing a service of a vendor
+  const editServiceOfSpecificVendor = async (
+    selectedFile: File | null,
+    selectItem: string,
+    subtitle: string,
+    selectedRadio: string,
+    productName: string,
+    description: string,
+    price: number,
+    existingImagePath: any
+  ) => {
+    try {
+      let cloudinaryImageUrl = existingImagePath; // Set the default image URL to the existing one
+
+      if (selectedFile) {
+        const formData = new FormData();
+        formData.append("file", selectedFile);
+        formData.append("upload_preset", "z9q4pq86");
+
+        const cloudinaryResponse = await axios.post(
+          `https://api.cloudinary.com/v1_1/dhvrtisdb/image/upload`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+
+        cloudinaryImageUrl = cloudinaryResponse.data.secure_url;
+      } else {
+        toast.error("No file selected."); // Notify the user if no file is selected
+        return;
+      }
+
+      const serviceData = {
+        category: selectItem,
+        subTitle: subtitle,
+        tag: selectedRadio,
+        content: [
+          {
+            name: productName,
+            description: description,
+            imagePath: cloudinaryImageUrl,
+            price: price,
+          },
+        ],
+      };
+      const response = await axios.put(
+        `${vendorsUrl}/single/${vendor_id}/${product_id}`,
+        serviceData
+      );
+      if (response.data.success) {
+        toast.success("Product updated successfully.");
+        refetchVendorServices();
+      }
+      console.log("response", response);
+      return response.data;
+    } catch (error) {
+      console.log("vendors fetch error", error);
+      toast.error("Error creating product. Please try again.");
+    }
+  };
+
+  useEffect(() => {
+    refetchVendors();
+  }, []);
+
+  useEffect(() => {
+    refetchVendorServices();
+  }, [vendor_id]);
+
   return (
     <VendorsDataContext.Provider
       value={{
@@ -280,6 +348,7 @@ export const VendorsDataProvider = ({ children }: any) => {
         servicesFromVendor,
         editVendorFunc,
         addNewServicetoVendorFunc,
+        editServiceOfSpecificVendor,
       }}
     >
       {children}

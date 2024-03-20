@@ -22,6 +22,7 @@ import {
   HandleSelectCategoryProps,
 } from "@/components/products-page/handleSelectCategory";
 import DashBoardLayout from "@/components/layout/dashboardLayout";
+import { useVendorsDataContext } from "@/utils/context/vendors-provider";
 
 type FileType = File | null;
 
@@ -36,14 +37,9 @@ const simulateUpload = (setProgress: any) => {
   }, 100);
 };
 
-const EditVendorService = ({
-  selectItem,
-  setSelectItem,
-  menuItemPlaceholder,
-  selectDataItems,
-}: HandleSelectCategoryProps) => {
+const EditVendorService = () => {
   const router = useRouter();
-  const { product_id } = router.query;
+  const { product_id, vendor_id } = router.query;
 
   const [product, setProduct] = useState<any>({});
   const [productName, setProductName] = useState<string>("");
@@ -54,8 +50,10 @@ const EditVendorService = ({
   const [selectedFile, setSelectedFile] = useState<FileType>(null);
   const [progress, setProgress] = useState(0);
   const [previewImage, setPreviewImage] = useState(null);
-
+  const [selectItem, setSelectItem] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const { editServiceOfSpecificVendor } = useVendorsDataContext();
 
   const handleRadioButtonChange = (event: any) => {
     setSelectedRadio(event.target.value);
@@ -63,10 +61,11 @@ const EditVendorService = ({
 
   useEffect(() => {
     const getProductDetails = async () => {
-      const { product_id } = router.query;
       try {
-        const response = await axios.get(`/api/service/${product_id}`);
-        const fetchedProduct = response.data.service;
+        const response = await axios.get(
+          `/api/provider/single/${vendor_id}/${product_id}`
+        );
+        const fetchedProduct = response.data.data;
         setProduct(fetchedProduct);
         setProductName(fetchedProduct.content[0]?.name || "");
         setPrice(fetchedProduct.content[0]?.price || 0);
@@ -81,7 +80,7 @@ const EditVendorService = ({
     };
 
     getProductDetails();
-  }, [router.query, setSelectItem]);
+  }, [router.query]);
 
   const handleFileChange = (event: any) => {
     const file = event.target.files && event.target.files[0];
@@ -118,6 +117,32 @@ const EditVendorService = ({
 
   const handleEdit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    try {
+      setIsLoading(true);
+      const res = await editServiceOfSpecificVendor(
+        selectedFile,
+        selectItem,
+        subtitle,
+        selectedRadio,
+        productName,
+        description,
+        price,
+        product.content[0].imagePath
+      );
+      if (res.success) {
+        setIsLoading(false);
+
+        setTimeout(() => {
+          //vendors/more-details?vendor_id=65f9a03b40e115ed3fa52d5e&tab=services
+          router.push(
+            `/vendors/more-details?vendor_id=${vendor_id}&tabName=Services`
+          );
+        }, 2000);
+      }
+    } catch (error) {
+      console.error("Error editing product", error);
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -190,10 +215,10 @@ const EditVendorService = ({
                 >
                   <label>Category</label>
                   <HandleSelectCategory
-                    menuItemPlaceholder={menuItemPlaceholder}
+                    menuItemPlaceholder={"select category"}
                     selectItem={selectItem}
                     setSelectItem={setSelectItem}
-                    selectDataItems={selectDataItems}
+                    selectDataItems={["PRIVATE CHEF & MEAL PREP"]}
                   />
                 </StyledInputField>
 

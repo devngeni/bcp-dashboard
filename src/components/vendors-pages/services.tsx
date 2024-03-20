@@ -78,7 +78,7 @@ const VendorServices = ({ searchQuery, vendorDetails, rowData }: any) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {filterDataBySearchQuery().map((row: any, index: any) => (
+              {filterDataBySearchQuery()?.map((row: any, index: any) => (
                 <TableRow key={index}>
                   <TableCell>1</TableCell>
                   <TableCell>
@@ -119,7 +119,7 @@ const VendorServices = ({ searchQuery, vendorDetails, rowData }: any) => {
                         WebkitLineClamp: 2,
                       }}
                     >
-                      {row.description}
+                      {row.content[0].description}
                     </Box>
                   </TableCell>
                   <TableCell>{row.category}</TableCell>
@@ -141,7 +141,7 @@ const VendorServices = ({ searchQuery, vendorDetails, rowData }: any) => {
                         title="Edit"
                         onClick={() =>
                           router.push(
-                            `/vendors/edit-service?product_id=${row._id}`
+                            `/vendors/edit-service?vendor_id=${vendorDetails._id}&product_id=${row._id}`
                           )
                         }
                       >
