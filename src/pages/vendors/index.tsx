@@ -44,7 +44,6 @@ const Vendors = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const { vendorsData, deleteVendorFunc } = useVendorsDataContext();
-  console.log("vendorsData", vendorsData);
 
   const toggleDeleteModal = () => setIsDeleteModalOpen((prev) => !prev);
 
@@ -126,7 +125,7 @@ const Vendors = () => {
           gap: "20px",
         }}
       >
-        {filterDataBySearch().map((vendor, index) => (
+        {filterDataBySearch()?.map((vendor, index) => (
           <VendorsSubWrapper key={index}>
             <Box
               sx={{
@@ -142,7 +141,7 @@ const Vendors = () => {
               </Box>
               <Box>
                 <Image
-                  src={vendor?.image}
+                  src={vendor?.image ?? "/vendor.png"}
                   alt={vendor?.title}
                   width={81}
                   height={84}

@@ -12,18 +12,15 @@ import NewService from "@/components/vendors-pages/new-service";
 import { useVendorsDataContext } from "@/utils/context/vendors-provider";
 import { useRouter } from "next/router";
 import { VendorProps } from ".";
-import { set } from "lodash";
 
 const Vendor = () => {
   const router = useRouter();
-  const { vendor_id } = router.query;
+  const { vendor_id, tabName } = router.query;
   const tabs = ["Details", "Services", "New Service"];
   const [activeTab, setActiveTab] = useState("Details");
   const [title, setTitle] = useState("Vendor");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectItem, setSelectItem] = useState("");
-  const [vendorServices, setVendorServices] = useState([]);
-  const [vendor, setVendor] = useState({} as VendorProps);
 
   const handleTabClick = (tabName: string) => {
     setActiveTab(tabName);
@@ -36,18 +33,13 @@ const Vendor = () => {
     }
   };
 
-  const { getVendorServicesFunc } = useVendorsDataContext();
+  const { servicesFromVendor, singleVendorData } = useVendorsDataContext();
 
-  const fetchVendorServices = async () => {
-    const vendorServicesData = await getVendorServicesFunc?.(vendor_id);
-    setVendorServices(vendorServicesData.data);
-    setVendor(vendorServicesData.serviceProvider);
-    console.log(vendorServicesData.serviceProvider, "vendorServicesData");
-  };
-
-  useState(() => {
-    fetchVendorServices();
-  });
+  React.useEffect(() => {
+    if (tabName === "Services") {
+      setActiveTab("Services");
+    }
+  }, [tabName]);
 
   return (
     <CommonWrapper>
@@ -82,12 +74,12 @@ const Vendor = () => {
               </Box>
             )}
           </TabsBar>
-          {activeTab === "Details" && <Details vendor={vendor} />}
+          {activeTab === "Details" && <Details vendor={singleVendorData} />}
           {activeTab === "Services" && (
             <VendorServices
               searchQuery={searchQuery}
-              rowData={vendorServices}
-              vendorDetails={vendor}
+              rowData={servicesFromVendor}
+              vendorDetails={singleVendorData}
             />
           )}
           {activeTab === "New Service" && (
@@ -96,6 +88,7 @@ const Vendor = () => {
               setSelectItem={setSelectItem}
               selectDataItems={["PRIVATE CHEF & MEAL PREP"]}
               menuItemPlaceholder="select category"
+              vendorName={singleVendorData.title}
             />
           )}
         </Box>

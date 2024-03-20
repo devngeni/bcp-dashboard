@@ -19,6 +19,11 @@ import {
   HandleSelectCategoryProps,
 } from "../products-page/handleSelectCategory";
 import { useRouter } from "next/router";
+import { useVendorsDataContext } from "@/utils/context/vendors-provider";
+
+interface INewServiceProps extends HandleSelectCategoryProps {
+  vendorName: string;
+}
 
 type FileType = File | null;
 
@@ -38,12 +43,13 @@ const NewService = ({
   setSelectItem,
   menuItemPlaceholder,
   selectDataItems,
-}: HandleSelectCategoryProps) => {
+  vendorName,
+}: INewServiceProps) => {
   const router = useRouter();
-  const { vendor } = router.query;
+  const { vendor_id } = router.query;
   const [productName, setProductName] = useState<string>("");
   const [price, setPrice] = useState("");
-  const [subtitle, setSubtitle] = useState<string>("");
+  const [subtitle, setSubtitle] = useState<string>("Restaurant");
   const [description, setDescription] = useState<string>("");
   const [selectedRadio, setSelectedRadio] = useState("");
   const [selectedFile, setSelectedFile] = useState<FileType>(null);
@@ -51,14 +57,36 @@ const NewService = ({
   const [isLoading, setIsLoading] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
 
-  const context = useProductDataContext();
-  const newProductFunc = context?.newProductFunc;
-  if (!newProductFunc) {
-    console.error("newProductFunc is not defined");
-    return null;
-  }
+  const { addNewServicetoVendorFunc } = useVendorsDataContext();
 
-  const handleSubmit = async () => {};
+  const handleSubmit = async () => {
+    try {
+      setIsLoading(true);
+      const res = await addNewServicetoVendorFunc(
+        vendor_id,
+        selectedFile,
+        selectItem,
+        subtitle,
+        selectedRadio,
+        productName,
+        description,
+        price
+      );
+      if (res.data.success) {
+        setIsLoading(false);
+        setProductName("");
+        setPrice("");
+        // setSubtitle("");
+        setDescription("");
+        setSelectedRadio("");
+        setSelectedFile(null);
+        setPreviewImage(null);
+      }
+    } catch (error) {
+      console.error("error", error);
+      setIsLoading(false);
+    }
+  };
 
   const handleRadioButtonChange = (event: any) => {
     setSelectedRadio(event.target.value);
@@ -109,7 +137,7 @@ const NewService = ({
       }}
     >
       <TopLevel sx={{ position: "relative", mt: "20px" }}>
-        <h2>{vendor}</h2>
+        <h2>{vendorName}</h2>
         <Box
           sx={{
             display: "flex",
@@ -179,12 +207,7 @@ const NewService = ({
               }}
             >
               <label>Subtitle</label>
-              <input
-                type="text"
-                placeholder="Subtitle"
-                value={subtitle}
-                onChange={(e) => setSubtitle(e.target.value)}
-              />
+              <input type="text" placeholder="Subtitle" value={subtitle} />
             </StyledInputField>
           </Box>
 

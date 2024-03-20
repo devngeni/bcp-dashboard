@@ -7,12 +7,12 @@ import React, { useEffect, useRef, useState } from "react";
 import Loader from "../common-components/loader";
 import { ChangeImageButton } from "@/styles/myAccount.styles";
 import { VendorProps } from "@/pages/vendors";
+import { useVendorsDataContext } from "@/utils/context/vendors-provider";
 
 const Details = ({ vendor }: any) => {
   const router = useRouter();
   const { vendor_id } = router.query;
-
-  console.log("vendor_id", vendor);
+  const { editVendorFunc } = useVendorsDataContext();
 
   const [vendorDetails, setVendorDetails] = useState("" ?? vendor.description);
   const [vendorName, setVendorName] = useState("" ?? vendor.title);
@@ -21,12 +21,14 @@ const Details = ({ vendor }: any) => {
     file: null,
     previewImage: null,
   });
+  const [selectedFile, setSelectedFile] = useState(null); // [file, setFile
   const fileInputRef: any = useRef(null);
 
   const handleImageChange = (e: any) => {
     const file = e.target.files[0];
 
     if (file) {
+      setSelectedFile(file);
       const reader: any = new FileReader();
       reader.onloadend = () => {
         setSelectedImage({
@@ -40,6 +42,28 @@ const Details = ({ vendor }: any) => {
 
   const handleClickChange = () => {
     fileInputRef.current.click(); // Trigger click on file input
+  };
+
+  const handleUpdateDetails = async () => {
+    const description = vendorDetails;
+    const existingImagePath = vendor?.image;
+    try {
+      setIsLoading(true);
+      const res = await editVendorFunc(
+        vendor_id,
+        vendorName,
+        description,
+        existingImagePath,
+        selectedFile
+      );
+
+      if (res.data.success) {
+        setIsLoading(false);
+      }
+    } catch (error) {
+      console.error("error", error);
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -62,7 +86,7 @@ const Details = ({ vendor }: any) => {
               id="fileInput"
             />
             <Image
-              src={selectedImage.previewImage ?? vendor?.image}
+              src={selectedImage.previewImage ?? vendor?.image ?? "/vendor.png"}
               alt="vendor-img"
               width={345}
               height={185}
@@ -101,7 +125,7 @@ const Details = ({ vendor }: any) => {
               onChange={(e) => setVendorDetails(e.target.value)}
             />
           </StyledTextArea>
-          <YelloWButton className="update_btn">
+          <YelloWButton className="update_btn" onClick={handleUpdateDetails}>
             {isLoading ? <Loader /> : "Update"}
           </YelloWButton>
         </Box>
