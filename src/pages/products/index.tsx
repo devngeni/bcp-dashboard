@@ -409,9 +409,9 @@ const ProductsPages: NextPageWithLayout = () => {
             >
               Add new product
             </YelloWButton>
-            <Box className="arrow" onClick={toggleOpen}>
+            {/* <Box className="arrow" onClick={toggleOpen}>
               <Image src={ArrowIcon} alt="arrow" />
-            </Box>
+            </Box> */}
           </Box>
         </TopLevel>
         <ProductsTable>
