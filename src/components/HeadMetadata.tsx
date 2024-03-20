@@ -28,7 +28,8 @@ const HeadMetaData = ({ pageTitle }: HeadMetaDataProps) => {
         />
         <meta property="og:url" content={ogUrl} />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content="/logo.svg" />
+        <meta property="og:site_name" content="Better call paul" />
+        <meta property="og:image" content="/favicon/preview-image.png" />
       </Head>
     </>
   );

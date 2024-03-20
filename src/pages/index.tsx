@@ -29,6 +29,7 @@ import GoogleIcon from "@mui/icons-material/Google";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import toast from "react-hot-toast";
 import Loader from "@/components/common-components/loader";
+import Image from "next/image";
 
 export interface Icredentials {
   email: string;
@@ -79,6 +80,7 @@ const SignIn: NextPageWithLayout = ({ providers }: any) => {
     <SignInContainer>
       <SignInNav>
         <header>BETTER CALL PAUL</header>
+        {/* <Image src="/favicon/logo2.svg" alt="logo" width="60" height="100" /> */}
       </SignInNav>
 
       <SignInForm>
