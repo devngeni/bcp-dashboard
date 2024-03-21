@@ -232,13 +232,7 @@ const NewProductPage = ({
                 },
               }}
             >
-              {[
-                "Featured",
-                "Deal of the Month",
-                "Add to quick actions",
-                "On Offer/Discount",
-                "Banner Ad",
-              ].map((label, index) => (
+              {["Deal of the Month", "Banner Ad"].map((label, index) => (
                 <Box
                   key={index}
                   sx={{
