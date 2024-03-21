@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { VendorProps } from "@/pages/vendors";
+import { useProductDataContext } from "./products-data";
 
 const vendorsUrl = "/api/provider";
 
@@ -41,6 +42,7 @@ export const VendorsDataProvider = ({ children }: any) => {
   const [vendorsData, setVendorsData] = useState<any[]>([]);
   const [servicesFromVendor, setVendorServices] = useState([]);
   const [singleVendorData, setSingleVendorData] = useState({} as VendorProps);
+  const { refetchServices } = useProductDataContext();
 
   //get vendors data
   const fetchVendorsData = async () => {
@@ -190,12 +192,14 @@ export const VendorsDataProvider = ({ children }: any) => {
     const updatedVendorServices = await getVendorServicesFunc(vendor_id);
     setVendorServices(updatedVendorServices?.data);
     setSingleVendorData(updatedVendorServices?.serviceProvider);
+    refetchServices();
   };
 
   //refetch all vendors get data
   const refetchVendors = async () => {
     const updatedVendors = await fetchVendorsData();
     setVendorsData(updatedVendors?.data);
+    refetchServices();
   };
 
   //add new service to vendor

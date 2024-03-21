@@ -19,6 +19,7 @@ import { useRouter } from "next/router";
 import { useProductDataContext } from "@/utils/context/products-data";
 import toast from "react-hot-toast";
 import Loader from "../common-components/loader";
+import SubtitleSelect from "./subtitleSelect";
 
 type FileType = File | null;
 
@@ -62,7 +63,7 @@ const EditProductPage = ({
         setProductName(fetchedProduct.content[0]?.name || "");
         setPrice(fetchedProduct.content[0]?.price || 0);
         setSelectItem(fetchedProduct.category || "");
-        setSubtitle(fetchedProduct.subTitle || "");
+        setSubtitle(fetchedProduct?.subTitle || "");
         setDescription(fetchedProduct.content[0]?.description || "");
         setSelectedRadio(fetchedProduct.tag || "");
         setSelectedFile(fetchedProduct.content[0]?.imagePath || "");
@@ -175,9 +176,6 @@ const EditProductPage = ({
             <YelloWButton type="submit">
               {isLoading ? <Loader /> : "Save Changes"}
             </YelloWButton>
-            {/* <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Image src={ArrowIcon} alt="arrow" className="sort_arrow" />
-            </Box> */}
           </Box>
         </TopLevel>
         <Box sx={{ display: "flex", gap: "50px", flexWrap: "wrap" }}>
@@ -232,12 +230,13 @@ const EditProductPage = ({
                 }}
               >
                 <label>Subtitle</label>
-                <input
+                {/* <input
                   type="text"
                   placeholder="Subtitle"
                   value={subtitle}
                   onChange={(e) => setSubtitle(e.target.value)}
-                />
+                /> */}
+                <SubtitleSelect subtitle={subtitle} setSubtitle={setSubtitle} />
               </StyledInputField>
             </Box>
 

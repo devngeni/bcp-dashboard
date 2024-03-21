@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import ServiceProviderModel from ".././../../../models/ServiceProvider.model";
 import ServicesModel from ".././../../../models/service.model";
-import ServiceProviderModel from "../../../../models/ServiceProvider.model";
 import { connectDB } from "@/utils/dbconnection";
 
 export default async function handler(
@@ -24,13 +24,11 @@ export default async function handler(
         const chains = await ServicesModel.find({ service_id: id }).populate(
           "service_id"
         );
-        return res
-          .status(200)
-          .json({
-            success: true,
-            serviceProvider: serviceProvider,
-            data: chains,
-          });
+        return res.status(200).json({
+          success: true,
+          serviceProvider: serviceProvider,
+          data: chains,
+        });
       } catch (e) {}
     } else if (req.method === "PUT" || req.method === "PATCH") {
       const serviceProviderToUpdate = await ServiceProviderModel.findById(id);
@@ -46,6 +44,11 @@ export default async function handler(
         .status(200)
         .json({ success: true, data: updateServiceProvider });
     } else if (req.method === "DELETE") {
+      //Delete All Service Items With The same service_id as the id
+
+      const serviceItemsToDelete = await ServicesModel.deleteMany({
+        service_id: id,
+      });
       const serviceProviderToDelete = await ServiceProviderModel.findById(id);
       if (!serviceProviderToDelete) {
         return res.status(404).json({ message: "Service Provider Not Found" });
