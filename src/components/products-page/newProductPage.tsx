@@ -9,7 +9,6 @@ import {
   YelloWButton,
 } from "@/styles/common.styles";
 import { TopLevel, UploadProductPicture } from "@/styles/products.styles";
-import ArrowIcon from "../../../public/arrowDownIcon.svg";
 import UploadImageIcon from "../../../public/uploadImageicon.svg";
 import {
   HandleSelectCategory,
@@ -17,6 +16,7 @@ import {
 } from "./handleSelectCategory";
 import { useProductDataContext } from "@/utils/context/products-data";
 import Loader from "../common-components/loader";
+import SubtitleSelect from "./subtitleSelect";
 
 type FileType = File | null;
 
@@ -38,7 +38,7 @@ const NewProductPage = ({
   selectDataItems,
 }: HandleSelectCategoryProps) => {
   const [productName, setProductName] = useState<string>("");
-  const [price, setPrice] = useState<number>(0);
+  const [price, setPrice] = useState<number | any>(0);
   const [subtitle, setSubtitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [selectedRadio, setSelectedRadio] = useState("");
@@ -151,9 +151,6 @@ const NewProductPage = ({
             <YelloWButton type="submit">
               {isLoading ? <Loader /> : "Save Product"}
             </YelloWButton>
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Image src={ArrowIcon} alt="arrow" className="sort_arrow" />
-            </Box>
           </Box>
         </TopLevel>
 
@@ -176,7 +173,7 @@ const NewProductPage = ({
                   type="number"
                   placeholder="Price"
                   value={price}
-                  onChange={(e) => setPrice(Number(e.target.value))}
+                  onChange={(e) => setPrice(e.target.value)}
                 />
               </StyledInputField>
             </Box>
@@ -209,12 +206,7 @@ const NewProductPage = ({
                 }}
               >
                 <label>Subtitle</label>
-                <input
-                  type="text"
-                  placeholder="Subtitle"
-                  value={subtitle}
-                  onChange={(e) => setSubtitle(e.target.value)}
-                />
+                <SubtitleSelect setSubtitle={setSubtitle} />
               </StyledInputField>
             </Box>
 

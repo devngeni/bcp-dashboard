@@ -25,6 +25,7 @@ interface ProductDataProps {
     existingImagePath: any
   ) => void;
   deleteFunc?: (product_id: string) => void;
+  refetchServices: () => void;
 }
 
 // Product Data Context
@@ -221,6 +222,7 @@ export const ProductDataProvider = ({ children }: any) => {
         deleteFunc: deleteProduct,
         editFunc: editProduct,
         newProductFunc: newProduct,
+        refetchServices,
       }}
     >
       {children}
