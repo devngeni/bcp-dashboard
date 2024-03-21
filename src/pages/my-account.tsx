@@ -114,7 +114,7 @@ const MyAccount: NextPageWithLayout = () => {
         }
       } else {
         setIsLoading(false);
-        toast.error("Passwords do no match");
+        toast.error("Passwords do not match");
         return;
       }
     } else if (activeTab === "Profile") {
