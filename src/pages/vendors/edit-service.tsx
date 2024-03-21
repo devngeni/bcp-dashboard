@@ -259,12 +259,7 @@ const EditVendorService = () => {
                   },
                 }}
               >
-                {[
-                  "Featured",
-                  "Deal of the Month",
-                  "Add to quick actions",
-                  "On Offer/Discount",
-                ].map((label, index) => (
+                {["Deal of the Month"].map((label, index) => (
                   <Box
                     key={index}
                     sx={{
