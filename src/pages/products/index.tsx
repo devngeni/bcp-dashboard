@@ -264,23 +264,26 @@ const ProductsPages: NextPageWithLayout = () => {
       newSelected = selectedRows.filter((item) => item !== index);
     } else {
       newSelected = [...selectedRows, index];
-      setEachSelectedRow(visibleItems[index]);
+      if (searchQuery.trim() !== "") {
+        setEachSelectedRow(filteredData[index]);
+      } else {
+        setEachSelectedRow(visibleItems[index]);
+      }
     }
-
     setSelectedRows(newSelected);
   };
 
-  // Function to handle "Select All" checkbox click
-  const handleSelectAllClick = () => {
-    if (selectAll) {
-      setSelectAll(false);
-      setSelectedRows([]);
-    } else {
-      setSelectAll(true);
-      setSelectedRows(visibleItems.map((_: any, index: any) => index));
-    }
-  };
+  //function to filter by search query
+  const filteredData = services.filter((item: Product) => {
+    return (
+      item.content[0].name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.subTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.tag?.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  });
 
+  //get page numbers
   const itemsPerPage = 10;
   const totalPages = Math.ceil(services && services.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -292,15 +295,6 @@ const ProductsPages: NextPageWithLayout = () => {
     setCurrentPage(newPage);
     setSearchQuery("");
   };
-
-  const filteredData = services.filter((item: Product) => {
-    return (
-      item.content[0].name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.subTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.tag?.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  });
 
   // Function to get page numbers
   const getPageNumbers = (): (number | string)[] => {
@@ -396,11 +390,6 @@ const ProductsPages: NextPageWithLayout = () => {
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </Box>
-              {/* <SortBox>
-                <Image src={SortIcon} alt="sortIcon" />
-                <Box className="sort_text">Sort</Box>
-                <Image src={ArrowIcon} alt="arrow" className="sort_arrow" />
-              </SortBox> */}
             </Box>
             <YelloWButton
               onClick={() =>
@@ -409,9 +398,6 @@ const ProductsPages: NextPageWithLayout = () => {
             >
               Add new product
             </YelloWButton>
-            {/* <Box className="arrow" onClick={toggleOpen}>
-              <Image src={ArrowIcon} alt="arrow" />
-            </Box> */}
           </Box>
         </TopLevel>
         <ProductsTable>

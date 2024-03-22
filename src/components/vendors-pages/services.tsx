@@ -44,7 +44,11 @@ const VendorServices = ({ searchQuery, vendorDetails, rowData }: any) => {
       newSelected = selectedRows.filter((item) => item !== index);
     } else {
       newSelected = [...selectedRows, index];
-      setSingleSelectedRow(rowData[index]);
+      if (searchQuery.trim() !== "") {
+        setSingleSelectedRow(filterDataBySearchQuery()[index]);
+      } else {
+        setSingleSelectedRow(rowData[index]);
+      }
     }
 
     setSelectedRows(newSelected);
@@ -63,13 +67,19 @@ const VendorServices = ({ searchQuery, vendorDetails, rowData }: any) => {
         setIsLoading(false);
         console.error("Error deleting product:", error);
       }
-    } else {
-      toast.error("select product to delete");
     }
   };
 
-  const toggleDeleteModal = () => {
-    setIsDeleteModalOpen((prev) => !prev);
+  const toggleDeleteModal = (product_id: string) => {
+    if (selectedRows.length === 0) {
+      toast.error("Select the item to delete");
+    } else {
+      if (singleSelectedRow._id === product_id) {
+        setIsDeleteModalOpen((prev) => !prev);
+      } else {
+        toast.error("Select specific item for delete");
+      }
+    }
   };
 
   const filterDataBySearchQuery = () => {
@@ -123,7 +133,7 @@ const VendorServices = ({ searchQuery, vendorDetails, rowData }: any) => {
                 <>
                   {filterDataBySearchQuery()?.map((row: any, index: any) => (
                     <TableRow key={index}>
-                      <TableCell>{index}</TableCell>
+                      <TableCell>{index + 1}</TableCell>
                       <TableCell>
                         <StyledCheckBox onClick={() => handleCheck(index)} />
                       </TableCell>
@@ -195,7 +205,7 @@ const VendorServices = ({ searchQuery, vendorDetails, rowData }: any) => {
                             <DeleteOutlineOutlinedIcon
                               color="error"
                               onClick={() => {
-                                toggleDeleteModal();
+                                toggleDeleteModal(row._id);
                               }}
                             />
                           </div>
@@ -203,7 +213,7 @@ const VendorServices = ({ searchQuery, vendorDetails, rowData }: any) => {
                             <DeleteModal
                               isLoading={isLoading}
                               isDeleteModalOpen={isDeleteModalOpen}
-                              handleClose={toggleDeleteModal}
+                              handleClose={() => setIsDeleteModalOpen(false)}
                               handleDelete={() => handleDelete(row._id)}
                               styles={{
                                 background: "rgba(0,0,0,0.01)",
