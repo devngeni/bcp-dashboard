@@ -145,7 +145,7 @@ const SignIn: NextPageWithLayout = ({ providers }: any) => {
         </Box>
         <TC_Box>
           <Box className="text">
-            By signing up, you agree to our <span>Terms, Data Policy</span> and{" "}
+            By signing in, you agree to our <span>Terms, Data Policy</span> and{" "}
             <span>Cookies Policy.</span>
           </Box>
         </TC_Box>
